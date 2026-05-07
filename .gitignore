@@ -1,0 +1,63 @@
+# Regenerable extraction output
+extracted_*/
+utterances_v2/
+.swb_extract_index.json
+/tmp/call_ids.txt
+/tmp/audio_includes.txt
+/tmp/transcript_includes.txt
+/tmp/utterance_includes.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+
+# Virtualenvs
+venv/
+.venv/
+env/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Data files — never tracked (regenerable from raw inputs or too large)
+*.csv
+*.wav
+*.pyc
+
+# Data directories (far too large to track; pulled from phoenix separately)
+audio/
+swb_ms98_transcriptions_raw/
+swb_ms98_transcriptions_cleaned/
+utterances/
+utterances_v2/
+tables/
+corpus/
+legacy/
+legacy-extractors-and-analysis/
+phoenix-extras/
+annotated_files/
+annotations/
+extracted_all/
+nxt_switchboard_ann/
+phonetic/
+prosodic/
+trans/
+trn-chunk/
+verif/
+ws97hr1/
+ws97hr2/
+ws97hr3/
+
+# Local Claude Code config
+.claude/settings.local.json

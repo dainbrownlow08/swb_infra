@@ -1,0 +1,337 @@
+TANNEN'S CONVERSATIONAL STYLE FEATURES
+Source: Deborah Tannen, "Conversational Style: Analyzing Talk Among Friends"
+        New Edition, Oxford University Press, 2005
+
+Note on page numbers: PDF page = printed book page + 21.
+All quotes cite PDF page numbers (with book page in parentheses).
+
+
+================================================================================
+A. THE TWO OVERARCHING STYLISTIC STRATEGIES
+================================================================================
+
+1. HIGH-INVOLVEMENT STYLE (signals rapport / interpersonal connection)
+   "All of these features can be understood as expressing (in John Gumperz's
+   terms, putting the signaling load on) involvement, or rapport. Hence, I
+   shall refer to the speakers who use them as exhibiting a high-involvement
+   style."
+   — PDF p. 61–62 (book pp. 40–41)
+
+2. HIGH-CONSIDERATENESS STYLE (signals the need not to impose)
+   "In contrast, the other three speakers expected and used strategies that
+   expressed (or put the signaling load on) the need not to impose. Hence,
+   I shall refer to these speakers as using a high-considerateness style."
+   — PDF p. 62 (book p. 41)
+
+   Both descend from Lakoff's three Rules of Rapport — Don't impose
+   (distance), Give options (deference), Be friendly (camaraderie) —
+   quoted at PDF p. 37 (book p. 17).
+
+
+================================================================================
+B. CANONICAL SUMMARY OF DIMENSIONS (Chapter 7)
+================================================================================
+
+"Following is a summary of the dimensions that have been examined:
+ 1. Relative personal focus of topic
+ 2. Paralinguistic features (absolute use and use of marked shifts)
+    a. loudness
+    b. pitch
+    c. pauses
+    d. voice quality and tone
+ 3. Expectation that enthusiasm be overtly demonstrated, for example, through
+    a. quickness of response
+    b. paralinguistic features
+    c. free offer of related material
+    d. use of questions (information, echo, etc.)
+ 4. Use of questions, including
+    a. echo questions as back-channel
+    b. information questions
+ 5. Pacing
+    a. cooperative versus obstructive overlap
+    b. timing of contribution, relative to previous contribution
+    c. rate of speech
+    d. floor-getting devices (increased amplitude, repetition of words)
+ 6. Use of repetition, for example
+    a. to finish another's statement or add to another's line of argument
+    b. to incorporate another's offer into original statement or argument
+ 7. Topic cohesion (and tolerance for diffuse topics)
+ 8. Tolerance for noise versus silence
+ 9. Laughter (when, how much)"
+— PDF p. 202–203 (book pp. 181–182)
+
+"These and other characteristic ways of saying things are used in the
+production of specific conversational devices, for example:
+ 1. Machine-gun questions
+ 2. Mutual revelation/personal statements
+ 3. Use of ethnically marked or otherwise in-group–associated expressions
+ 4. Story rounds
+ 5. Ironic or humorous routines"
+— PDF p. 203 (book p. 182)
+
+
+================================================================================
+C. "FEATURES OF HIGH-INVOLVEMENT STYLE" CHECKLIST (Chapter 2)
+================================================================================
+
+"1. Topic
+    a. Prefer personal topics
+    b. Shift topics abruptly
+    c. Introduce topics without hesitation
+    d. Persist (if a new topic is not immediately picked up, reintroduce it,
+       repeatedly if necessary)
+ 2. Pacing
+    a. Faster rate of speech
+    b. Faster turn taking
+    c. Avoiding interturn pauses (silence shows lack of rapport)
+    d. Cooperative overlap
+    e. Participatory listenership
+ 3. Narrative strategies
+    a. Tell more stories
+    b. Tell stories in rounds
+    c. Prefer internal evaluation (i.e., the point of a story is dramatized
+       rather than lexicalized)
+ 4. Expressive paralinguistics
+    a. Expressive phonology
+    b. Marked pitch and amplitude shifts
+    c. Marked voice quality
+    d. Strategic within-turn pauses"
+— PDF p. 61–62 (book pp. 40–41)
+
+
+================================================================================
+D. CHAPTER 4 — LINGUISTIC DEVICES
+================================================================================
+
+1. PERSONAL VS. IMPERSONAL TOPICS (preference for the personal)
+   "Thus I began to see one of the major differences in Chad's and my
+   strategies: expectations about appropriate topics of talk between new
+   acquaintances."
+   — PDF p. 95 (book p. 74)
+
+   "The assumptions that it is appropriate to talk about personal matters
+   with new acquaintances and that people like to talk about themselves
+   seem like givens to some speakers (e.g., me), whereas for others they
+   are equally obviously not true."
+   — PDF p. 102–103 (book pp. 81–82)
+
+2. THE ENTHUSIASM CONSTRAINT (overlap-as-enthusiasm)
+   "I was trying to encourage Chad to tell me, not by waiting for him to
+   talk, but by showing him my own excitement and exuberance. The message
+   is in the pace that I am creating: 'See how excited and interested I am?
+   I can hardly contain myself.' I expected Chad to become equally excited
+   and shout me down."
+   — PDF p. 98 (book p. 77)
+
+   "The overlap-as-enthusiasm strategy is reminiscent of the enthusiasm
+   constraint I discovered for Greek speakers (Tannen [1981a] 1994)."
+   — PDF p. 98 (book p. 77)
+
+3. THE MACHINE-GUN QUESTION
+   "A number of linguistic features make these questions seem like
+   machine-gun fire, including high pitch, reduced syntactic form, fast
+   rate of speech, and directness of content. In addition, the effect of
+   all these features is intensified by the pace with which the question
+   is fired in conversation, that is, the time that is permitted to elapse
+   before the question is posed."
+   — PDF p. 112 (book p. 91)
+
+4. OVERLAP AND PACE (cooperative overlap, latching, fast rate)
+   "Thus, rapid rate of speech, overlap, and latching of utterances are
+   devices by which some speakers show solidarity, enthusiasm, and interest
+   in others' talk. The resulting fast pace greases the conversational
+   wheels when speakers share expectations about the use of these devices."
+   — PDF p. 119 (book p. 98)
+
+   ("Latch" is borrowed from Schenkein 1978; defined at PDF p. 104,
+   book p. 83.)
+
+5. MUTUAL REVELATION / PERSONAL STATEMENTS
+   "This is a device by which a personal statement is intended as a show
+   of rapport. By this strategy, the speaker expects a statement of
+   personal experience to elicit a similar statement from the other.
+   Thematic cohesion is established by the metamessage: 'We are intimate;
+   we both tell about ourselves; we are both interested in hearing about
+   the other's experience.'"
+   — PDF p. 122 (book p. 101)
+
+6. BONDING THROUGH HIGH-INVOLVEMENT DEVICES
+   "Peter responds positively to my sudden focus of attention on his
+   personal life… rather than just answering my sudden question as Chad
+   did with 'Yeah,' Peter volunteers added information that provides
+   matter for further talk."
+   — PDF p. 127 (book p. 106)
+
+7. EXPRESSIVE PHONOLOGY AND INTONATION
+   (incl. paralinguistic shifts, response cries, code-switching)
+   "An aspect of Peter's and my styles is expressive use of phonology and
+   other paralinguistic cues."
+   — PDF p. 128 (book p. 107)
+
+   "My choice of a Yiddish 'response cry' (Goffman 1981) functions in a
+   number of ways to establish rapport."
+   — PDF p. 129 (book p. 108)
+
+   "The entire interchange thus exhibits marked pitch shifts and exaggerated
+   stress, which give it a sense of expressiveness and empathy."
+   — PDF p. 130 (book p. 109)
+
+8. PERSISTENCE (re-introducing dropped topics; multi-try contributions)
+   "Peter, Steve, and I operate on the assumption that those who want to
+   say something will find the time to say it… one of the characteristics
+   of our style is that Steve, Peter, and I persist when we have something
+   to say… Both Peter and I persist with contributions for two, three, and
+   four tries."
+   — PDF p. 131 (book p. 110)
+
+9. TOLERANCE FOR NOISE VS. SILENCE (and tolerance for diffuse topics)
+   "A concomitant of the persistence device, and the assumption that one's
+   thoughts are of interest, is a tolerance for such distraction and
+   diffuse talk, which is related to the tolerance for overlap."
+   — PDF p. 140 (book p. 119)
+
+   "What speakers of this high-involvement style cannot tolerate is the
+   alternative to this strategy: silence."
+   — PDF p. 141 (book p. 120)
+
+
+================================================================================
+E. CHAPTER 5 — NARRATIVE STRATEGIES
+================================================================================
+
+10. STORY ROUNDS (clusters with thematic point-matching, no orientation)
+    "I use the term story round to refer to a particular kind of story
+    cluster, in which speakers exchange stories of personal experiences
+    that illustrate similar points… they require little or no orientation
+    section… The very juxtaposition of stories furnishes thematic cohesion."
+    — PDF p. 147–148 (book pp. 126–127)
+
+    "The story round device clearly belongs to the high-involvement
+    strategy members of the group. Nineteen of the twenty-one stories told
+    in rounds were told by Steve, Peter, and me."
+    — PDF p. 148 (book p. 127)
+
+11. EXPRESSIVE VS. UNDERSTATED EVALUATION
+    (internal vs. external evaluation in Labov's sense)
+    "Steve uses marked intonation and voice quality to show disgust; Chad
+    uses extra words and monotonous tone. Chad's is a style of nuance and
+    understatement, Steve's of expressiveness and overstatement."
+    — PDF p. 158 (book p. 137)
+
+    "(Evaluation in this sense, following Labov [1972], refers to speakers'
+    ways of showing their attitudes toward what they are saying.)"
+    — PDF p. 158 (book p. 137)
+
+12. GETTING TO THE POINT (lexicalized vs. dramatized point)
+    "It is part of Steve's style to tell a story the point of which is in
+    the intonation rather than the verbal content."
+    — PDF p. 167 (book p. 146)
+
+    "He never states that point; it resides in the intonation pattern and
+    the juxtaposition of the stories."
+    — PDF p. 168 (book p. 147)
+
+13. MEANING IN INTONATION
+    (constructed dialogue framed by intonation/voice quality)
+    "It is interesting to note that in telling this story, Peter uses
+    intonation and tone to frame direct quotations. He does not introduce
+    reported speech by saying, 'He said' or 'She said.' Rather, he mimics
+    his son's and his girlfriend's speech."
+    — PDF p. 172 (book p. 151)
+
+14. COOPERATIVE VS. IMPATIENT PROMPTING
+    "I wondered about the difference between prompting someone in a
+    cooperative way and dragging a story out of them."
+    — PDF p. 170 (book p. 149)
+
+    "Thus the question serves both as a prompt and a show of interest in
+    the story as it has proceeded thus far."
+    — PDF p. 171 (book p. 150)
+
+15. WHAT THE POINT CAN BE
+    (cultural assumptions about acceptable narrative points)
+    "In addition to differences in expectations about what stories can be
+    about, there are clearly differences operating about how stories are
+    told."
+    — PDF p. 183 (book p. 162)
+
+    "Sally's strategy is not to impose, not to insult her audience by
+    hitting them over the head with the point. But her style differs from
+    Steve's in that intonation and direct quotation are not used to
+    dramatize the point either. Sally's style combines the lexical
+    understatement of Steve's style with the paralinguistic understatement
+    of Chad's style."
+    — PDF p. 183 (book p. 162)
+
+
+================================================================================
+F. CHAPTER 6 — IRONY AND JOKING
+================================================================================
+
+"One of the most distinctive aspects of any person's style is the use of
+humor. Through intonation, pace, voice quality, and nonverbal signals, a
+speaker can frame an utterance or string of utterances as 'not meant
+literally.'"
+— PDF p. 184 (book p. 163)
+
+Cutler (1974) intonational cues of irony Tannen quotes:
+ "1. nasalization of all or part of an utterance
+  2. slower rate in all or part
+  3. exaggerated stress on one or more parts"
+— PDF p. 185 (book p. 164)
+
+Tannen catalogues five distinguishable humor styles in the group:
+
+16. MOCKING / DRAMATIZED IRONY (Steve)
+    Exaggerating one's own or another's speech patterns; "dramatic irony"
+    in Booth/Roy's sense.
+    "Steve's most characteristic form of humor is a mocking style by which
+    he exaggerates either his own or someone else's speech patterns. In
+    this sense, his is an irony aimed at style."
+    — PDF p. 187 (book p. 166)
+
+17. BUILDING-ON-OTHERS' HUMOR (Deborah)
+    "Frequently throughout the conversation I make jokes by changing
+    slightly or adding to something that someone else has said."
+    — PDF p. 191 (book p. 170)
+
+    "In this as in previous examples, my characteristic style is to build
+    on the humor of another speaker's prior turn."
+    — PDF p. 193 (book p. 172)
+
+18. DEADPAN / MOCK-SERIOUS IRONY (Peter)
+    "Whereas Steve's irony is mock annoyed, mock tough, or mock solicitous
+    and dramatized through exaggerated enunciation, Peter's is mock
+    serious."
+    — PDF p. 193 (book p. 172)
+
+    "Peter never laughs after his one-liners, and he often follows them up
+    with genuinely serious statements."
+    — PDF p. 193 (book p. 172)
+
+19. CAMPING / STYLIZED ACCENT (David)
+    "David's humor is similar to Steve's in that he often speaks with an
+    exaggerated speech style. Whereas Steve exaggerates Jewish speech
+    patterns and his own fussiness, David exaggerates stereotypical gay
+    speech patterns; in other words, he camps."
+    — PDF p. 197 (book p. 176)
+
+20. CONTENT IRONY / OUTWARD-AIMED IRONY (Sally)
+    "Notice too that while Steve's irony is aimed at mocking his own style,
+    Sally's is content irony; it is aimed outward."
+    — PDF p. 199 (book p. 178)
+
+
+================================================================================
+G. THE SUMMARY CONTINUUM
+================================================================================
+
+"Conversational style, then, may be seen as a mix of linguistic devices
+made up of features and used according to strategies for serving the human
+needs for interpersonal involvement and independence."
+— PDF p. 206 (book p. 185)
+
+Speakers are placed on overlapping continua (subtle↔gross humor,
+slow↔fast pace, low↔high % narrative, few↔many narratives), which
+superimpose into a master Considerateness ↔ Involvement continuum at
+PDF p. 207 (book p. 186).
