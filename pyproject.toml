@@ -7,7 +7,10 @@ name = "swb-extract"
 version = "0.1.0"
 description = "Switchboard utterance slicer producing a 2-column manifest joinable by future feature extractors"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "empath>=0.89",
+    "spacy>=3.8",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=7"]

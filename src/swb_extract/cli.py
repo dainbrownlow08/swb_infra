@@ -199,22 +199,39 @@ def cmd_verify(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_table(args: argparse.Namespace) -> int:
+    from .features_table import run as table_run
+
+    return table_run(args)
+
+
 def cmd_features(args: argparse.Namespace) -> int:
     from .features import (
         demographics,
         filler_word_per_second,
         filler_word_rate,
+        fto,
+        latching_flag,
+        laughter,
         loudness,
+        machine_gun_question,
+        mutual_revelation_flag,
+        overlap,
+        personal_focus_score,
         pitch,
         pronoun_per_second,
         pronoun_rate,
+        question_flags,
         repetition_per_second,
         repetition_rate,
         repetitions_in_current,
         repetitions_in_previous,
+        rising_terminal,
         syllable_rate,
         token_count,
+        topic_label,
         turn_gap,
+        within_utterance_pauses,
         word_rate,
     )
 
@@ -240,6 +257,8 @@ def cmd_features(args: argparse.Namespace) -> int:
         return syllable_rate.run(args)
     if args.name == turn_gap.FEATURE_NAME:
         return turn_gap.run(args)
+    if args.name == fto.FEATURE_NAME:
+        return fto.run(args)
     if args.name == repetitions_in_current.FEATURE_NAME:
         return repetitions_in_current.run(args)
     if args.name == repetitions_in_previous.FEATURE_NAME:
@@ -248,6 +267,26 @@ def cmd_features(args: argparse.Namespace) -> int:
         return word_rate.run(args)
     if args.name == token_count.FEATURE_NAME:
         return token_count.run(args)
+    if args.name == topic_label.FEATURE_NAME:
+        return topic_label.run(args)
+    if args.name == personal_focus_score.FEATURE_NAME:
+        return personal_focus_score.run(args)
+    if args.name == mutual_revelation_flag.FEATURE_NAME:
+        return mutual_revelation_flag.run(args)
+    if args.name == latching_flag.FEATURE_NAME:
+        return latching_flag.run(args)
+    if args.name == laughter.FEATURE_NAME:
+        return laughter.run(args)
+    if args.name == within_utterance_pauses.FEATURE_NAME:
+        return within_utterance_pauses.run(args)
+    if args.name == overlap.FEATURE_NAME:
+        return overlap.run(args)
+    if args.name == question_flags.FEATURE_NAME:
+        return question_flags.run(args)
+    if args.name == rising_terminal.FEATURE_NAME:
+        return rising_terminal.run(args)
+    if args.name == machine_gun_question.FEATURE_NAME:
+        return machine_gun_question.run(args)
     raise NotImplementedError(
         f"feature extractor {args.name!r} not implemented yet. "
         f"Write to {Path(args.out_root) / 'features' / (args.name + '.csv')} "
@@ -288,6 +327,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--limit", type=int, default=0)
     s.set_defaults(func=cmd_extract)
 
+    s = sub.add_parser(
+        "table", help="rebuild features_table.csv from manifest + features/*.csv"
+    )
+    s.add_argument("--out-root", default=default_out)
+    s.set_defaults(func=cmd_table)
+
     s = sub.add_parser("verify", help="spot-check durations of N random manifest rows")
     s.add_argument("--out-root", default=default_out)
     s.add_argument("--transcript-root", default=default_trans)
@@ -297,13 +342,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     default_caller = str(repo / "tables" / "caller_tab.csv")
     default_conv = str(repo / "tables" / "conv_tab.csv")
+    default_topic = str(repo / "tables" / "topic_tab.csv")
     s = sub.add_parser("features", help="run a feature extractor that writes a sibling CSV")
     s.add_argument("name", help="extractor name (e.g. 'demographics')")
     s.add_argument("--out-root", default=default_out)
     s.add_argument("--caller-tab", default=default_caller,
                    help="LDC caller_tab.csv (used by demographics)")
     s.add_argument("--conv-tab", default=default_conv,
-                   help="LDC conv_tab.csv (used by demographics)")
+                   help="LDC conv_tab.csv (used by demographics, topic_label)")
+    s.add_argument("--topic-tab", default=default_topic,
+                   help="LDC topic_tab.csv (used by topic_label)")
     s.add_argument("--transcript-root", default=default_trans,
                    help="cleaned ms98 transcript root (used by per-second features)")
     s.add_argument("--workers", type=int, default=4,
