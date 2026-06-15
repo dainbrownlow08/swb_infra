@@ -160,9 +160,13 @@ def write_rising_terminal(
         rels = rels[:limit]
 
     cache: dict[str, list[str]] = {} if overwrite else _read_existing(output_csv)
-    needs_work = [r for r in rels if r not in cache]
+    # Recompute rows whose cached flag is empty ("" = was unjudgeable): word
+    # alignment may have improved since, and silently freezing the original
+    # 68.5% not-at-random missingness is exactly the §3 fix-3 failure mode.
+    needs_work = [r for r in rels if r not in cache or cache[r][1] == ""]
+    reusable = len(rels) - len(needs_work)
     print(
-        f"rising_terminal: {len(rels):,} total, {len(cache):,} cached, "
+        f"rising_terminal: {len(rels):,} total, {reusable:,} cached, "
         f"{len(needs_work):,} to extract (workers={workers})"
     )
 
@@ -195,10 +199,10 @@ def write_rising_terminal(
         writer = csv.writer(fout, quoting=csv.QUOTE_MINIMAL)
         writer.writerow(HEADER)
         for rel in rels:
-            if rel in cache:
-                writer.writerow(cache[rel])
-            else:
+            if rel in fresh:  # freshly computed (incl. recomputed empty rows)
                 writer.writerow(_fmt_row(rel, fresh[rel]))
+            else:
+                writer.writerow(cache[rel])
     return len(rels)
 
 

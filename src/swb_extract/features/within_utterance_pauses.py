@@ -61,7 +61,9 @@ def compute_pauses(words: list[tuple[float, float, str]]) -> PauseStats | None:
             gaps.append(g)
     total = sum(gaps)
     count = sum(1 for g in gaps if g >= PAUSE_MIN_SEC)
-    span = words[-1][1] - words[0][0]
+    # Rows are sorted by start, so the last-by-start word need not end last;
+    # use the max end (matches fto's word-tight bounds) so rate never exceeds 1.
+    span = max(e for _s, e, _t in words) - words[0][0]
     rate = total / span if span > 0 else 0.0
     mx = max(gaps) if gaps else 0.0
     return (total, count, rate, mx)

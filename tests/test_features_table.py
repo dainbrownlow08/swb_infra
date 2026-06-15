@@ -85,6 +85,22 @@ def test_extra_row_raises(tmp_path):
         build_table(mp, fdir, out / "features_table.csv")
 
 
+def test_over_wide_row_raises(tmp_path):
+    out, mp, fdir = _setup(tmp_path)
+    # gamma declares ONE value column but a data row carries two → must error,
+    # not silently truncate the stray cell.
+    _write_csv(
+        fdir / "gamma.csv",
+        ["Utterance File Name", "Gamma"],
+        [
+            ["200/sw2001A-U0002.wav", "9", "stray"],
+            ["200/sw2001B-U0004.wav", "8"],
+        ],
+    )
+    with pytest.raises(TableBuildError, match="value cols, header declares"):
+        build_table(mp, fdir, out / "features_table.csv")
+
+
 def test_duplicate_column_raises(tmp_path):
     out, mp, fdir = _setup(tmp_path)
     _write_csv(
