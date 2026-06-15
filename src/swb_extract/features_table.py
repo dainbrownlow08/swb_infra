@@ -95,9 +95,15 @@ def build_table(
                             f"extractor to regenerate it in manifest order"
                         )
                     vals = frow[1:]
+                    if len(vals) > width:  # malformed extractor — never truncate
+                        raise TableBuildError(
+                            f"{path.name} at manifest row {n + 1} (key {key!r}): "
+                            f"{len(vals)} value cols, header declares {width} — "
+                            f"re-run the extractor"
+                        )
                     if len(vals) < width:  # trailing empty cells dropped by csv
                         vals = vals + [""] * (width - len(vals))
-                    out_row.extend(vals[:width])
+                    out_row.extend(vals)
                 writer.writerow(out_row)
                 n += 1
             for path, reader in zip(feature_paths, readers):

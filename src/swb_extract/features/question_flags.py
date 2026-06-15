@@ -107,7 +107,13 @@ def _previous_text(
     side: str,
     utt_num: int,
 ) -> str | None:
-    """Text of the cross-speaker chronological predecessor, or None."""
+    """Text of the nearest *cross-speaker* chronological predecessor, or None.
+
+    Echo questions throw the OTHER speaker's words back, so we skip the current
+    speaker's own preceding utterances (continuations, self-backchannels) and
+    return the first entry on the other side. None if the speaker opened the
+    conversation or has no cross-speaker predecessor yet.
+    """
     merged = merged_idx.get(call_id)
     if not merged:
         return None
@@ -116,10 +122,13 @@ def _previous_text(
         if e[0] == side and e[1] == utt_num:
             cur_pos = i
             break
-    if cur_pos is None or cur_pos == 0:
+    if cur_pos is None:
         return None
-    prev_side, prev_utt, _, _ = merged[cur_pos - 1]
-    return text_idx.get((call_id, prev_side, prev_utt))
+    for j in range(cur_pos - 1, -1, -1):
+        prev_side, prev_utt, _, _ = merged[j]
+        if prev_side != side:
+            return text_idx.get((call_id, prev_side, prev_utt))
+    return None
 
 
 def _fmt(v: int | None) -> str:

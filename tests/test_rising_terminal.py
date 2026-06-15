@@ -5,6 +5,8 @@ pyin can occasionally return too few voiced frames on synthetic tones; those
 cases are skipped rather than asserted, so the test validates DIRECTION
 (rising → 1, flat/falling → 0) without being flaky.
 """
+import csv
+
 import numpy as np
 import pytest
 
@@ -103,3 +105,46 @@ def test_too_short_window_none(tmp_path):
     p = tmp_path / "tiny.wav"
     _write(p, _glide_samples(180, 180, 0.03))  # shorter than one pyin frame
     assert extract_rising_terminal(p) == (None, None)
+
+
+def test_cache_recomputes_empty_flag_rows(tmp_path, monkeypatch):
+    """A cached unjudgeable ('' flag) row is recomputed; a settled row is reused.
+
+    Freezing the original not-at-random missingness is the §3 fix-3 failure mode.
+    """
+    from swb_extract.features import rising_terminal as rt
+    from swb_extract.manifest import manifest_path, open_appender, write_row
+
+    out = tmp_path / "utterances_v2"
+    mp = manifest_path(out)
+    rel_empty = "200/sw2001A-U0002.wav"
+    rel_done = "200/sw2001B-U0004.wav"
+    with open_appender(mp) as w:
+        write_row(w, rel_empty, "")
+        write_row(w, rel_done, "")
+
+    out_csv = out / "features" / "rising_terminal.csv"
+    out_csv.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_csv, "w", newline="") as f:
+        wr = csv.writer(f)
+        wr.writerow(rt.HEADER)
+        wr.writerow([rel_empty, "", ""])      # prior run: unjudgeable
+        wr.writerow([rel_done, "0", "12.0"])  # prior run: settled
+
+    calls = []
+
+    def fake_extract(path, anchor=None):
+        calls.append(str(path))
+        return (1, 42.0)
+
+    monkeypatch.setattr(rt, "extract_rising_terminal", fake_extract)
+    troot = tmp_path / "swb_ms98_transcriptions_cleaned"
+    troot.mkdir()
+    rt.write_rising_terminal(
+        mp, out_csv, out_root=out, transcript_root=troot, workers=1
+    )
+
+    by_rel = {r[0]: r[1:] for r in csv.reader(out_csv.open())}
+    assert by_rel[rel_empty] == ["1", repr(42.0)]  # recomputed
+    assert by_rel[rel_done] == ["0", "12.0"]        # reused from cache
+    assert len(calls) == 1                          # only the empty row ran

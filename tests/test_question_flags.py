@@ -92,3 +92,54 @@ def test_write_round_trip(tmp_path):
     by_rel = {r[0]: r[1:] for r in rows[1:]}
     assert by_rel["200/sw2001A-U0002.wav"] == ["0", "0"]   # declarative
     assert by_rel["200/sw2001B-U0001.wav"] == ["1", "1"]   # question + echo of "lake"
+
+
+# --- regression: echo predecessor must be the OTHER speaker, not same-side ---
+
+
+def test_echo_ignores_same_side_predecessor(tmp_path):
+    """A self-repeats 'lake'; the cross-speaker predecessor (B) lacks it → echo 0.
+
+    The immediate chronological predecessor is A's own 'we drove to the lake',
+    which would false-fire under the old immediate-predecessor logic.
+    """
+    files = {
+        "sw2001B-ms98-a-trans.text": "sw2001B-ms98-a-0001 0.0 1.0 tell me about it\n",
+        "sw2001A-ms98-a-trans.text": (
+            "sw2001A-ms98-a-0002 1.5 5.0 we drove to the lake\n"
+            "sw2001A-ms98-a-0004 5.5 7.0 what lake\n"  # same-side predecessor
+        ),
+    }
+    root = _make_trans_root(tmp_path, files)
+    out = tmp_path / "utterances_v2"
+    mp = manifest_path(out)
+    with open_appender(mp) as w:
+        write_row(w, "200/sw2001B-U0001.wav", "tell me about it")
+        write_row(w, "200/sw2001A-U0002.wav", "we drove to the lake")
+        write_row(w, "200/sw2001A-U0004.wav", "what lake")
+    write_question_flags(mp, out / "features" / "question_flags.csv", transcript_root=root)
+    rows = list(csv.reader((out / "features" / "question_flags.csv").open()))
+    by_rel = {r[0]: r[1:] for r in rows[1:]}
+    assert by_rel["200/sw2001A-U0004.wav"] == ["1", "0"]  # question, NOT an echo
+
+
+def test_echo_reaches_across_same_side_backchannel(tmp_path):
+    """B echoes A's 'plaza' even though B's own 'mm-hmm' sits between them."""
+    files = {
+        "sw2002A-ms98-a-trans.text": "sw2002A-ms98-a-0002 0.0 3.0 we stayed at the plaza\n",
+        "sw2002B-ms98-a-trans.text": (
+            "sw2002B-ms98-a-0004 3.2 3.6 mm-hmm\n"     # B's own backchannel
+            "sw2002B-ms98-a-0006 4.0 5.0 what plaza\n"  # echoes A across it
+        ),
+    }
+    root = _make_trans_root(tmp_path, files)
+    out = tmp_path / "utterances_v2"
+    mp = manifest_path(out)
+    with open_appender(mp) as w:
+        write_row(w, "200/sw2002A-U0002.wav", "we stayed at the plaza")
+        write_row(w, "200/sw2002B-U0004.wav", "mm-hmm")
+        write_row(w, "200/sw2002B-U0006.wav", "what plaza")
+    write_question_flags(mp, out / "features" / "question_flags.csv", transcript_root=root)
+    rows = list(csv.reader((out / "features" / "question_flags.csv").open()))
+    by_rel = {r[0]: r[1:] for r in rows[1:]}
+    assert by_rel["200/sw2002B-U0006.wav"] == ["1", "1"]  # question + echo of "plaza"

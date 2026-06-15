@@ -50,6 +50,26 @@ def test_threshold_boundary():
     assert count == 1
 
 
+def test_span_uses_max_end_not_last_word(tmp_path=None):
+    # An early word ends LATE (overlapping alignment); the last-by-start word
+    # ends earlier. Span must be max-end − first-start = 5.0, not 2.0, so the
+    # 0.0-gap-but-late-end case can never push rate above 1.
+    words = [(0.0, 5.0, "loooong"), (1.0, 2.0, "b")]  # sorted by start
+    total, count, rate, mx = compute_pauses(words)
+    assert total == pytest.approx(0.0)  # word[1].start 1.0 < word[0].end 5.0 → no gap
+    assert rate == pytest.approx(0.0)
+    assert rate <= 1.0
+
+
+def test_rate_never_exceeds_one(tmp_path=None):
+    # Pause present, but an early word ends past the last word's start.
+    words = [(0.0, 4.0, "a"), (4.5, 4.6, "b")]  # gap 0.5; max end 4.6, span 4.6
+    total, count, rate, mx = compute_pauses(words)
+    assert total == pytest.approx(0.5)
+    assert rate == pytest.approx(0.5 / 4.6)
+    assert rate <= 1.0
+
+
 def _make_word_root(tmp_path: Path, files: dict[str, str]) -> Path:
     root = tmp_path / "swb_ms98_transcriptions_cleaned"
     for fname, body in files.items():
