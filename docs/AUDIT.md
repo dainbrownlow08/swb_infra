@@ -15,14 +15,17 @@
 The shape of the work, not just the count:
 
 - **The extractor pipeline is largely corrected** — FTO, laughter, personal-focus,
-  rising-terminal, and the machine-gun pitch term are all rebuilt and unit-tested (§3). **But
-  the fixes are not yet wired into the notebooks**: every analysis notebook (00–06) still loads
-  the raw `Turn Gap` and the backchannel-stripped feature CSVs. "Built" ≠ "in use" — hence the
-  large 🟡 band.
+  rising-terminal, and the machine-gun pitch term are all rebuilt and unit-tested (§3). **Most
+  fixes are not yet wired into the notebooks**: NB00–05 still load the raw `Turn Gap` and the
+  backchannel-stripped feature CSVs — but **NB06 now adopts FTO** (Jun-26), the first fix to
+  cross from "built" to "in use" (§3.1). "Built" ≠ "in use" — hence the still-large 🟡 band.
 - **NB06 delivered the first real distributional rigor** at the *corrected caller-level unit*:
   Hartigan's dip test, Horn's parallel analysis, dropped silhouette, FDR-corrected demographics
-  (§4A1, §2.8, §4B9-partial). It explicitly defers the "airtight" battery (Silverman / bootstrap-LRT
-  / skew-fit / taxometrics).
+  (§4A1, §2.8, §4B9-partial), and (Jun-26) swapped the broken `Turn Gap` for **FTO** with an
+  in-notebook distribution check (§3.1, §17). With the corrected feature, parallel analysis now
+  retains **K=2** (PC3 was a borderline keeper under the old `Turn Gap`); the unimodal-continuum
+  finding and the robust gender/education effects are unchanged. It explicitly defers the
+  "airtight" battery (Silverman / bootstrap-LRT / skew-fit / taxometrics).
 - **Still entirely ahead:** the airtight unimodality battery (§4A2–8), the whole "positive story"
   — trait stability/ICC, construct validity/CFA, mixed-effects demographics, accommodation,
   style-mismatch → call quality (§4B10, §4C, §4D) — and external replication (§4F). This matches
@@ -84,8 +87,8 @@ The soft spots a reviewer will find:
 
 The Jun 9 extractors are well-built (clean word-alignment infrastructure, every extractor unit-tested, no join fan-out, zero duplicate keys). Five things need fixing, in order:
 
-1. 🟡 **Turn Gap semantics.** It's computed against the chronological predecessor *including backchannels*, so 60.3% of gaps are negative and the median "gap" is −0.49 s. This poisons Latching (1.15% positives — near-constant) and the machine-gun composite (its "fast follow ≤0.5 s" criterion is satisfied by every negative gap). Redefine as **floor-transfer offset (FTO)**: merge consecutive same-speaker utterances into turns, exclude backchannel-only predecessors, and measure gap at genuine floor transfers (Heldner & Edlund 2010 is the standard reference — SWBD FTOs should center ~+200 ms, which would also situate your data in the turn-taking literature).
-   ↳ **Status:** Built — `src/swb_extract/features/fto.py` (+`test_fto.py`) implements merged turns, backchannel-predecessor exclusion, and gap-at-floor-transfer; `latching_flag.py` and `machine_gun_question.py` are rewired to it. **Not wired into analysis** — NB00–06 still load the raw `Turn Gap` (`turn_gap.py` kept on purpose for paper replication). Marker flips to ✅ once a notebook adopts FTO.
+1. ✅ **Turn Gap semantics.** It's computed against the chronological predecessor *including backchannels*, so 60.3% of gaps are negative and the median "gap" is −0.49 s. This poisons Latching (1.15% positives — near-constant) and the machine-gun composite (its "fast follow ≤0.5 s" criterion is satisfied by every negative gap). Redefine as **floor-transfer offset (FTO)**: merge consecutive same-speaker utterances into turns, exclude backchannel-only predecessors, and measure gap at genuine floor transfers (Heldner & Edlund 2010 is the standard reference — SWBD FTOs should center ~+200 ms, which would also situate your data in the turn-taking literature).
+   ↳ **Status:** ✅ **Wired into NB06** (2026-06-26). `src/swb_extract/features/fto.py` (+`test_fto.py`, 12 passing tests) implements merged turns, backchannel-predecessor exclusion, and gap-at-floor-transfer; **regenerated fresh** (the Jun-10 CSV was stale vs the Jun-14 algorithm — 2,703 rows / 1.26% changed on rebuild). NB06 replaces `Turn Gap` with `FTO Sec` (restricted to a [−2, +2] s response window), recomputes end-to-end, and validates the distribution (median **+0.140 s**, 37.7% overlap — §17). `latching_flag.py`/`machine_gun_question.py` are rewired to FTO at the extractor level. **NB00–05 still load the raw `Turn Gap`** (`turn_gap.py` kept on purpose for paper replication).
 2. 🟡 **One canonical table.** `tannen_features.csv` (May 9) has only topic/personal-focus/mutual-revelation; `merge_test.csv` (Jun 9, 39 cols) has everything else; and no script in the repo builds merge_test's original base columns. Write one version-controlled builder producing a single table.
    ↳ **Status:** `scripts/build_tannen_features.py` (version-controlled) builds the dim-1–2 slice only (5 cols: manifest + topic + personal-focus + mutual-revelation). The 39-col `merge_test.csv` base still has no from-source builder; `build_merge_test.py` merges new features in place onto an existing base. Two tables remain un-unified.
 3. 🟡 **Degenerate features.** `personal_focus_score`: 54.7% NaN and 64.6% of defined values exactly 0.0 or 1.0 — Empath saturates on short utterances; aggregate to speaker level over content words, or replace with a pronoun+lexicon score over a minimum-token window. `rising_terminal`: 68.5% missing **not at random** (short/unvoiced tails), and `build_merge_test.py` fills NaN→0, conflating "unmeasurable" with "not rising."
@@ -137,8 +140,8 @@ This is the core of your ask. Organized from "makes the current claim rigorous" 
     ↳ **Status:** Not started. `rating_tab.csv` is on disk but no notebook joins it.
 16. ⬜ **Topic as within-speaker manipulation.** Join `topic_label` (built, never used). Topics differ in personal focus (the prompts in `topic_tab.csv` are classifiable); each caller appears across multiple topics. Test whether speakers shift toward involvement on personal topics *within caller* — Tannen predicts yes; it also doubles as the topic control for all demographic claims.
     ↳ **Status:** Not started — `topic_label.csv` is built but still never joined (same gap as §2.6).
-17. ⬜ **Ground turn-gap distributions in the turn-taking literature** (Levinson & Torreira 2015; Heldner & Edlund 2010): after the FTO fix, your gap distribution should reproduce the canonical unimodal ~+200 ms shape with an overlap tail — a free external-validity check that also retroactively explains the paper's −4 s nonsense.
-    ↳ **Status:** Blocked on wiring FTO (§3.1) into analysis — `fto.py` exists but no notebook plots/validates its distribution yet.
+17. ✅ **Ground turn-gap distributions in the turn-taking literature** (Levinson & Torreira 2015; Heldner & Edlund 2010): after the FTO fix, your gap distribution should reproduce the canonical unimodal ~+200 ms shape with an overlap tail — a free external-validity check that also retroactively explains the paper's −4 s nonsense.
+    ↳ **Status:** ✅ Done in NB06 **Step 1b** (2026-06-26). The regenerated FTO distribution reproduces the canonical shape — median **+0.140 s**, **37.7%** overlap, a single mode just after zero, 91% within [−1, +2] s — plotted against the Heldner & Edlund ~+200 ms reference. Retroactively explains the legacy −4 s nonsense.
 
 ### E. Feature gaps still worth closing (from your map, re-prioritized)
 
@@ -159,7 +162,7 @@ Highest theory-per-effort first:
 ## 5. Suggested order of work
 
 1. 🟡 **Fixes** (days): FTO turn gap; one canonical table; backchannel classifier validated on NXT dialAct; caller dedup; laughter counter; filled-pause split.
-   ↳ FTO ✅ built / ⬜ not wired · canonical table 🟡 · caller dedup ✅ · laughter ✅ built / ⬜ not merged · backchannel-vs-NXT ⬜ · filled-pause split ⬜.
+   ↳ FTO ✅ built / ✅ wired in NB06 · canonical table 🟡 · caller dedup ✅ · laughter ✅ built / ⬜ not merged · backchannel-vs-NXT ⬜ · filled-pause split ⬜.
 2. 🟡 **The unimodality battery** (1–2 weeks): dip + Silverman + bootstrap-LRT + skew-fit comparison + multivariate clusterability + recovery simulation + multiverse grid. This is the defensible core of the "continuum" paper.
    ↳ dip ✅ + parallel analysis ✅ (NB06) · Silverman / bootstrap-LRT / skew-fit / multivariate / recovery / multiverse all ⬜.
 3. ⬜ **The positive story** (2–4 weeks): ICC trait stability; CFA of the involvement construct; mixed-model demographics; accommodation; mismatch → rating_tab quality.
