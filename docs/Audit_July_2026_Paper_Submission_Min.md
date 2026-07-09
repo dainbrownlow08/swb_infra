@@ -133,10 +133,11 @@ scipy 1.17.1 (`jf_skew_t`) — sklearn suffices for the classifiers; zero new de
 A task is **done** when its gate passes, FEATURES.md/AUDIT.md reflect it (project `CLAUDE.md`
 rule), and a checkpoint commit is proposed to Dain.
 
-- [ ] **T0 — checkpoint commit.** The 6/29 reorg is still uncommitted; commit everything on
+- [x] **T0 — checkpoint commit.** _Done 2026-07-09, `fa7b635`._ The 6/29 reorg is still uncommitted; commit everything on
   `audit-fixes-interactional-extractors` (incl. this file). _Gate:_ clean `git status`.
-- [ ] **T1 — `stats_modality.py` + tests**, Q1 spec verbatim. _Gate:_ pytest green
-  (planted structure detected, planted null passed).
+- [x] **T1 — `stats_modality.py` + tests**, Q1 spec verbatim. _Gate:_ pytest green
+  (planted structure detected, planted null passed). _Done 2026-07-09: 15 known-answer tests,
+  3.5 s (`python3 -m pytest tests/test_stats_modality.py`)._
 - [ ] **T2 — Phase-0 refactor** (Q2): `build_unit_table` + `run_pca` in-notebook. _Gate:_
   identical headline numbers (487 callers, PC1 42.5%, K=2, dip p .994/.993, ΔBIC(2−1)=+11).
 - [ ] **T3 — NB07 Step 11: trust evidence** per Delta 3 + capstone self-check in Step 10.

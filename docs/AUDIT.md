@@ -11,7 +11,7 @@
 
 ## Progress dashboard
 
-**~7 done · ~7 partial · ~30 not started.**
+**~7 done · ~10 partial · ~27 not started.** _(7/9: §4A2–4 ⬜→🟡 — modality stack built + tested, not yet run.)_
 
 The shape of the work, not just the count:
 
@@ -111,11 +111,12 @@ This is the core of your ask. Organized from "makes the current claim rigorous" 
 
 1. ✅ **Hartigan's dip test** (`pip install diptest`) on PC0/PC1/F3 at utterance, side, and caller level — the standard test of unimodality, replacing KDE eyeballing. Report dip statistic + bootstrap p for every axis in a single table.
    ↳ **Status:** Done in NB06 (cell 11) at caller level on the 3 retained PCs (dip p = 0.96/0.93/0.99). Not yet run at utterance/side level or on F3.
-2. ⬜ **Silverman's bandwidth test** (critical-bandwidth bootstrap) as the complementary mode test — dip and Silverman together are the accepted pair.
-3. ⬜ **Parametric bootstrap likelihood-ratio test for k=1 vs k=2** (simulate from the fitted 1-component model, refit both, build the LR null — ~30 lines with sklearn; `mclustBootstrapLRT` in R if you want the citable canonical version). This is the direct, correct answer to "but BIC picked k=2."
-   ↳ **Status:** NB06 keeps a single GMM **BIC** line (ΔBIC +10) only — that is model selection, not the bootstrap LR null this item asks for.
-4. ⬜ **Fit a single skew-normal / skew-t / lognormal against the 2-Gaussian mixture** (scipy `skewnorm`/`skewt` MLE; `mixsmsn` in R for skewed mixtures). If one skewed component beats two Gaussians on BIC — very likely given PC0 skew +0.49 — the k=2 BIC result is formally explained as skew-fitting, not types. *This single analysis closes your biggest vulnerability.*
-   ↳ **Status:** Not started. Highest-leverage single gap (resolves §2.2); NB06 measures PC1 skew +0.49 / excess-kurt +0.91 but fits no skewed alternative.
+2. 🟡 **Silverman's bandwidth test** (critical-bandwidth bootstrap) as the complementary mode test — dip and Silverman together are the accepted pair.
+   ↳ **Status:** `silverman_test` built + known-answer-tested in `src/swb_extract/stats_modality.py` (2026-07-09, submission-plan T1): Gaussian kernel, variance-preserving smoothed bootstrap, Hall & York conservatism noted in the docstring. Not yet run on data → NB07 Step 18.
+3. 🟡 **Parametric bootstrap likelihood-ratio test for k=1 vs k=2** (simulate from the fitted 1-component model, refit both, build the LR null — ~30 lines with sklearn; `mclustBootstrapLRT` in R if you want the citable canonical version). This is the direct, correct answer to "but BIC picked k=2."
+   ↳ **Status:** `gmm_blrt` (McLachlan 1987) built + known-answer-tested in `stats_modality.py` (2026-07-09, T1); not yet run on data → NB07 Step 18. Until then NB06/NB07 still carry only the BIC line — model selection, not the test.
+4. 🟡 **Fit a single skew-normal / skew-t / lognormal against the 2-Gaussian mixture** (scipy `skewnorm`/`skewt` MLE; `mixsmsn` in R for skewed mixtures). If one skewed component beats two Gaussians on BIC — very likely given PC0 skew +0.49 — the k=2 BIC result is formally explained as skew-fitting, not types. *This single analysis closes your biggest vulnerability.*
+   ↳ **Status:** `fit_family_bic` (norm / skewnorm / lognorm / `jf_skew_t` vs GMM(1)/GMM(2)) built + known-answer-tested in `stats_modality.py` (2026-07-09, T1); not yet run on data — the side-level run (the ΔBIC −110 site, §2.2) lands in NB07 Step 18.
 5. ⬜ **Multivariate clusterability, not just 1-D projections.** Unimodal PCs don't preclude structure elsewhere in the 19-dim space. Run the dip test on pairwise distances, the Hopkins statistic, and the gap statistic against a proper null (PCA-shaped Gaussian reference). "No clusters in the full feature space" is a much stronger claim than "no clusters on PC0."
 6. ⬜ **Taxometric analysis — the centerpiece I'd recommend.** Types-vs-continuum is a solved methodological problem in psychopathology research: Meehl's MAXEIG/MAMBAC/L-Mode with the **Comparison Curve Fit Index** (CCFI < 0.45 ⇒ dimensional; `RTaxometrics` in R; MAMBAC is simple enough to hand-roll in Python). Nobody in the conversational-style literature has applied taxometrics. With 543 callers (or 3,595 sides) and your indicator set, this is feasible and would be a publishable methods contribution on its own: "Conversational style is dimensional, not taxonic."
    ↳ **Status:** Not started — named as deferred in NB06's recorded conclusion ("the airtight version still needs the dip/BLRT/taxometric battery"). _Briefly deferred from the submission plan on time cost (2026-07-08); **reinstated 2026-07-09** when time cost was dropped as a scoping criterion — in scope as Paper-Submission Min **T12** (`taxometrics.py` + NB07 Step 20), including a side-level gold-involvement-indicator variant (taxometrics on human-annotated involvement behaviors — no prior art in the conversational-style literature)._
@@ -167,7 +168,7 @@ Highest theory-per-effort first:
 1. 🟡 **Fixes** (days): FTO turn gap; one canonical table; backchannel classifier validated on NXT dialAct; caller dedup; laughter counter; filled-pause split.
    ↳ FTO ✅ built / ✅ wired in NB06 · canonical table 🟡 (builder ✅ built + CLI-wired; **cutover begun — NB07 reads the loader**; §4A battery + `merge_test` retirement + trust walkthrough remain) · caller dedup ✅ · laughter ✅ built / ⬜ not merged · backchannel-vs-NXT ⬜ · filled-pause split ⬜.
 2. 🟡 **The unimodality battery** (1–2 weeks): dip + Silverman + bootstrap-LRT + skew-fit comparison + multivariate clusterability + recovery simulation + multiverse grid. This is the defensible core of the "continuum" paper.
-   ↳ dip ✅ + parallel analysis ✅ (NB06) · Silverman / bootstrap-LRT / skew-fit / multivariate / recovery / multiverse all ⬜.
+   ↳ dip ✅ + parallel analysis ✅ (NB06) · Silverman / bootstrap-LRT / skew-fit 🟡 (`stats_modality.py` built + tested 7/9; runs land in NB07 Step 18) · multivariate / recovery / multiverse ⬜ · taxometrics ⬜ (reinstated 7/9 → T12).
 3. ⬜ **The positive story** (2–4 weeks): ICC trait stability; CFA of the involvement construct; mixed-model demographics; accommodation; mismatch → rating_tab quality.
    ↳ Nothing started; this is the largest untouched block and the audit's highest-value avenues (§4B10, §4C11, §4D15).
 4. 🟡 **Feature expansion** (ongoing, dimension-at-a-time per your preference): overlap split, voice quality, marked shifts, speaker aggregates.
