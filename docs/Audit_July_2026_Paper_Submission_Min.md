@@ -138,8 +138,10 @@ rule), and a checkpoint commit is proposed to Dain.
 - [x] **T1 — `stats_modality.py` + tests**, Q1 spec verbatim. _Gate:_ pytest green
   (planted structure detected, planted null passed). _Done 2026-07-09: 15 known-answer tests,
   3.5 s (`python3 -m pytest tests/test_stats_modality.py`)._
-- [ ] **T2 — Phase-0 refactor** (Q2): `build_unit_table` + `run_pca` in-notebook. _Gate:_
+- [x] **T2 — Phase-0 refactor** (Q2): `build_unit_table` + `run_pca` in-notebook. _Gate:_
   identical headline numbers (487 callers, PC1 42.5%, K=2, dip p .994/.993, ΔBIC(2−1)=+11).
+  _Done 2026-07-09: full rerun, 22/22 printed-output checks identical (incl. loadings + FDR
+  table); Conclusion carries the reconciliation block + the P1 step convention._
 - [ ] **T3 — NB07 Step 11: trust evidence** per Delta 3 + capstone self-check in Step 10.
   _Gate:_ checks pass; registry rows moved; counts/date bumped.
 - [ ] **T4 — `nxt.py` + `tests/test_nxt.py`** (truncated-real-file fixtures; parses dialAct +
