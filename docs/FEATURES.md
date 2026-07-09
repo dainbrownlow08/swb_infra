@@ -15,9 +15,10 @@
 > distribution sanity check + ideally the NXT-gold check, audit §4C). See
 > `docs/PIPELINE.md` for the add-a-feature and recompute procedure.
 >
-> _Last reviewed: 2026-07-09 (NB07 Step 11 trust adjudication, submission plan T3 —
-> 26 rows promoted on printed evidence; per-utterance Personal Focus Score
-> deprecated). Counts: 43 Trusted · 6 WIP · 5 Deprecated. Live dashboard:
+> _Last reviewed: 2026-07-09 (NB07 Step 14, submission plan T6 — the two overlap-split
+> columns added as WIP pre-rebuild and promoted to Trusted on the pre-registered gold
+> checks; earlier same day: Step 11 trust adjudication, 26 rows promoted, per-utterance
+> Personal Focus Score deprecated). Counts: 45 Trusted · 6 WIP · 5 Deprecated. Live dashboard:
 > `python3 -c "import sys;sys.path.insert(0,'src');from
 > swb_extract import registry as R;print(R.summary())"`._
 
@@ -42,7 +43,9 @@
 | Backchannel Flag | fto.py | interactional | lexical allowlist — corpus-wide agreement with the notebook is_bc verified (NB07 Step 11); allowlist measured vs NXT gold (Step 12): P .842 / R .917 on primary {b}, F1 .878 |
 | Interjection Flag | fto.py | interactional | contained other-speaker utterance (no floor transfer); rides tests/test_fto.py; lexical-allowlist heuristic — NXT gold P/R pending (§4C12) |
 | Latching Flag | latching_flag.py | interactional | Latching=1 ⇒ raw FTO ∈ [0, 0.2] s verified corpus-wide at 0 violations AFTER Step 11 caught a stale pre-Jun-26-FTO vintage (1,333/214,204 rows corrected on re-extraction 2026-07-09); 17.9% of defined transfers latched; LATCH_MAX_SEC=0.2 documented + sweepable |
-| Overlap Duration Sec | overlap.py | interactional | word-level intervals; cooperative/obstructive split → overlap_split extractor (§4E-a, submission plan T6) |
+| Overlap Duration Sec | overlap.py | interactional | word-level intervals; cooperative/obstructive split = the overlap_split extractor (§4E-a, landed T6) |
+| Cooperative Overlap Count | overlap_split.py | interactional | coop/obstr split on merged FTO turns (§4E-a, Delta 7d); W=1.0s fixed in advance; bc-only overlaps cooperative by definition; PROMOTED on NB07 Step 14 gold checks (2026-07-09): gold-`b` overlap events 98.1% cooperative (bar 90); `+`-continuation floor retention across intervening talk 73.2% (bar 70) |
+| Obstructive Overlap Count | overlap_split.py | interactional | floor-taking overlap where the holder ceded within W=1.0s of onset ("successful interruption"); 31.7% of the 74,550 corpus-wide overlap events; caller `obstructive_overlap_share` = the involvement-panel variable (Step 16); see Cooperative Overlap Count |
 | Overlap Count | overlap.py | interactional | 0% null among placeable; verified vs negative-FTO coherence (NB07 Step 11) |
 | Overlap Onset Flag | overlap.py | interactional | onset-in-overlap coheres with FTO<0 at transfers (NB07 Step 11) |
 | Within Pause Total Sec | within_utterance_pauses.py | interactional | sums ALL positive inter-word gaps (Count only ≥0.25 s — so Count=0 does NOT imply Total=0); invariants verified corpus-wide (NB07 Step 11); zero-inflated |

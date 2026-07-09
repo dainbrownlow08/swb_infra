@@ -11,7 +11,7 @@
 
 ## Progress dashboard
 
-**~7 done · ~11 partial · ~26 not started.** _(7/9: §4A2–4 ⬜→🟡 — modality stack built + tested, not yet run; §4C12 ⬜→🟡 — gold layer live, allowlist + question flag measured.)_
+**~8 done · ~11 partial · ~25 not started.** _(7/9: §4A2–4 ⬜→🟡 — modality stack built + tested, not yet run; §4C12 ⬜→🟡 — gold layer live, allowlist + question flag measured; §4E-a ⬜→✅ — overlap split extracted, in the table, adjudicated Trusted on gold checks.)_
 
 The shape of the work, not just the count:
 
@@ -151,7 +151,8 @@ This is the core of your ask. Organized from "makes the current claim rigorous" 
 
 Highest theory-per-effort first:
 
-- ⬜ **(a) Cooperative vs obstructive overlap** — the split your `overlap.py` explicitly deferred; operationalize as overlap after which the original speaker retains vs loses the floor — this is *the* HI-diagnostic distinction. _(Still deferred in `overlap.py`.)_
+- ✅ **(a) Cooperative vs obstructive overlap** — the split your `overlap.py` explicitly deferred; operationalize as overlap after which the original speaker retains vs loses the floor — this is *the* HI-diagnostic distinction.
+  ↳ **Status:** ✅ Done 2026-07-09 (submission plan T6). `src/swb_extract/features/overlap_split.py` (+11 unit tests) classifies every overlap event on the merged FTO turn walk (`fto.build_turn_events`, factored out so FTO and the split share one state machine): backchannel-only → cooperative by definition; contained interjection → cooperative; floor-taking overlap → obstructive iff the holder ceded within the pre-registered W=1.0 s. Corpus-wide: 74,550 events, 31.7% obstructive. **In the table and adjudicated Trusted** on NB07 Step 14's pre-registered gold checks: overlapping gold-`b` events 98.1% cooperative (bar 90); `+`-continuation floor retention across intervening talk 73.2% (bar 70) — the latter doubling as the promised gold check of `fto.py`'s turn-merging. `obstructive_overlap_share` feeds the involvement panel (Step 16).
 - ✅ **(b) Laughter counter** (map #17, trivial, dim 9 currently empty). _(Done: `laughter.py` — see §3.5; note it is built but not yet merged into the analysis tables.)_
 - ⬜ **(c) Filled-pause vs discourse-marker split** (map #2 — the two halves of your current filler rate have *opposite* theoretical signs and are cancelling). _(`filler_word_rate.py` still one bucket.)_
 - ⬜ **(d) Voice quality** — jitter/shimmer/HNR/H1–H2 via `praat-parselmouth` or openSMILE eGeMAPS (both open-source; dim 2d has zero columns).
@@ -172,7 +173,7 @@ Highest theory-per-effort first:
 3. ⬜ **The positive story** (2–4 weeks): ICC trait stability; CFA of the involvement construct; mixed-model demographics; accommodation; mismatch → rating_tab quality.
    ↳ Nothing started; this is the largest untouched block and the audit's highest-value avenues (§4B10, §4C11, §4D15).
 4. 🟡 **Feature expansion** (ongoing, dimension-at-a-time per your preference): overlap split, voice quality, marked shifts, speaker aggregates.
-   ↳ laughter ✅ · overlap split / voice quality / marked shifts / speaker aggregates all ⬜ (the last is now unblocked).
+   ↳ laughter ✅ · **overlap split ✅ (T6, in the table + Trusted)** · voice quality / marked shifts / speaker aggregates ⬜ (the last is now unblocked).
 5. ⬜ **Replication** (later): Fisher / CallHome / CANDOR.
 
 One framing note for the eventual write-up: be careful to claim **unimodal/dimensional**, not "normal." Normality is neither necessary (a skewed continuum is still a continuum) nor sufficient (two heavily overlapping latent types can produce a unimodal, even Gaussian-looking, observed distribution — which is exactly why the taxometrics and reliability analyses in §A6 and §B10 are what make the claim airtight, not the histograms). Framed that way — *dimensional structure, stable individual differences, dyadic accommodation, and mismatch costs* — the unimodal result isn't the boring outcome; it's the corrected foundation Tannen's continuum language always implied.

@@ -85,6 +85,24 @@ HEADER = (
 Result = tuple[float | None, float | None, int, int, int]
 FtoIndex = dict[tuple[int, str, int], Result]
 
+# Turn-walk event kinds. The walk itself (build_turn_events) is the single
+# source of truth for the merged-turn state machine; build_fto_index and the
+# overlap_split extractor are both thin views over it, so their turn logic
+# cannot drift apart.
+FIRST = "first"  # first substantive utterance of the conversation
+CONT = "cont"  # same-side continuation (incl. the holder's own bc-like tokens)
+BC = "bc"  # listener backchannel — never takes, extends, or breaks a turn
+INTERJ = "interj"  # contained substantive utterance the holder talked through
+TRANSFER = "transfer"  # genuine floor transfer
+
+# Event = (kind, start, end, ref_end, lex_bc): word-tight bounds, plus the
+# reference time the classification was made against — the holder's running
+# turn end at onset (BC/INTERJ/TRANSFER; None for a conversation-initial BC),
+# the speaker's own previous substantive end (CONT; None if none), None for
+# FIRST. lex_bc = the lexical-allowlist flag for same-side rows.
+Event = tuple[str, float, float, float | None, int]
+EventIndex = dict[tuple[int, str, int], Event]
+
 
 def _word_tight_bounds(
     rows: list[WordRow] | None, trans_start: float, trans_end: float
@@ -94,12 +112,12 @@ def _word_tight_bounds(
     return rows[0][0], max(end for _start, end, _tok in rows)
 
 
-def build_fto_index(transcript_root: Path) -> FtoIndex:
-    """Classify every well-formed utterance and time the floor transfers."""
+def build_turn_events(transcript_root: Path) -> EventIndex:
+    """Walk each conversation's merged-turn chronology, classifying every utterance."""
     chrono = build_turn_gap_index(transcript_root)
     texts = build_text_index(transcript_root)
     words = build_word_index(transcript_root)
-    idx: FtoIndex = {}
+    idx: EventIndex = {}
     for call_id, merged in chrono.items():
         # The chrono merge is ordered by trans bounds, but every turn decision
         # below uses word-tight bounds — and trans bounds carry silence padding
@@ -121,27 +139,46 @@ def build_fto_index(transcript_root: Path) -> FtoIndex:
             if bc and side != cur_side:
                 # Listener backchannel (incl. conversation-initial): never
                 # starts, extends, or breaks a turn.
-                idx[key] = (None, None, 0, 1, 0)
+                ref = cur_turn_end if cur_side is not None else None
+                idx[key] = (BC, start, end, ref, 1)
                 continue
             if cur_side is None:
                 # First substantive utterance of the conversation: opens a
                 # turn, but there is no previous turn to measure against.
-                idx[key] = (None, None, 1, 0, 0)
+                idx[key] = (FIRST, start, end, None, 0)
                 cur_side, cur_turn_end = side, end
             elif side == cur_side:
-                onset = start - last_sub_end[side] if side in last_sub_end else None
-                idx[key] = (None, onset, 0, 1 if bc else 0, 0)
+                idx[key] = (CONT, start, end, last_sub_end.get(side), 1 if bc else 0)
                 cur_turn_end = max(cur_turn_end, end)
             elif end <= cur_turn_end:
                 # Substantive but the holder talked through it: within-speech
-                # interjection, not a floor transfer. Onset is the (negative)
-                # offset into the holder's ongoing turn.
-                idx[key] = (None, start - cur_turn_end, 0, 0, 1)
+                # interjection, not a floor transfer.
+                idx[key] = (INTERJ, start, end, cur_turn_end, 0)
             else:
-                fto = start - cur_turn_end
-                idx[key] = (fto, fto, 1, 0, 0)
+                idx[key] = (TRANSFER, start, end, cur_turn_end, 0)
                 cur_side, cur_turn_end = side, end
             last_sub_end[side] = max(last_sub_end.get(side, 0.0), end)
+    return idx
+
+
+def build_fto_index(transcript_root: Path) -> FtoIndex:
+    """Classify every well-formed utterance and time the floor transfers."""
+    events = build_turn_events(transcript_root)
+    idx: FtoIndex = {}
+    for key, (kind, start, _end, ref, lex_bc) in events.items():
+        if kind == BC:
+            idx[key] = (None, None, 0, 1, 0)
+        elif kind == FIRST:
+            idx[key] = (None, None, 1, 0, 0)
+        elif kind == CONT:
+            onset = start - ref if ref is not None else None
+            idx[key] = (None, onset, 0, lex_bc, 0)
+        elif kind == INTERJ:
+            # Onset is the (negative) offset into the holder's ongoing turn.
+            idx[key] = (None, start - ref, 0, 0, 1)
+        else:  # TRANSFER
+            fto = start - ref
+            idx[key] = (fto, fto, 1, 0, 0)
     return idx
 
 
