@@ -11,7 +11,7 @@
 
 ## Progress dashboard
 
-**~8 done · ~11 partial · ~25 not started.** _(7/9: §4A2–4 ⬜→🟡 — modality stack built + tested, not yet run; §4C12 ⬜→🟡 — gold layer live, allowlist + question flag measured; §4E-a ⬜→✅ — overlap split extracted, in the table, adjudicated Trusted on gold checks.)_
+**~8 done · ~12 partial · ~24 not started.** _(7/9: §4A2–4 ⬜→🟡 — modality stack built + tested, not yet run; §4C12 ⬜→🟡 — gold layer live, allowlist + question flag measured; §4E-a ⬜→✅ — overlap split extracted, in the table, adjudicated Trusted on gold checks; §4E-g ⬜→🟡 — gold quotation rate in the Step-17 panel.)_
 
 The shape of the work, not just the count:
 
@@ -158,7 +158,8 @@ Highest theory-per-effort first:
 - ⬜ **(d) Voice quality** — jitter/shimmer/HNR/H1–H2 via `praat-parselmouth` or openSMILE eGeMAPS (both open-source; dim 2d has zero columns).
 - ⬜ **(e) Marked-shift dynamics** — pitch slope per syllable, reset counts, contour entropy instead of static moments (your map's own closing argument); validate against the NXT accent/break gold subset. _(`pitch.py` still static moments only.)_
 - ⬜ **(f) Speaker-level aggregates** (map #29–33: silence ratio, overlap-initiation rate, persistence, narrative share, humor rate) — cheap groupbys once FTO and laughter exist. _(FTO + laughter now exist, so this is unblocked.)_
-- ⬜ **(g) The Ch.5 narrative block** (#25–28) last — heaviest lift, save for after the distributional paper.
+- 🟡 **(g) The Ch.5 narrative block** (#25–28) last — heaviest lift, save for after the distributional paper.
+  ↳ **Status:** 🟡 The quotation / constructed-dialogue slice is now measured (2026-07-09, NB07 Step 17, T9): gold `^q`/`(^q)` rate (1,280 timed events) is a gold-involvement-panel variable — Tannen's signature narrative-involvement device, human-annotated. The full #25–28 feature block (story detection, narrative share, etc.) remains unbuilt.
 
 ### F. External validity
 
