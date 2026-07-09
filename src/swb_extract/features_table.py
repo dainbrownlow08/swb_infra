@@ -20,7 +20,7 @@ poisoned the legacy pipeline cannot happen here. Duplicate value-column names
 across feature CSVs are likewise refused. stdlib csv only; runs under either
 python environment; O(1) memory.
 
-Output: utterances_v2/features_table.csv
+Output: utterances_v2/derived/features_table.csv
 """
 from __future__ import annotations
 
@@ -116,7 +116,7 @@ def build_table(
 
 def run(args) -> int:
     out_root = Path(args.out_root)
-    output_csv = out_root / OUTPUT_NAME
+    output_csv = out_root / "derived" / OUTPUT_NAME
     n_rows, n_cols = build_table(
         manifest_path(out_root), out_root / "features", output_csv
     )

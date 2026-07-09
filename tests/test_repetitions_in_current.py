@@ -35,6 +35,15 @@ def test_count_pair_repetitions_multiple_words():
     assert count_pair_repetitions(["x", "y", "x", "y", "x"]) == 4
 
 
+def test_pair_count_quadratic_tail_exceeds_token_count():
+    # Boundary pin (AUDIT.md C1 Tier 1): the pair count is quadratic in massed
+    # repeats — C(n, 2) — so the column can legitimately exceed token_count.
+    # 15 repeats of one word = 105 pairs from 15 tokens, which is why the
+    # observed max 109 > max token_count 81 is BY DESIGN, not a counting bug.
+    assert count_pair_repetitions(["uh"] * 15) == 105
+    assert compute(" ".join(["uh"] * 15)) == 105
+
+
 def test_compute_strips_whole_brackets():
     # Two [noise] tokens would otherwise become a fake repetition; they're stripped.
     assert compute("[noise] the the") == 1
