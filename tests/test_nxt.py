@@ -17,6 +17,7 @@ from swb_extract.nxt import (
     load_dialacts,
     load_disfluencies,
     load_terminal_times,
+    load_terminal_words,
     parse_tag,
 )
 
@@ -60,6 +61,12 @@ def test_load_terminal_times_skips_untimed_elements():
     assert "s1_2" not in times  # punc: no times
     assert "s2_2" not in times  # sil: no times
     assert len(times) == 5
+
+
+def test_load_terminal_words_orth_in_document_order():
+    words = load_terminal_words(2005, "A", xml_root=FIXTURES)
+    assert words[0] == ("s1_1", "Okay", 0.8, 1.28)
+    assert [w[1] for w in words] == ["Okay", "Uh", "first", "I", "think"]
 
 
 # --- dialog acts ----------------------------------------------------------------

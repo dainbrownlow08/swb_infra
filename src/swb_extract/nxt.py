@@ -110,6 +110,31 @@ def load_terminal_times(
     return times
 
 
+def load_terminal_words(
+    conv: int, side: str, xml_root: Path = NXT_XML
+) -> list[tuple[str, str, float, float]]:
+    """Timed word terminals in document order: (id, orth, start, end).
+
+    Only ``<word>`` elements with numeric times — punctuation/silence/traces
+    are excluded. The Treebank-style ``orth`` differs from ms98 tokenization
+    (contractions split, case preserved); lowercase and reconcile at use site.
+    """
+    root = ET.parse(_side_file("terminals", conv, side, xml_root)).getroot()
+    words: list[tuple[str, str, float, float]] = []
+    for el in root.iter("word"):
+        tid = el.get(f"{NITE}id")
+        orth = el.get("orth")
+        if tid is None or orth is None:
+            continue
+        try:
+            s = float(el.get(f"{NITE}start"))
+            e = float(el.get(f"{NITE}end"))
+        except (TypeError, ValueError):
+            continue
+        words.append((tid, orth, s, e))
+    return words
+
+
 @dataclass(frozen=True)
 class DialAct:
     conv: int

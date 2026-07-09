@@ -161,8 +161,13 @@ rule), and a checkpoint commit is proposed to Dain.
   **EXCLUDED** per the 0.8 bar; gold q-rate 7.83% vs 3.34%; Tier-3 marker fix declined on the
   counterfactual (+716/+471 ⇒ marginal precision ≈.60, bar unreachable); Echo vs gold `bh`
   P .209/R .025 — kept out. Classifier route = T7. §4C12 ⬜→🟡._
-- [ ] **T5 — NB07 Step 13: repetition de-conflation** (7e). _Gate:_ repair-overlap fraction +
+- [x] **T5 — NB07 Step 13: repetition de-conflation** (7e). _Gate:_ repair-overlap fraction +
   de-conflated variant + mirror correlation printed; repetition FEATURES.md notes updated.
+  _Done 2026-07-09: 0.49% terminals unassigned; extractor↔gold sanity r=.978/ρ=.974;
+  **24.5% (current) / 14.2% (previous)** of pair-repetitions repair-attributable — §4C12c
+  quantified with de-conflated variants; mirror correlations ≈0 (sparse `^m`) → self- vs
+  allo-repetition are distinct constructs; the gold mirror rate is the panel's repetition
+  variable (T9)._
 - [ ] **T6 — `features/overlap_split.py` + tests + registry rows + `swb-extract table` rebuild
   + NB07 Step 14: overlap-split validity** (7d gold checks). _Gate:_ full-notebook rerun clean
   under the stale guard with headline numbers unmoved (new columns don't touch vol11); gold
