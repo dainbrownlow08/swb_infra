@@ -1,0 +1,19 @@
+<nite:terminal_stream xmlns:nite="http://nite.sourceforge.net/" nite:id="sw2005-A-terminals">
+<word pos="UH" nite:id="s1_1" msstateID="sw2005A-ms98-a-0001-2" msstate="sw2005A-ms98-a-0001" nite:end="1.280000" nite:start="0.800000" orth="Okay">
+	<nite:pointer role="phon" href="sw2005.A.phonwords.xml#id(ms1A_pw1)"/>
+</word>
+<punc nite:id="s1_2">.</punc>
+<word pos="UH" nite:id="s2_1" msstateID="sw2005A-ms98-a-0001-3" msstate="sw2005A-ms98-a-0001" nite:end="1.500000" nite:start="1.280000" orth="Uh">
+	<nite:pointer role="phon" href="sw2005.A.phonwords.xml#id(ms1A_pw2)"/>
+</word>
+<sil nite:id="s2_2"/>
+<word pos="RB" nite:id="s2_3" msstateID="sw2005A-ms98-a-0001-4" msstate="sw2005A-ms98-a-0001" nite:end="1.985000" nite:start="1.500000" orth="first">
+	<nite:pointer role="phon" href="sw2005.A.phonwords.xml#id(ms1A_pw3)"/>
+</word>
+<word pos="PRP" nite:id="s2_21" msstateID="sw2005A-ms98-a-0003-1" msstate="sw2005A-ms98-a-0003" nite:end="10.300000" nite:start="10.000000" orth="I">
+	<nite:pointer role="phon" href="sw2005.A.phonwords.xml#id(ms1A_pw21)"/>
+</word>
+<word pos="VBP" nite:id="s2_22" msstateID="sw2005A-ms98-a-0003-2" msstate="sw2005A-ms98-a-0003" nite:end="10.600000" nite:start="10.300000" orth="think">
+	<nite:pointer role="phon" href="sw2005.A.phonwords.xml#id(ms1A_pw22)"/>
+</word>
+</nite:terminal_stream>

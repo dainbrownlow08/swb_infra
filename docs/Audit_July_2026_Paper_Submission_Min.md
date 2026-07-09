@@ -150,11 +150,17 @@ rule), and a checkpoint commit is proposed to Dain.
   (registry 43/6/5); C(n,2) boundary test added (20/20 green); RT MNAR attribution corrected
   (null RISES with length, contra docstring); capstone self-check prints NONE; headline
   numbers unchanged._
-- [ ] **T4 — `nxt.py` + `tests/test_nxt.py`** (truncated-real-file fixtures; parses dialAct +
+- [x] **T4 — `nxt.py` + `tests/test_nxt.py`** (truncated-real-file fixtures; parses dialAct +
   terminals + disfluency) **+ NB07 Step 12: gold alignment & validation** — inventory print,
   ≥50%-overlap DA→utterance matching (match rate printed, expect >90%), 7a allowlist P/R,
   7b question P/R per Delta 6 Tiers 1–3. _Gate:_ verdict lines = gold-bc membership decision,
   allowlist P/R, question admit/exclude; FEATURES.md Question/Echo notes carry measured P/R.
+  _Done 2026-07-09: 10 nxt tests green; match rate **99.2%** (544 convs ∩ manifest, 52,890
+  labelled utts). **Allowlist P .842 / R .917 / F1 .878** vs gold `b` (§2.8 defended with
+  numbers). **Question Flag P .553 / R .236** (syntactic 29% / declarative 6% / tag 3%) →
+  **EXCLUDED** per the 0.8 bar; gold q-rate 7.83% vs 3.34%; Tier-3 marker fix declined on the
+  counterfactual (+716/+471 ⇒ marginal precision ≈.60, bar unreachable); Echo vs gold `bh`
+  P .209/R .025 — kept out. Classifier route = T7. §4C12 ⬜→🟡._
 - [ ] **T5 — NB07 Step 13: repetition de-conflation** (7e). _Gate:_ repair-overlap fraction +
   de-conflated variant + mirror correlation printed; repetition FEATURES.md notes updated.
 - [ ] **T6 — `features/overlap_split.py` + tests + registry rows + `swb-extract table` rebuild
