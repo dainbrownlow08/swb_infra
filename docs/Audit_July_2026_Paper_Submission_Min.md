@@ -20,6 +20,44 @@
 > clause apply verbatim: decision rules and admission bars are fixed in advance; a discordant
 > result is recorded and investigated in place, never tuned away.
 
+## Session handoff — 2026-07-09 (T0–T5 done; **resume at T6**)
+
+State: T0–T5 complete, committed, and pushed (`fa7b635`…`c7458f0` on
+`audit-fixes-interactional-extractors`; main merged through the README update). NB07 carries
+Steps 11–13 with a reconciled Conclusion; registry = 43 Trusted / 6 WIP / 5 Deprecated; the
+Step-10 capstone self-check prints NONE; the 22-number headline regression is unchanged
+throughout. Measured so far (details in the task ticks + NB07's Conclusion): allowlist-38 vs
+gold backchannels **P .842 / R .917 / F1 .878** (99.2% DA→utterance match, 544 convs, 52,890
+labelled utts); **Question Flag P .553 / R .236 → EXCLUDED** (pre-registered bar; gold q-rate
+7.83% vs 3.34%; Tier-3 declined on the counterfactual); repetition **24.5% / 14.2%**
+repair-attributable (de-conflated variants computed; self- vs allo-repetition distinct, r≈0 —
+the panel's repetition variable is the gold mirror rate); Step 11 caught + fixed a stale FTO
+vintage in `latching_flag.csv` (1,333 rows re-extracted).
+
+**Executor notes (learned this session):**
+- **NB07 editing:** insert/patch cells with a small python-json script (existing cell ids:
+  Steps 11 = `1951f4a6`/`e8d4bcf3`/`1c886527`/`ff6bcdd4`/`461e4681`, Step 12 = `t4md`/`t4a–d`,
+  Step 13 = `t5md`/`t5a–b`, Conclusion = `c24`) — NotebookEdit demands a fresh full Read after
+  every nbconvert rewrite, which is not worth it. Execute with `cd analysis && python3 -m
+  jupyter nbconvert --to notebook --execute --inplace 07_final.ipynb` (~15–20 s currently);
+  pull outputs with a json script. New steps insert **before** Step 10 (`c22`/`c23`), which
+  stays last with the Conclusion.
+- **Kernel globals chain across steps** — later cells depend on earlier ones: `df`, `sub`,
+  `spk`, `feature_cols`, `RC`/`RP`, `build_unit_table`/`run_pca`, `CONVS`, `TRANS_ROOT`,
+  `gold`, `utt_toks`, `g13`, `prf()`, `_Counter`, `_time`. Don't rename. Any new **analysis**
+  input column must join `EXTRA_CONSUMED` (Step 10 asserts WIP∩consumed = ∅); validation-only
+  reads are exempt.
+- **Tests:** `python3 -m pytest tests/<file> -q` (framework python3; there is no standalone
+  `pytest` on PATH). Data dirs are gitignored — regenerated CSVs never get committed.
+- **Pushes:** personal SSH key only (passphrase-protected; Dain loads it if the agent is
+  empty). The `gh` CLI is the *work* account — read-only here, never a push path.
+- **T6 next** (Delta 7d + the T6 bullet): remember the registry guard — add the two new
+  overlap-split FEATURES.md rows **before** `swb-extract table`, then rebuild, full rerun,
+  reconcile. Expect the headline numbers unchanged (new columns don't touch vol11). After T6:
+  T7 classifiers (bars pre-registered: bc F1 ≥ .85, question F1 ≥ .70), T8/T9 panels, T10+
+  battery. The audit-honesty rule applies to every task: FEATURES.md/AUDIT.md updates are part
+  of the task, not a wrap-up chore.
+
 ## Scope
 
 **In:** §4A **in full** — A1–A8, incl. A6 taxometrics (reinstated 7/9c) · pooled personal focus (Pipeline Step-11 analysis
