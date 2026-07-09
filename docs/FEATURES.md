@@ -40,7 +40,7 @@
 | FTO Sec | fto.py | interactional | floor-transfer offset; 64.5% null BY DESIGN (floor transfers only); med +0.14s, matches Heldner & Edlund (audit §3.1) |
 | Onset Gap Sec | fto.py | interactional | 25.4% null = backchannels + conversation-initial turns, decomposed (NB07 Step 11); rides tests/test_fto.py |
 | Turn Initial Flag | fto.py | interactional | FTO defined ⇒ flag=1 verified corpus-wide (NB07 Step 11); rides tests/test_fto.py |
-| Backchannel Flag | fto.py | interactional | lexical allowlist — corpus-wide agreement with the notebook is_bc verified (NB07 Step 11); allowlist measured vs NXT gold (Step 12): P .842 / R .917 on primary {b}, F1 .878 |
+| Backchannel Flag | fto.py | interactional | lexical allowlist — corpus-wide agreement with the notebook is_bc verified (NB07 Step 11); allowlist measured vs NXT gold (Step 12): P .842 / R .917 on primary {b}, F1 .878; DAMSL-trained classifier (Step 15) CV F1 .888 admitted as an alternative bc_def (in-notebook mask, not a column) |
 | Interjection Flag | fto.py | interactional | contained other-speaker utterance (no floor transfer); rides tests/test_fto.py; lexical-allowlist heuristic — NXT gold P/R pending (§4C12) |
 | Latching Flag | latching_flag.py | interactional | Latching=1 ⇒ raw FTO ∈ [0, 0.2] s verified corpus-wide at 0 violations AFTER Step 11 caught a stale pre-Jun-26-FTO vintage (1,333/214,204 rows corrected on re-extraction 2026-07-09); 17.9% of defined transfers latched; LATCH_MAX_SEC=0.2 documented + sweepable |
 | Overlap Duration Sec | overlap.py | interactional | word-level intervals; cooperative/obstructive split = the overlap_split extractor (§4E-a, landed T6) |
@@ -76,7 +76,7 @@
 
 | Column | Extractor | Family | Notes |
 |---|---|---|---|
-| Question Flag | question_flags.py | interactional | VALIDATED vs NXT gold 2026-07-09 (NB07 Step 12, 52,890 labelled utts): precision .553 / recall .236 (recall by type: syntactic 29%, declarative 6%, tag 3%); gold q-rate 7.83% vs flag 3.34% — the audit's rate-gap explained; EXCLUDED from analyses per the pre-registered 0.8 bar; Tier-3 marker-skip fix declined on evidence (+716 gain vs +471 new FPs); classifier route = T7 (§4C12) |
+| Question Flag | question_flags.py | interactional | VALIDATED vs NXT gold 2026-07-09 (NB07 Step 12, 52,890 labelled utts): precision .553 / recall .236 (recall by type: syntactic 29%, declarative 6%, tag 3%); gold q-rate 7.83% vs flag 3.34% — the audit's rate-gap explained; EXCLUDED from analyses per the pre-registered 0.8 bar; Tier-3 marker-skip fix declined on evidence (+716 gain vs +471 new FPs); classifier route CLOSED 2026-07-09 (NB07 Step 15): question clf CV F1 .681 < the .70 bar → not admitted; no question_rate anywhere, gold 7.83% quoted descriptively (§4C12) |
 | Echo Question Flag | question_flags.py | interactional | adjudicated 2026-07-09 vs gold `bh` (backchannel-in-question-form): precision .209 / recall .025 — construct mismatch; keep out of analyses; gold `bh` itself is the panel variable (T9) |
 | Machine Gun Question Score | machine_gun_question.py | interactional | 49.7% null — decomposition pending (audit §3.4 / C1 Tier 4); ingredients gated on T4; FTO-derived → same stale-vintage risk Step 11 caught in latching — RE-EXTRACT before first use |
 | Machine Gun Question Flag | machine_gun_question.py | interactional | 49.7% null |
