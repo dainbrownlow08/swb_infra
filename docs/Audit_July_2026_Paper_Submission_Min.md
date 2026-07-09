@@ -142,8 +142,14 @@ rule), and a checkpoint commit is proposed to Dain.
   identical headline numbers (487 callers, PC1 42.5%, K=2, dip p .994/.993, ΔBIC(2−1)=+11).
   _Done 2026-07-09: full rerun, 22/22 printed-output checks identical (incl. loadings + FDR
   table); Conclusion carries the reconciliation block + the P1 step convention._
-- [ ] **T3 — NB07 Step 11: trust evidence** per Delta 3 + capstone self-check in Step 10.
-  _Gate:_ checks pass; registry rows moved; counts/date bumped.
+- [x] **T3 — NB07 Step 11: trust evidence** per Delta 3 + capstone self-check in Step 10.
+  _Gate:_ checks pass; registry rows moved; counts/date bumped. _Done 2026-07-09: 8 hard
+  invariants at 0 violations — after the first run **caught a stale pre-Jun-26-FTO vintage in
+  `latching_flag.csv`** (3 visible violations; 1,333 rows corrected via re-extract + table
+  rebuild + full rerun, the P1 loop). 26 rows → Trusted, per-utterance PF score → Deprecated
+  (registry 43/6/5); C(n,2) boundary test added (20/20 green); RT MNAR attribution corrected
+  (null RISES with length, contra docstring); capstone self-check prints NONE; headline
+  numbers unchanged._
 - [ ] **T4 — `nxt.py` + `tests/test_nxt.py`** (truncated-real-file fixtures; parses dialAct +
   terminals + disfluency) **+ NB07 Step 12: gold alignment & validation** — inventory print,
   ≥50%-overlap DA→utterance matching (match rate printed, expect >90%), 7a allowlist P/R,

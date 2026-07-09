@@ -15,8 +15,10 @@
 > distribution sanity check + ideally the NXT-gold check, audit §4C). See
 > `docs/PIPELINE.md` for the add-a-feature and recompute procedure.
 >
-> _Last reviewed: 2026-06-29 (initial buckets set). Counts: 17 Trusted · 33 WIP · 4
-> Deprecated. Live dashboard: `python3 -c "import sys;sys.path.insert(0,'src');from
+> _Last reviewed: 2026-07-09 (NB07 Step 11 trust adjudication, submission plan T3 —
+> 26 rows promoted on printed evidence; per-utterance Personal Focus Score
+> deprecated). Counts: 43 Trusted · 6 WIP · 5 Deprecated. Live dashboard:
+> `python3 -c "import sys;sys.path.insert(0,'src');from
 > swb_extract import registry as R;print(R.summary())"`._
 
 ## Trusted
@@ -30,7 +32,33 @@
 | loudness std | loudness.py | volume | 0% null |
 | loudness range | loudness.py | volume | 0% null |
 | Pronouns per Second | pronoun_per_second.py | volume | 0% null; per-token variant deprecated |
+| Repetitions In Current Utterance | repetitions_in_current.py | volume | pair count Σ C(n,2) BY DESIGN — max 109 > max token_count 81 is the quadratic tail (boundary test pins C(15,2)=105); full-corpus recompute reconciled (NB07 Step 11); heavy right tail — consider log1p at analysis time (audit §2.8); rhetorical-vs-disfluent unsplit (§4C12c — gold de-conflation planned) |
+| Repetitions In Previous Utterance | repetitions_in_previous.py | volume | cross-utterance pair matches vs chronological predecessor; 0.9% null = conversation-initial, verified ≤1/conversation (NB07 Step 11); same tail + de-conflation caveats as the current-utterance counter |
+| Repetitions per Second | repetition_per_second.py | volume | numerator = repetition_rate count (unique words reaching ≥2), NOT the pair count — by design per docstring; shares tokenize with the repetition family (NB07 Step 11) |
+| Filler Words per Second | filler_word_per_second.py | volume | allowlist verified vs docstring (um/uh/er + so/well/like/you know/i mean/i guess/basically, phrase-aware); filled-pause vs discourse-marker UNSPLIT — opposite theoretical signs may cancel (audit §4E-c) |
 | FTO Sec | fto.py | interactional | floor-transfer offset; 64.5% null BY DESIGN (floor transfers only); med +0.14s, matches Heldner & Edlund (audit §3.1) |
+| Onset Gap Sec | fto.py | interactional | 25.4% null = backchannels + conversation-initial turns, decomposed (NB07 Step 11); rides tests/test_fto.py |
+| Turn Initial Flag | fto.py | interactional | FTO defined ⇒ flag=1 verified corpus-wide (NB07 Step 11); rides tests/test_fto.py |
+| Backchannel Flag | fto.py | interactional | lexical allowlist — corpus-wide agreement with the notebook is_bc verified (NB07 Step 11); NXT gold P/R pending (§4C12) |
+| Interjection Flag | fto.py | interactional | contained other-speaker utterance (no floor transfer); rides tests/test_fto.py; lexical-allowlist heuristic — NXT gold P/R pending (§4C12) |
+| Latching Flag | latching_flag.py | interactional | Latching=1 ⇒ raw FTO ∈ [0, 0.2] s verified corpus-wide at 0 violations AFTER Step 11 caught a stale pre-Jun-26-FTO vintage (1,333/214,204 rows corrected on re-extraction 2026-07-09); 17.9% of defined transfers latched; LATCH_MAX_SEC=0.2 documented + sweepable |
+| Overlap Duration Sec | overlap.py | interactional | word-level intervals; cooperative/obstructive split → overlap_split extractor (§4E-a, submission plan T6) |
+| Overlap Count | overlap.py | interactional | 0% null among placeable; verified vs negative-FTO coherence (NB07 Step 11) |
+| Overlap Onset Flag | overlap.py | interactional | onset-in-overlap coheres with FTO<0 at transfers (NB07 Step 11) |
+| Within Pause Total Sec | within_utterance_pauses.py | interactional | sums ALL positive inter-word gaps (Count only ≥0.25 s — so Count=0 does NOT imply Total=0); invariants verified corpus-wide (NB07 Step 11); zero-inflated |
+| Within Pause Count | within_utterance_pauses.py | interactional | gaps ≥ PAUSE_MIN_SEC=0.25; Count≥1 ⇔ Max≥0.25 verified (NB07 Step 11) |
+| Within Pause Rate | within_utterance_pauses.py | interactional | Total/span; ≤1 verified corpus-wide (NB07 Step 11) |
+| Max Within Pause Sec | within_utterance_pauses.py | interactional | ≤ Total verified corpus-wide (NB07 Step 11) |
+| Rising Terminal Flag | rising_terminal.py | interactional | 30.3% null MNAR, voicing/length-dependent — null rate RISES with utterance length (21%→35% for ≤2→≥6 tokens; NB07 Step 11), contra the docstring's short-tails guess; do NOT fillna(0) — treat null as indeterminate |
+| Terminal F0 Slope | rising_terminal.py | interactional | clip at ±1000 Hz/s before use (bound chosen + recorded, NB07 Step 11) |
+| Laughter Count | laughter.py | interactional | full-corpus bracket reconciliation vs Transcript exact (NB07 Step 11); RATE-normalize at analysis — raw counts are a talkativeness proxy (Jun-19 audit) |
+| Laughed Word Count | laughter.py | interactional | reconciled corpus-wide (NB07 Step 11) |
+| Noise Count | laughter.py | interactional | counted before stripping (audit §3.5) |
+| Vocalized Noise Count | laughter.py | interactional | counted before stripping (audit §3.5) |
+| Other Bracket Count | laughter.py | interactional | 255 corpus-wide — negligible |
+| Personal Hits | personal_focus_score.py | tannen | raw ingredient — pool-then-ratio at unit level ONLY (coverage + non-degeneracy evidence NB07 Step 11); Empath category mapping unvalidated — carry the §4C12 caveat in any analysis |
+| Impersonal Hits | personal_focus_score.py | tannen | raw ingredient for pooling (see Personal Hits note) |
+| Analyzed Tokens | personal_focus_score.py | tannen | density basis for pooling |
 | pitch mean | pitch.py | prosody | 8% null (unvoiced); 50–400 Hz clamp; static moment only |
 | pitch std | pitch.py | prosody | 8% null |
 | pitch range | pitch.py | prosody | 8% null |
@@ -45,39 +73,12 @@
 
 | Column | Extractor | Family | Notes |
 |---|---|---|---|
-| Repetitions In Current Utterance | repetitions_in_current.py | volume | SUSPECT max 109 > max token_count 81 — verify counting unit |
-| Repetitions In Previous Utterance | repetitions_in_previous.py | volume | SUSPECT max 100; 0.9% null |
-| Repetitions per Second | repetition_per_second.py | volume | kept per-second; shares repetition logic — confirm vs the count bug |
-| Filler Words per Second | filler_word_per_second.py | volume | filled-pause vs discourse-marker not split (audit map #2) |
-| Onset Gap Sec | fto.py | interactional | 25.4% null; FTO companion |
-| Turn Initial Flag | fto.py | interactional | FTO helper classification |
-| Backchannel Flag | fto.py | interactional | FTO helper classification |
-| Interjection Flag | fto.py | interactional | FTO helper classification |
-| Latching Flag | latching_flag.py | interactional | 64.4% null (FTO-based); 17.8% latched among defined (was ~1% when broken) |
-| Overlap Duration Sec | overlap.py | interactional | cooperative/obstructive split deferred (audit §4E-a) |
-| Overlap Count | overlap.py | interactional | 0% null |
-| Overlap Onset Flag | overlap.py | interactional | 0% null |
-| Within Pause Total Sec | within_utterance_pauses.py | interactional | zero-inflated (most utts none) |
-| Within Pause Count | within_utterance_pauses.py | interactional | 0% null |
-| Within Pause Rate | within_utterance_pauses.py | interactional | 0% null |
-| Max Within Pause Sec | within_utterance_pauses.py | interactional | 0% null |
-| Question Flag | question_flags.py | interactional | rate 3.26% ~half SwDA — validate vs NXT gold (audit §4C12) |
-| Echo Question Flag | question_flags.py | interactional | 0% null |
-| Rising Terminal Flag | rising_terminal.py | interactional | 30.3% null (down from 68.5% — anchor fix worked); do NOT fillna(0) |
-| Terminal F0 Slope | rising_terminal.py | interactional | ±2000 Hz/s outliers — clip before use |
-| Machine Gun Question Score | machine_gun_question.py | interactional | 49.7% null — pitch gate may be too aggressive; per-side baseline (audit §3.4) |
+| Question Flag | question_flags.py | interactional | onset-syntax heuristic, rate 3.26% ~half SwDA — gold validation + adjudication = submission plan T4 (audit §4C12) |
+| Echo Question Flag | question_flags.py | interactional | adjudication rides T4 (gold `bh` is the direct counterpart) |
+| Machine Gun Question Score | machine_gun_question.py | interactional | 49.7% null — decomposition pending (audit §3.4 / C1 Tier 4); ingredients gated on T4; FTO-derived → same stale-vintage risk Step 11 caught in latching — RE-EXTRACT before first use |
 | Machine Gun Question Flag | machine_gun_question.py | interactional | 49.7% null |
-| Laughter Count | laughter.py | interactional | NEW (never analyzed); counted before stripping (audit §3.5) |
-| Laughed Word Count | laughter.py | interactional | 0% null |
-| Noise Count | laughter.py | interactional | 0% null |
-| Vocalized Noise Count | laughter.py | interactional | 0% null |
-| Other Bracket Count | laughter.py | interactional | 0% null |
-| Personal Hits | personal_focus_score.py | tannen | raw ingredient — pool at speaker level |
-| Impersonal Hits | personal_focus_score.py | tannen | raw ingredient for pooling |
-| Analyzed Tokens | personal_focus_score.py | tannen | density basis for pooling |
-| Personal Focus Score | personal_focus_score.py | tannen | DEGENERATE 71.5% null, saturates 0/1 — pool from hits instead (audit §3.3) |
-| Mutual Revelation Flag | mutual_revelation_flag.py | tannen | 0.9% null |
-| Topic Label | topic_label.py | meta | assigned SWBD topic; never yet joined (audit §2.6); confound for region/gender |
+| Mutual Revelation Flag | mutual_revelation_flag.py | tannen | EXCLUDED from the paper — spot-checked precision ~30–40% (Jun-19 audit); no gold rescue exists; keep out until hand-labeled |
+| Topic Label | topic_label.py | meta | assigned SWBD topic; join-validity unchecked, never yet joined (audit §2.6/§4D16 — out of submission scope) |
 
 ## Deprecated (replication only)
 
@@ -87,3 +88,4 @@
 | Pronoun Rate | pronoun_rate.py | volume | per-token variant; using Pronouns per Second instead |
 | Repetition Rate | repetition_rate.py | volume | per-token variant; using Repetitions per Second instead |
 | Filler Word Rate | filler_word_rate.py | volume | per-token variant; using Filler Words per Second instead |
+| Personal Focus Score | personal_focus_score.py | tannen | DEGENERATE per-utterance ratio — 71.5% null, saturates 0/1 (Jun-19 audit 2/10); pool the raw hit columns instead (NB07 Step 11; audit §3.3) |
