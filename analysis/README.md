@@ -15,7 +15,7 @@ frozen** (replication artifacts — never edited, never re-pointed), and
 | 04 | `04_caller_level_volume.ipynb` | Caller-level test (volume features). One row per *person*, not per conversation side — see "Unit of analysis" below. |
 | 05 | `05_caller_level_interactional.ipynb` | Caller-level test expanded with the interactional/timing features + varimax factor analysis. |
 | 06 | `06_caller_level_volume_brizan_revisions_plus.ipynb` | Caller-level volume with the Brizan revisions: `Turn Gap` → **FTO**, Hartigan's dip, Horn's parallel analysis, FDR-corrected demographics. Frozen on the 03-era CSV. |
-| 07 | `07_final.ipynb` | **The living notebook.** Rebuilds 06 on the **canonical table** via the guarded loader (reproduces 06 to within rounding), then accumulates the audit work as numbered Steps (Step 11 = trust adjudication; the §4A battery, gold suite, and taxometrics land next per `docs/Audit_July_2026_Paper_Submission_Min.md`). Steps insert before Step 10 + the Conclusion, which stay last; the Conclusion is re-reconciled at every landing. |
+| 07 | `07_final.ipynb` | **The living notebook.** Rebuilds 06 on the **canonical table** via the guarded loader (reproduces 06 to within rounding), then accumulates the audit work as numbered Steps — as of 2026-07-09 the full submission plan is landed (Steps 11–23: trust adjudication, NXT gold suite, overlap split, classifiers, F_int + panels, the §4A modality battery, clusterability, taxometrics, power, the 288-spec multiverse, and the battery summary). Steps insert before Step 10 + the Conclusion, which stay last; the Conclusion is re-reconciled at every landing. |
 
 ## Two data lines
 
@@ -61,6 +61,8 @@ version-controlled here; their data is not.
 
 ```bash
 cd analysis && python3 -m jupyter nbconvert --to notebook --execute --inplace 07_final.ipynb
+# NB: a full run takes ~55 min (Step 21's recovery arms dominate) — run it in the
+# background and don't pipe nbconvert (a pipe masks its exit code).
 ```
 
 Uses the framework `python3` (pandas / sklearn / scipy / diptest). Run from inside
