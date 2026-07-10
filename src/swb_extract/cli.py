@@ -217,6 +217,7 @@ def cmd_features(args: argparse.Namespace) -> int:
         machine_gun_question,
         mutual_revelation_flag,
         overlap,
+        overlap_split,
         personal_focus_score,
         pitch,
         pronoun_per_second,
@@ -281,6 +282,8 @@ def cmd_features(args: argparse.Namespace) -> int:
         return within_utterance_pauses.run(args)
     if args.name == overlap.FEATURE_NAME:
         return overlap.run(args)
+    if args.name == overlap_split.FEATURE_NAME:
+        return overlap_split.run(args)
     if args.name == question_flags.FEATURE_NAME:
         return question_flags.run(args)
     if args.name == rising_terminal.FEATURE_NAME:

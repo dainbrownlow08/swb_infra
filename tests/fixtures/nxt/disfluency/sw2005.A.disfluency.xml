@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<nite:disf_stream xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nite="http://nite.sourceforge.net/" nite:id="sw2005-disfs-A">
+		<disfluency nite:id="sw2005.disf.1">
+			<reparandum nite:id="sw2005.disf.1.reparandum">
+				<nite:child href="sw2005.A.terminals.xml#id(s2_21)"/>
+				<nite:child href="sw2005.A.terminals.xml#id(s2_22)"/>
+			</reparandum>
+			<repair nite:id="sw2005.disf.1.repair">
+				<nite:child href="sw2005.A.terminals.xml#id(s2_24)"/>
+			</repair>
+		</disfluency>
+</nite:disf_stream>

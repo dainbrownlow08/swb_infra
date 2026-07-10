@@ -20,6 +20,58 @@
 > clause apply verbatim: decision rules and admission bars are fixed in advance; a discordant
 > result is recorded and investigated in place, never tuned away.
 
+## Session close-out — 2026-07-09 (**T0–T15 all done — code complete**)
+
+Every task's gate passed; NB07 carries Steps 11–23 with a reconciled Conclusion incl. the T15
+close-out block (formal battery, claim scoping, shrunken limitations, gold-suite numbers +
+Delta-6 citations). Headline: **dimensional, not normal, everywhere** — side-level ΔBIC −110
+closed (skewnorm over GMM2 by 36); taxometrics CCFI .151 (dimensional, π-robust); power
+100%/0% on the deciding pair; **288/288 multiverse specs unimodal**; gold suite complete
+(allowlist P .842/R .917/F1 .878; bc classifier F1 .888 admitted; question F1 .681 excluded at
+the bar; coop/obstr split Trusted at 98.1%/73.2%; repetition 24.5%/14.2% de-conflated; gold
+involvement axis dimensional-with-skew; gold-indicator taxometrics ambiguous-on-low-validity,
+recorded). Registry 45 Trusted / 6 WIP / 5 Deprecated; capstone NONE; full pytest green (307).
+Remaining before submission: prose, figures polish, and the out-of-scope positive-story
+program. The original T0–T5 handoff below is kept for the record.
+
+## Session handoff — 2026-07-09 (T0–T5 done; **resume at T6**) — superseded, kept for the record
+
+State: T0–T5 complete, committed, and pushed (`fa7b635`…`c7458f0` on
+`audit-fixes-interactional-extractors`; main merged through the README update). NB07 carries
+Steps 11–13 with a reconciled Conclusion; registry = 43 Trusted / 6 WIP / 5 Deprecated; the
+Step-10 capstone self-check prints NONE; the 22-number headline regression is unchanged
+throughout. Measured so far (details in the task ticks + NB07's Conclusion): allowlist-38 vs
+gold backchannels **P .842 / R .917 / F1 .878** (99.2% DA→utterance match, 544 convs, 52,890
+labelled utts); **Question Flag P .553 / R .236 → EXCLUDED** (pre-registered bar; gold q-rate
+7.83% vs 3.34%; Tier-3 declined on the counterfactual); repetition **24.5% / 14.2%**
+repair-attributable (de-conflated variants computed; self- vs allo-repetition distinct, r≈0 —
+the panel's repetition variable is the gold mirror rate); Step 11 caught + fixed a stale FTO
+vintage in `latching_flag.csv` (1,333 rows re-extracted).
+
+**Executor notes (learned this session):**
+- **NB07 editing:** insert/patch cells with a small python-json script (existing cell ids:
+  Steps 11 = `1951f4a6`/`e8d4bcf3`/`1c886527`/`ff6bcdd4`/`461e4681`, Step 12 = `t4md`/`t4a–d`,
+  Step 13 = `t5md`/`t5a–b`, Conclusion = `c24`) — NotebookEdit demands a fresh full Read after
+  every nbconvert rewrite, which is not worth it. Execute with `cd analysis && python3 -m
+  jupyter nbconvert --to notebook --execute --inplace 07_final.ipynb` (~15–20 s currently);
+  pull outputs with a json script. New steps insert **before** Step 10 (`c22`/`c23`), which
+  stays last with the Conclusion.
+- **Kernel globals chain across steps** — later cells depend on earlier ones: `df`, `sub`,
+  `spk`, `feature_cols`, `RC`/`RP`, `build_unit_table`/`run_pca`, `CONVS`, `TRANS_ROOT`,
+  `gold`, `utt_toks`, `g13`, `prf()`, `_Counter`, `_time`. Don't rename. Any new **analysis**
+  input column must join `EXTRA_CONSUMED` (Step 10 asserts WIP∩consumed = ∅); validation-only
+  reads are exempt.
+- **Tests:** `python3 -m pytest tests/<file> -q` (framework python3; there is no standalone
+  `pytest` on PATH). Data dirs are gitignored — regenerated CSVs never get committed.
+- **Pushes:** personal SSH key only (passphrase-protected; Dain loads it if the agent is
+  empty). The `gh` CLI is the *work* account — read-only here, never a push path.
+- **T6 next** (Delta 7d + the T6 bullet): remember the registry guard — add the two new
+  overlap-split FEATURES.md rows **before** `swb-extract table`, then rebuild, full rerun,
+  reconcile. Expect the headline numbers unchanged (new columns don't touch vol11). After T6:
+  T7 classifiers (bars pre-registered: bc F1 ≥ .85, question F1 ≥ .70), T8/T9 panels, T10+
+  battery. The audit-honesty rule applies to every task: FEATURES.md/AUDIT.md updates are part
+  of the task, not a wrap-up chore.
+
 ## Scope
 
 **In:** §4A **in full** — A1–A8, incl. A6 taxometrics (reinstated 7/9c) · pooled personal focus (Pipeline Step-11 analysis
@@ -150,33 +202,73 @@ rule), and a checkpoint commit is proposed to Dain.
   (registry 43/6/5); C(n,2) boundary test added (20/20 green); RT MNAR attribution corrected
   (null RISES with length, contra docstring); capstone self-check prints NONE; headline
   numbers unchanged._
-- [ ] **T4 — `nxt.py` + `tests/test_nxt.py`** (truncated-real-file fixtures; parses dialAct +
+- [x] **T4 — `nxt.py` + `tests/test_nxt.py`** (truncated-real-file fixtures; parses dialAct +
   terminals + disfluency) **+ NB07 Step 12: gold alignment & validation** — inventory print,
   ≥50%-overlap DA→utterance matching (match rate printed, expect >90%), 7a allowlist P/R,
   7b question P/R per Delta 6 Tiers 1–3. _Gate:_ verdict lines = gold-bc membership decision,
   allowlist P/R, question admit/exclude; FEATURES.md Question/Echo notes carry measured P/R.
-- [ ] **T5 — NB07 Step 13: repetition de-conflation** (7e). _Gate:_ repair-overlap fraction +
+  _Done 2026-07-09: 10 nxt tests green; match rate **99.2%** (544 convs ∩ manifest, 52,890
+  labelled utts). **Allowlist P .842 / R .917 / F1 .878** vs gold `b` (§2.8 defended with
+  numbers). **Question Flag P .553 / R .236** (syntactic 29% / declarative 6% / tag 3%) →
+  **EXCLUDED** per the 0.8 bar; gold q-rate 7.83% vs 3.34%; Tier-3 marker fix declined on the
+  counterfactual (+716/+471 ⇒ marginal precision ≈.60, bar unreachable); Echo vs gold `bh`
+  P .209/R .025 — kept out. Classifier route = T7. §4C12 ⬜→🟡._
+- [x] **T5 — NB07 Step 13: repetition de-conflation** (7e). _Gate:_ repair-overlap fraction +
   de-conflated variant + mirror correlation printed; repetition FEATURES.md notes updated.
-- [ ] **T6 — `features/overlap_split.py` + tests + registry rows + `swb-extract table` rebuild
+  _Done 2026-07-09: 0.49% terminals unassigned; extractor↔gold sanity r=.978/ρ=.974;
+  **24.5% (current) / 14.2% (previous)** of pair-repetitions repair-attributable — §4C12c
+  quantified with de-conflated variants; mirror correlations ≈0 (sparse `^m`) → self- vs
+  allo-repetition are distinct constructs; the gold mirror rate is the panel's repetition
+  variable (T9)._
+- [x] **T6 — `features/overlap_split.py` + tests + registry rows + `swb-extract table` rebuild
   + NB07 Step 14: overlap-split validity** (7d gold checks). _Gate:_ full-notebook rerun clean
   under the stale guard with headline numbers unmoved (new columns don't touch vol11); gold
-  agreement rates printed; the two columns adjudicated.
-- [ ] **T7 — NB07 Step 15: classifiers** (7f). _Gate:_ grouped-CV P/R/F1 printed; admission
-  bars applied as fixed; corpus-wide predictions materialized in-notebook.
-- [ ] **T8 — NB07 Step 16: F_int (primary, Delta 2) + panel sensitivity refit (Delta 5).**
+  agreement rates printed; the two columns adjudicated. _Done 2026-07-09: turn walk factored
+  into `fto.build_turn_events` (one state machine, FTO tests green); 11 unit tests; W=1.0s
+  fixed in advance; 74,550 events, 31.7% obstructive; pre-registered checks PASSED (gold-`b`
+  overlap events 98.1% cooperative, bar 90; `+`-continuation floor retention across
+  intervening talk 73.2%, bar 70) → both columns **Trusted** (registry 45/6/5); headline
+  unchanged._
+- [x] **T7 — NB07 Step 15: classifiers** (7f). _Gate:_ grouped-CV P/R/F1 printed; admission
+  bars applied as fixed; corpus-wide predictions materialized in-notebook. _Done 2026-07-09:
+  leak-free pipelines, 5-fold GroupKFold by conversation; **bc CV F1 .888 ≥ .85 → admitted**
+  to the multiverse bc_def axis; **question CV F1 .681 < .70 → NOT admitted** (missed by .019;
+  recorded, not tuned) — no question_rate anywhere; gold 7.83% is the citable number;
+  `clf_bc_mask`/`clf_q_mask` in-notebook, no table columns._
+- [x] **T8 — NB07 Step 16: F_int (primary, Delta 2) + panel sensitivity refit (Delta 5).**
   _Gate:_ both loading tables + variance shares; "no matching factor" recorded as a finding.
-- [ ] **T9 — NB07 Step 17: gold involvement panel + gold axis** (7c). _Gate:_ FA loadings,
+  _Done 2026-07-09: **F_int MATCHED** — Horn's K=2, varimax F2 = the NB05-F3 signature (onset
+  +.84 / duration +.97, bar .4) with FTO **−.74** (the predicted sign flip); panel refit
+  stable; PF_ratio/laughter/rt_rising_share all attach ≈+.3 to the engagement factor;
+  obstructive share attaches (weakly) to the pause factor; 487/487 complete._
+- [x] **T9 — NB07 Step 17: gold involvement panel + gold axis** (7c). _Gate:_ FA loadings,
   axis identified, battery rows appended at side level (+ caller sensitivity, n printed).
-- [ ] **T10 — NB07 Step 18: the modality battery** per Q2 Step 16's matrix — {PC1, PC2
+  _Done 2026-07-09: 1,085 complete sides; Horn's K=3; gold axis = G3 (echo-q .42, appreciation
+  .43, laughter .28) by the pre-fixed rule (mean gold loading +.18, narrowly over G1's +.16 —
+  the behaviors are multi-faceted, recorded); battery: dip .989 / Silverman .091 unimodal,
+  BLRT k=2 **resolved by fit-family (jf_skew_t over GMM2 by ΔBIC 18)**; caller sensitivity
+  n=320, same pattern._
+- [x] **T10 — NB07 Step 18: the modality battery** per Q2 Step 16's matrix — {PC1, PC2
   caller · PC1 side · PC1 utterance (10-feature + turn-initial sensitivity) · F_int caller} ×
   {dip · Silverman · BLRT · fit-family (not at utterance level)}; shared BATTERY list; no FDR
   (state why). **Side-level fit-family = the ΔBIC −110 closer — verdict recorded in
   "formally explained (or not) as skew-fitting" terms.** _Gate:_ every cell has a row; B +
-  runtimes printed.
-- [ ] **T11 — NB07 Step 19: multivariate clusterability** on **four** matrices — vol11,
+  runtimes printed. _Done 2026-07-09: all six cells; dip+Silverman unimodal 10/12 rows; BLRT
+  k=2 in all cells, **every one resolved by fit-family** (caller PC1 lognorm +18 / PC2
+  jf_skew_t +12 / F_int lognorm +24; **side PC1 skewnorm +36 — the §2.2 closer, in exactly
+  those terms**); the two utterance-level Silverman rejections investigated in place (Q5):
+  tail-carried (22 rows |z|>5; 0.1% winsorize → single mode at every moderate bandwidth);
+  utterance rows at B=99 (pre-authorized)._
+- [x] **T11 — NB07 Step 19: multivariate clusterability** on **four** matrices — vol11,
   vol+interactional, vol+int+panel (caller) and the gold panel (side): dip-on-distances,
-  Hopkins vs N(0, Σ̂), gap k=1..6. _Gate:_ verdict line per matrix; BATTERY rows.
-- [ ] **T12 — `src/swb_extract/taxometrics.py` + `tests/test_taxometrics.py` + NB07 Step 20:
+  Hopkins vs N(0, Σ̂), gap k=1..6. _Gate:_ verdict line per matrix; BATTERY rows. _Done
+  2026-07-09: **gap k̂=1 and unimodal distances (dip p≈1.0) on all four**; Hopkins rejected the
+  Gaussian null everywhere (H .71–.82) — investigated in place with a shape-matched
+  Gaussian-copula null: unremarkable on vol+int (.26) and gold (.11), persists on vol11 (.046)
+  and vol+int+panel (.000) = higher-order dependence, not clusters; standing bounded
+  discordance recorded, arbitered by Step 20 (whose dimensional comparison population carries
+  the same shape — and the observed curves track it)._
+- [x] **T12 — `src/swb_extract/taxometrics.py` + `tests/test_taxometrics.py` + NB07 Step 20:
   taxometrics** (§4A6, reinstated 7/9c). Module per Q1 spec verbatim: `gen_data` (Ruscio &
   Kaczetow 2008 comparison-data generator), `mambac`, `maxeig`, `lmode`, `ccfi`; end-to-end
   known-answer tests (dimensional-generated → CCFI < 0.45; taxonic at the paper's parameters →
@@ -188,25 +280,47 @@ rule), and a checkpoint commit is proposed to Dain.
   CSV export (non-blocking). **Plus the gold-panel variant:** the same battery on side-level
   gold involvement indicators (n=1,284) — taxometrics on human-annotated involvement
   behaviors, the novel exhibit. _Gate:_ pytest green incl. known-answer tests; CCFI verdicts
-  per the Ruscio bands recorded per procedure, both indicator sets.
-- [ ] **T13 — NB07 Step 21: recovery/power** (Q2 Step 19: Arm T at n=487 and n=4,876, B=200;
+  per the Ruscio bands recorded per procedure, both indicator sets. _Done 2026-07-09: 9
+  known-answer tests green (gen_data = two-phase: low-noise calibration then best-of-N
+  sampling); **caller CCFI .106/.267/.079, mean .151 → DIMENSIONAL**, π-robust
+  (.136/.151/.135); GMM(2) weights .40/.60; envelope exhibit + CSV exports; gold variant
+  (n=1,085): mean .460 → ambiguous per the bands, validity caveat recorded (mean inter-r .09
+  — too weak to discriminate; the gold axis itself is dimensional-with-skew)._
+- [x] **T13 — NB07 Step 21: recovery/power** (Q2 Step 19: Arm T at n=487 and n=4,876, B=200;
   Arm D false alarms; n=1,284 covered by interpolation in prose; **taxometric sub-arm
   reinstated** — taxonic `gen_data` 5-indicator sets at the paper's base rate → CCFI on a
   B=25 subset, runtime printed). _Gate:_ the "we had the power ≈X / false-alarm ≈Y" sentence,
-  incl. CCFI detection and false-alarm rates.
-- [ ] **T14 — NB07 Step 22: multiverse** — grid now `bc_def` ∈ {allowlist38, token≤2, union,
+  incl. CCFI detection and false-alarm rates. _Done 2026-07-09 (side variant at the actual
+  n=3,705; BLRT inner B 199→99/49 per the budget clause, printed): detection at n=487 — dip
+  10% / Silverman 82% / **BLRT 100% / fit-family 100%** (side: 89/100/100/100); false alarms
+  on matched skewnorm — 0/0/**76**/0% (BLRT's skew alarm = the designed-for behavior the
+  fit-family pairing absorbs); **CCFI 100% detection / 0% false alarm** at our exact indicator
+  basis._
+- [x] **T14 — NB07 Step 22: multiverse** — grid now `bc_def` ∈ {allowlist38, token≤2, union,
   none, classifier (if admitted), gold-subset} × transform 2 × unit 2 × min_utt 3 ×
   feature_set {vol11, vol11+pitch3, vol+interactional, vol+int+panel} = **up to 288 specs**
   (gold-subset arms carry reduced n — printed per spec). _Gate:_ specification-curve figure;
-  "X of N specs unimodal" headline; non-unimodal specs enumerated and diagnosed.
-- [ ] **T15 — NB07 Step 23 + close-out:** BATTERY summary table (A1's ask, now incl. the gold
+  "X of N specs unimodal" headline; non-unimodal specs enumerated and diagnosed. _Done
+  2026-07-09: classifier arm admitted (Step 15); **288/288 specifications unimodal** (dip
+  p>.05 AND single KDE mode at bw .25/.40/.60 by the notebook's standing Step-5 instrument —
+  instrument aligned after a stub-mask smoke run exposed the strict-floor counter reading
+  far-tail micro-bumps as modes, before the real grid was read; raw counter recorded
+  alongside); ΔBIC k1-favored 186/288, the k2 residue = Step 18's explained skew-fitting;
+  gold-subset n printed (caller 248–320, side 416–1,081); zero specs to diagnose._
+- [x] **T15 — NB07 Step 23 + close-out:** BATTERY summary table (A1's ask, now incl. the gold
   axis); Conclusion: formal-battery block (**dimensional, not normal**), the taxometric CCFI
   verdicts (both indicator sets), claim-scoping + shrunken limitations paragraph, gold-suite
   numbers (allowlist P/R, question P/R, classifier CVs, coop/obstr validity) with the Delta-6
   citations. Bookkeeping: §4A1–8, §3.3, §3-minor, §4C12a/b/c, §4E-a status lines;
   §2.1/§2.2/§2.8/§5.2 cross-refs; dashboard recount; Verdict addendum; final top-to-bottom
   execution. _Gate:_ Q4's acceptance checklist **in full** (A6 line included), plus every
-  Delta-7 verdict recorded.
+  Delta-7 verdict recorded. _Done 2026-07-09: Step 23 renders the ~70-row BATTERY ledger +
+  the close-out verdict block; Conclusion carries the formal-battery block, unconditional-
+  rebuttal/scoped-positive-claim language, the shrunken limitations list (voice quality,
+  validated disclosure, narrative-beyond-quotation, perceptual anchoring, reliability), and
+  the Delta-6 citations; AUDIT.md §2.1/§2.2 ✅, §2.8 updated, §4A1–8 ✅, §4C12 ✅, §5.2 ✅,
+  dashboard recounted (16/10/16), Verdict addendum added; final top-to-bottom execution
+  green._
 
 ## Sequencing notes (dependency order, not time)
 

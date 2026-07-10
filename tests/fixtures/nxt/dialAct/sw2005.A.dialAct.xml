@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nite:dialAct_stream xmlns:nite="http://nite.sourceforge.net/" nite:id="sw2005.dialAct-A">
+<da niteType="other" swbdType="o" nite:id="da1">
+<nite:child href="sw2005.A.terminals.xml#id(s1_1)"/>
+</da>
+<da niteType="open_q" swbdType="qo" nite:id="da2">
+<nite:child href="sw2005.A.terminals.xml#id(s2_1)"/>
+<nite:child href="sw2005.A.terminals.xml#id(s2_3)"/>
+<nite:child href="sw2005.A.terminals.xml#id(s2_5)"/>
+</da>
+<da niteType="statement" swbdType="sd(^q)^t" nite:id="da3">
+<nite:child href="sw2005.A.terminals.xml#id(s2_21)"/>
+</da>
+<da niteType="backchannel" swbdType="b^m@" nite:id="da4">
+<nite:child href="sw2005.A.terminals.xml#id(s2_22)"/>
+</da>
+<da niteType="appreciation" swbdType="ba,fe" nite:id="da5">
+<nite:child href="sw2005.A.terminals.xml#id(s9_99)"/>
+</da>
+</nite:dialAct_stream>
