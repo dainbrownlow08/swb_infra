@@ -155,7 +155,8 @@ def write_machine_gun(
     )
     fr, rt_reader = _open_feature(
         features_dir, "rising_terminal",
-        ("Utterance File Name", "Rising Terminal Flag", "Terminal F0 Slope"),
+        ("Utterance File Name", "Rising Terminal Flag", "Terminal F0 Slope",
+         "Terminal ST Slope"),
     )
     ft, tok_reader = _open_feature(
         features_dir, "token_count", ("Utterance File Name", "token_count")

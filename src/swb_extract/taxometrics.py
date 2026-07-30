@@ -1,6 +1,8 @@
 """Taxometric analysis — types vs continuum, formally (AUDIT.md §4A6, Q1 spec).
 
-Pure, tested algorithms only — analysis narrative lives in analysis/07_final.ipynb.
+Pure, tested algorithms only — analysis narrative lives in the notebooks: the frozen
+NB07 battery record (analysis/07_demoted_in_favor_of_5D.ipynb) and the living
+analysis/08_measurement.ipynb.
 Implements Meehl's MAMBAC and MAXEIG, L-Mode, the Ruscio & Kaczetow (2008)
 comparison-data generator, and the Comparison Curve Fit Index. The CCFI logic:
 generate B *dimensional* and B *taxonic* comparison populations that both

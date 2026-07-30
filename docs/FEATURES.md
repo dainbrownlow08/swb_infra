@@ -18,7 +18,7 @@
 > _Last reviewed: 2026-07-09 (NB07 Step 14, submission plan T6 — the two overlap-split
 > columns added as WIP pre-rebuild and promoted to Trusted on the pre-registered gold
 > checks; earlier same day: Step 11 trust adjudication, 26 rows promoted, per-utterance
-> Personal Focus Score deprecated). Counts: 45 Trusted · 6 WIP · 5 Deprecated. Live dashboard:
+> Personal Focus Score deprecated). Counts: 46 Trusted · 6 WIP · 5 Deprecated. Live dashboard:
 > `python3 -c "import sys;sys.path.insert(0,'src');from
 > swb_extract import registry as R;print(R.summary())"`._
 
@@ -52,8 +52,9 @@
 | Within Pause Count | within_utterance_pauses.py | interactional | gaps ≥ PAUSE_MIN_SEC=0.25; Count≥1 ⇔ Max≥0.25 verified (NB07 Step 11) |
 | Within Pause Rate | within_utterance_pauses.py | interactional | Total/span; ≤1 verified corpus-wide (NB07 Step 11) |
 | Max Within Pause Sec | within_utterance_pauses.py | interactional | ≤ Total verified corpus-wide (NB07 Step 11) |
-| Rising Terminal Flag | rising_terminal.py | interactional | 30.3% null MNAR, voicing/length-dependent — null rate RISES with utterance length (21%→35% for ≤2→≥6 tokens; NB07 Step 11), contra the docstring's short-tails guess; do NOT fillna(0) — treat null as indeterminate |
-| Terminal F0 Slope | rising_terminal.py | interactional | clip at ±1000 Hz/s before use (bound chosen + recorded, NB07 Step 11) |
+| Rising Terminal Flag | rising_terminal.py | interactional | 30.3% null MNAR, voicing/length-dependent — null rate RISES with utterance length (21%→35% for ≤2→≥6 tokens; NB07 Step 11), contra the docstring's short-tails guess; do NOT fillna(0) — treat null as indeterminate. **2026-07-29 semitone redesign:** flag now thresholds the semitone slope at 3.07 st/s = the old 30 Hz/s operating point at the corpus-median register (169.0 Hz) — the Hz rule demanded ~1.7× steeper proportional rises from low-pitched speakers (side-level r(share, pitch mean) = +.485 under Hz); window/anchor/voiced gate unchanged, null set identical. Gold-DA known-groups (`analysis/validate_rising_terminal.py`): rising share .616 yn-questions vs .248 statements (2.48×, AUC .721) PASS; declarative-q `^d` .410 (1.65×, p 2.5e-08 — first-run 2× arm failed, adjudicated on record). Caller level: pooled defined-only share over ALL panel callers (tails min 2 / median 154) + `rt_defined_share` coverage companion; the ≥30-tails subset (428/487) is the robustness re-run, not eligibility |
+| Terminal F0 Slope | rising_terminal.py | interactional | clip at ±1000 Hz/s before use (bound chosen + recorded, NB07 Step 11); unchanged by the 2026-07-29 redesign (same fit, Hz/s continuity column) |
+| Terminal ST Slope | rising_terminal.py | interactional | semitone-scale terminal slope (st/s), 12·log2(F0) fit over the same voiced tail frames as Terminal F0 Slope — the register-invariant contour the flag thresholds (2026-07-29 redesign); same 30.3% null set; do NOT fillna(0) |
 | Laughter Count | laughter.py | interactional | full-corpus bracket reconciliation vs Transcript exact (NB07 Step 11); RATE-normalize at analysis — raw counts are a talkativeness proxy (Jun-19 audit) |
 | Laughed Word Count | laughter.py | interactional | reconciled corpus-wide (NB07 Step 11) |
 | Noise Count | laughter.py | interactional | counted before stripping (audit §3.5) |

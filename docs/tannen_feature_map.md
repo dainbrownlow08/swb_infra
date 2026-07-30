@@ -148,9 +148,12 @@ Suggestions are grouped by Tannen feature, with brief implementation notes.
     or final `?` if any pretokenized form exists. Required for both
     "machine-gun questions" and "echo questions as back-channel".
 
-11. **rising_terminal_flag** — Last 200 ms F0 slope > threshold. Catches
-    declarative-form questions ("You stayed at the Plaza?" PDF p. 113)
-    that syntactic detection misses.
+11. **rising_terminal_flag** — Semitone-scale F0 slope over the 0.3 s tail
+    anchored at the last word's offset, ≥ 3.07 st/s (2026-07-29 redesign:
+    register-invariant; the old 30 Hz/s rule under-detected low registers).
+    Catches declarative-form questions ("You stayed at the Plaza?" PDF
+    p. 113) that syntactic detection misses — gold-validated: ^d rising
+    share .410 vs .248 statements, qy .616.
 
 12. **machine_gun_question_score** — Composite z-score: (high pitch) +
     (short syntax: ≤4 words) + (short Turn Gap) + (question_flag). Exactly
