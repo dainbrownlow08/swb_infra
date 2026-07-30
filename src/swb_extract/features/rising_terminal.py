@@ -14,24 +14,37 @@ falling back to the file end when word timing is unavailable. Only the tail
 window is pitch-tracked, which also makes extraction much faster than running
 pyin over the whole utterance.
 
-For the TAIL_SEC window ending at the anchor, fit a least-squares slope to the
-voiced F0 frames (librosa.pyin, same config as pitch.py):
+For the TAIL_SEC window ending at the anchor, fit least-squares slopes to the
+voiced F0 frames (librosa.pyin, same config as pitch.py) on two scales:
+
+  Terminal F0 Slope = the fitted slope of F0 in Hz/s (continuity column —
+    same fit as the original design, unchanged by the 2026-07-29 redesign).
+  Terminal ST Slope = the fitted slope of 12*log2(F0) in semitones/s — the
+    register-invariant contour measure the flag now thresholds.
 
   Rising Terminal Flag =
-    1   if slope >= RISE_MIN_HZ_PER_SEC over >= MIN_VOICED voiced tail frames
+    1   if ST slope >= RISE_MIN_ST_PER_SEC over >= MIN_VOICED voiced tail frames
     0   otherwise
     ""  too few voiced frames in the tail to judge
 
-  Terminal F0 Slope =
-    the fitted slope in Hz/s whenever the flag is defined, else "". Reported
-    so analyses can use the continuous contour (and model missingness)
-    instead of only the thresholded flag.
+Redesigned 2026-07-29 (semitone threshold, AUDIT.md §3.3 note): the original
+flag thresholded the Hz/s slope at 30 Hz/s, but a pitch rise is a
+*proportional* excursion — the same ~4 st/s gesture is ~+49 Hz/s at a 190 Hz
+(typical female) register and ~+29 Hz/s at 110 Hz (typical male), so the
+absolute rule demanded ~1.7x steeper proportional rises from low-pitched
+speakers and mechanically coupled caller rising-share to pitch register
+(side-level r(share, pitch mean) = +.485 under the Hz rule). The semitone
+threshold is the old operating point made register-neutral:
+RISE_MIN_ST_PER_SEC = (12/ln 2) * 30 / 169 = 3.07 st/s, i.e. 30 Hz/s
+evaluated at the corpus-median side-median register of 169.0 Hz. Window,
+anchoring, and the voiced-frame gate are unchanged, so the null set (30.3%,
+MNAR — see FEATURES.md) is identical to the Hz-era extraction.
 
 Empty cells mean "no measurement" — downstream code must NOT fill them with 0
 (that conflates "unmeasurable" with "not rising").
 
 Output: utterances_v2/features/rising_terminal.csv
-Header: Utterance File Name,Rising Terminal Flag,Terminal F0 Slope
+Header: Utterance File Name,Rising Terminal Flag,Terminal F0 Slope,Terminal ST Slope
 """
 from __future__ import annotations
 
@@ -45,14 +58,22 @@ from .turn_gap import build_turn_gap_index
 from .word_align import build_word_index
 
 FEATURE_NAME = "rising_terminal"
-HEADER = ("Utterance File Name", "Rising Terminal Flag", "Terminal F0 Slope")
+HEADER = (
+    "Utterance File Name",
+    "Rising Terminal Flag",
+    "Terminal F0 Slope",
+    "Terminal ST Slope",
+)
 
 TAIL_SEC = 0.3              # window before the speech anchor to fit
-RISE_MIN_HZ_PER_SEC = 30.0  # slope threshold for "rising"
+# Register-invariant rise threshold in semitones/s: the old 30 Hz/s operating
+# point evaluated at the corpus-median side-median register of 169.0 Hz
+# ((12/ln 2) * 30 / 169 = 3.074; see module docstring, chosen + recorded).
+RISE_MIN_ST_PER_SEC = 3.07
 MIN_VOICED = 3              # minimum voiced frames in the tail to judge
 
-# (flag, slope_hz_per_sec); (None, None) = unjudgeable
-Result = tuple[int | None, float | None]
+# (flag, slope_hz_per_sec, slope_st_per_sec); (None, None, None) = unjudgeable
+Result = tuple[int | None, float | None, float | None]
 
 
 def extract_rising_terminal(
@@ -68,7 +89,7 @@ def extract_rising_terminal(
 
     y, sr = librosa.load(str(wav_path), sr=None)
     if y.size == 0:
-        return None, None
+        return None, None, None
     duration = y.size / sr
     end = duration
     if tail_anchor_sec is not None and 0.0 < tail_anchor_sec < duration:
@@ -78,7 +99,7 @@ def extract_rising_terminal(
 
     frame_length = _frame_length_for_sr(sr)
     if y_win.size < frame_length:
-        return None, None
+        return None, None, None
     f0, _vf, _vp = librosa.pyin(
         y_win, fmin=PITCH_FMIN, fmax=PITCH_FMAX, sr=sr, frame_length=frame_length
     )
@@ -88,9 +109,10 @@ def extract_rising_terminal(
     fv = f0[voiced]
     tv = times[voiced]
     if fv.size < MIN_VOICED:
-        return None, None
-    slope = float(np.polyfit(tv, fv, 1)[0])
-    return (1 if slope >= RISE_MIN_HZ_PER_SEC else 0), slope
+        return None, None, None
+    slope_hz = float(np.polyfit(tv, fv, 1)[0])
+    slope_st = float(np.polyfit(tv, 12.0 * np.log2(fv), 1)[0])
+    return (1 if slope_st >= RISE_MIN_ST_PER_SEC else 0), slope_hz, slope_st
 
 
 def build_anchor_index(transcript_root: Path) -> dict[tuple[int, str, int], float]:
@@ -118,11 +140,12 @@ def _worker(arg: tuple[str, str, float | None]) -> tuple[str, Result]:
 
 
 def _fmt_row(rel: str, result: Result) -> list[str]:
-    flag, slope = result
+    flag, slope_hz, slope_st = result
     return [
         rel,
         "" if flag is None else str(flag),
-        "" if slope is None else repr(slope),
+        "" if slope_hz is None else repr(slope_hz),
+        "" if slope_st is None else repr(slope_st),
     ]
 
 

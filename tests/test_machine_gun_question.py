@@ -47,9 +47,11 @@ def _setup(tmp_path: Path) -> Path:
     )
     _write_csv(
         fdir / "rising_terminal.csv",
-        ["Utterance File Name", "Rising Terminal Flag", "Terminal F0 Slope"],
-        [[A1, "0", "-10.0"], [A2, "", ""], [B3, "", ""], [B4, "0", "-5.0"],
-         [B5, "0", "2.0"], [B6, "0", "0.0"], [A7, "0", "-1.0"]],
+        ["Utterance File Name", "Rising Terminal Flag", "Terminal F0 Slope",
+         "Terminal ST Slope"],
+        [[A1, "0", "-10.0", "-1.0"], [A2, "", "", ""], [B3, "", "", ""],
+         [B4, "0", "-5.0", "-0.5"], [B5, "0", "2.0", "0.2"],
+         [B6, "0", "0.0", "0.0"], [A7, "0", "-1.0", "-0.1"]],
     )
     _write_csv(
         fdir / "token_count.csv",
