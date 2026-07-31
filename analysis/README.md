@@ -12,15 +12,17 @@ rising-terminal semitone redesign (qy 2.48×, AUC .721; the failed `^d` arm adju
 record). Kept here because `docs/FEATURES.md` cites it as the admission evidence for
 `Terminal ST Slope`.
 
-## archive/ — NB00–06, frozen replication artifacts
+## archive/ — the frozen replication line
 
-Moved here 2026-07-31 (git history preserves original paths). 00 overview · 01/02 legacy/paper
-replication (reproduce the *broken* result for the autopsy) · 03 the pivot (row-norm →
-column-standardize; bimodality = backchannel artifact) · 04/05 caller-level volume /
-interactional+varimax · 06 Brizan revisions (FTO, dip, Horn, FDR). They read the frozen
-`merge_test.csv`/`paper_aligned_*` line by `analysis/`-relative paths, which dangle one level
-deeper — irrelevant by construction: frozen means never re-run. Their findings are compressed
-into `docs/AUDIT.md` §1–§2.
+Moved here 2026-07-31 (git history preserves original paths). Notebooks NB00–06: 00 overview ·
+01/02 legacy/paper replication (reproduce the *broken* result for the autopsy) · 03 the pivot
+(row-norm → column-standardize; bimodality = backchannel artifact) · 04/05 caller-level volume /
+interactional+varimax · 06 Brizan revisions (FTO, dip, Horn, FDR). `scripts/` holds the
+frozen merge_test-era builders (`build_merge_test.py` — bannered, with its two
+deliberately-preserved bugs — `merge_features.py`, `build_tannen_features.py`), superseded by
+`swb-extract table`. The notebooks read the frozen `merge_test.csv`/`paper_aligned_*` line by
+`analysis/`-relative paths, which dangle one level deeper — irrelevant by construction: frozen
+means never re-run. Findings are compressed into `docs/AUDIT.md` §1–§2.
 
 ## The trustworthy data line (07/08)
 

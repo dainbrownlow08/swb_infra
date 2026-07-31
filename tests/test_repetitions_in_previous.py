@@ -9,7 +9,7 @@ from swb_extract.features.repetitions_in_previous import (
     lookup_repetitions_in_previous,
     write_repetitions_in_previous,
 )
-from swb_extract.features.turn_gap import build_text_index, build_turn_gap_index
+from swb_extract.features._turn_index import build_text_index, build_turn_gap_index
 from swb_extract.manifest import (
     MANIFEST_HEADER,
     manifest_path,

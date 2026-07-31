@@ -91,7 +91,7 @@ by `load_features_table`):
 
 1. ✅ **Turn Gap → FTO** (`fto.py`): merged turns, backchannel-predecessor exclusion, word-tight bounds. Legacy `Turn Gap` Deprecated (replication only).
 2. ✅ **One canonical table** (`features_table.py`, `swb-extract table`): zip-merge with per-row key assertions (the §1 row-scramble defense) + stale/registry guards at load. NB07/NB08 read only through the loader; `merge_test.csv` frozen for NB00–06 replication.
-3. ✅ **Degenerate features**: personal focus → pooled raw hits (per-utterance score Deprecated); rising terminal → word-anchored tail, missingness preserved (never fillna(0)), **semitone threshold 2026-07-29**. The sole remaining NaN→0 lives in the bannered frozen `scripts/build_merge_test.py`.
+3. ✅ **Degenerate features**: personal focus → pooled raw hits (per-utterance score Deprecated); rising terminal → word-anchored tail, missingness preserved (never fillna(0)), **semitone threshold 2026-07-29**. The sole remaining NaN→0 lives in the bannered frozen `analysis/archive/scripts/build_merge_test.py`.
 4. ✅ **Machine-gun pitch term**: per-side P75 baseline, not population median. Columns stay WIP (intent gate rides the excluded Question Flag; re-extract-before-use note stands).
 5. ✅ **Laughter counted before stripping** (5 columns, reconciled corpus-wide, Trusted; `laughs_per_100utt` in the panel).
 

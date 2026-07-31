@@ -1,11 +1,11 @@
 """Filler Words per Second per utterance.
 
-Same count algorithm as filler_word_rate (phrase-aware sliding window with
+Same count algorithm as the retired filler_word_rate (phrase-aware sliding window with
 bracket stripping), but divides by utterance duration in seconds instead of
 token count. Captures "speech rate" interpretation of filler usage rather
 than "filler proportion of words spoken."
 
-  count = same as filler_word_rate.count_filler_hits
+  count = same as _text.count_filler_hits
   duration = utterance.end - utterance.start (from cleaned ms98 transcript)
   rate = count / duration   (None if duration <= 0)
 
@@ -19,7 +19,7 @@ from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
 from ._duration_lookup import build_duration_index, lookup_duration
-from .filler_word_rate import DEFAULT_FILLERS, count_filler_hits, tokenize
+from ._text import DEFAULT_FILLERS, count_filler_hits, tokenize
 
 FEATURE_NAME = "filler_word_per_second"
 HEADER = ("Utterance File Name", "Filler Words per Second")

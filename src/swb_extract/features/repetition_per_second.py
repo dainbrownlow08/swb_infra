@@ -1,6 +1,6 @@
 """Repetitions per Second per utterance.
 
-Same algorithm as repetition_rate (binary-per-word count of unique tokens
+Same algorithm as the retired repetition_rate (binary-per-word count of unique tokens
 that appear >= 2 times, after whole-bracket tokens are stripped), but
 divides by utterance duration in seconds instead of token count.
 
@@ -14,7 +14,7 @@ from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
 from ._duration_lookup import build_duration_index, lookup_duration
-from .repetition_rate import count_repetitions, tokenize
+from ._text import count_repetitions, tokenize
 
 FEATURE_NAME = "repetition_per_second"
 HEADER = ("Utterance File Name", "Repetitions per Second")

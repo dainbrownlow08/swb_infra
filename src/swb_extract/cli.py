@@ -209,7 +209,6 @@ def cmd_features(args: argparse.Namespace) -> int:
     from .features import (
         demographics,
         filler_word_per_second,
-        filler_word_rate,
         fto,
         latching_flag,
         laughter,
@@ -221,43 +220,32 @@ def cmd_features(args: argparse.Namespace) -> int:
         personal_focus_score,
         pitch,
         pronoun_per_second,
-        pronoun_rate,
         question_flags,
         repetition_per_second,
-        repetition_rate,
         repetitions_in_current,
         repetitions_in_previous,
         rising_terminal,
         syllable_rate,
         token_count,
         topic_label,
-        turn_gap,
         within_utterance_pauses,
         word_rate,
     )
 
     if args.name == demographics.FEATURE_NAME:
         return demographics.run(args)
-    if args.name == filler_word_rate.FEATURE_NAME:
-        return filler_word_rate.run(args)
     if args.name == filler_word_per_second.FEATURE_NAME:
         return filler_word_per_second.run(args)
     if args.name == pitch.FEATURE_NAME:
         return pitch.run(args)
     if args.name == loudness.FEATURE_NAME:
         return loudness.run(args)
-    if args.name == pronoun_rate.FEATURE_NAME:
-        return pronoun_rate.run(args)
     if args.name == pronoun_per_second.FEATURE_NAME:
         return pronoun_per_second.run(args)
-    if args.name == repetition_rate.FEATURE_NAME:
-        return repetition_rate.run(args)
     if args.name == repetition_per_second.FEATURE_NAME:
         return repetition_per_second.run(args)
     if args.name == syllable_rate.FEATURE_NAME:
         return syllable_rate.run(args)
-    if args.name == turn_gap.FEATURE_NAME:
-        return turn_gap.run(args)
     if args.name == fto.FEATURE_NAME:
         return fto.run(args)
     if args.name == repetitions_in_current.FEATURE_NAME:

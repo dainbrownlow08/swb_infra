@@ -28,8 +28,8 @@ from collections import Counter
 from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path, parse_rel_path
-from .repetition_rate import tokenize
-from .turn_gap import (
+from ._text import tokenize
+from ._turn_index import (
     TextIndex,
     TurnGapIndex,
     build_text_index,

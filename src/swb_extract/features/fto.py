@@ -66,7 +66,7 @@ from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path, parse_rel_path
 from .backchannels import is_backchannel
-from .turn_gap import build_text_index, build_turn_gap_index
+from ._turn_index import build_text_index, build_turn_gap_index
 from .word_align import WordRow, build_word_index
 
 FEATURE_NAME = "fto"
