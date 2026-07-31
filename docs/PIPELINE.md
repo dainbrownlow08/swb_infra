@@ -2,8 +2,8 @@
 
 How feature data flows from raw extraction to the analysis notebooks, and the
 procedure for adding/validating a feature. The goal of this layout is that the
-trustworthy line (notebook 06 onward) **cannot accidentally run on stale or
-unregistered data**.
+trustworthy line (the frozen NB07 record + the living `analysis/08_measurement.ipynb`)
+**cannot accidentally run on stale or unregistered data**.
 
 ## The one rule
 
@@ -24,7 +24,7 @@ df = load_features_table(include="provisional")   # validated + unconfirmed (def
 | **Input** | `utterances_v2/features/*.csv` | no | each feature extractor (`swb-extract features …`) | the table builder |
 | **Trust metadata** | `docs/FEATURES.md` (parsed by `registry.py`) | **yes** | you (move rows between buckets) | the loader |
 | **Derived** | `utterances_v2/derived/features_table.csv` | no (rebuildable) | `swb-extract table` | trustworthy notebooks via the loader |
-| **Frozen** | `utterances_v2/merge_test.csv`, `paper_aligned_*` | no | the replication notebooks (01/02/03) | replication notebooks only |
+| **Frozen** | `utterances_v2/merge_test.csv`, `paper_aligned_*` | no | the archived replication notebooks (`analysis/archive/`, NB01–06) | archived notebooks only |
 | **Quarantine** | `utterances_v2/_archive/` | no | — | nobody (safe to delete) |
 
 Inputs and derived data are gitignored (large, regenerable); **the code and the
@@ -105,7 +105,7 @@ columns flow in automatically; provisional ones flow in with a warning.
 
 ## Replication tier (frozen — do not modify)
 
-Notebooks 01/02 reproduce the legacy/paper result and read the **frozen**
-`merge_test.csv` (and write their own `*_PCA_*.csv`). They are deliberately left on
-the old data and must not be re-pointed at the canonical table — their job is to
+The archived notebooks (`analysis/archive/`, NB00–06) reproduce the legacy/paper result
+and read the **frozen** `merge_test.csv` line. They are deliberately left on the old data,
+never re-run, and must not be re-pointed at the canonical table — their job was to
 reproduce the original (broken) result for the autopsy.

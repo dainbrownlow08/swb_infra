@@ -3,9 +3,9 @@
 The execution plan for reorganizing the analysis around **measurement**: five empirical
 combined-space PCA coordinates + one continuous theory-derived Tannen HI/HC score per caller,
 with the type question demoted to a secondary test and the battery/multiverse mass demoted to
-appendix citations. Companion to `docs/AUDIT.md` (which stays the audit ledger) and
-`docs/Audit_July_2026_Paper_Submission_Min.md` (the completed submission-battery plan this
-supersedes as "current phase"). Terminology: **"CPCA" = the combined trusted-space PCA** —
+appendix citations. Companion to `docs/AUDIT.md` (the canonical audit + evidence ledger);
+the completed submission-battery plan this superseded as "current phase" is archived at
+`docs/archive/Audit_July_2026_Paper_Submission_Min.md`. Terminology: **"CPCA" = the combined trusted-space PCA** —
 NB07 Step 24's analysis (26 features, 487 callers, Horn K=5), promoted from exploratory to
 central.
 

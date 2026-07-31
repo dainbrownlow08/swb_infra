@@ -2,30 +2,36 @@
 
 Project-specific working rules. Universal taste lives in `~/.claude/CLAUDE.md`.
 
+## The doc contract (post-compression, 2026-07-31)
+
+Four living documents, each with one job — everything superseded is verbatim in
+`docs/archive/` and `analysis/archive/` (record, not guidance; never update it):
+
+- `docs/AUDIT.md` — **canonical v2**: verdict, the NB07 evidence ledger, trust state,
+  open items, roadmap. Keeps v1's §1–§5 numbering because code docstrings cite it.
+- `docs/FEATURES.md` — the trust registry, machine-parsed (`registry.py`) and enforced by
+  the loader. Moving a row between Trusted/WIP/Deprecated **is** the trust workflow.
+- `docs/PIPELINE.md` — data-layer contract + the add-a-feature/recompute loop.
+- `docs/NB08_MEASUREMENT_PLAN.md` — the current phase's execution plan (archived at phase end).
+
+Notebooks: `analysis/08_measurement.ipynb` is the only living notebook;
+`analysis/07_demoted_in_favor_of_5D.ipynb` is the frozen evidence record — never edit,
+never re-run (~55 min; its recorded outputs are what "NB07 Step N" citations mean).
+
 ## Keep `docs/AUDIT.md` honest
 
-`docs/AUDIT.md` is the living audit of the repo **and** the roadmap for the re-analysis. Its
-status markers carry the plan: **✅ done** (implemented *and in use*), **🟡 partial** (built but
-not wired into analysis, or done at one level but not the rigorous version), **⬜ not started**.
-The ✅-vs-🟡 line is the distinction that matters most here — most work stalls at 🟡 = built but
-unused ("built ≠ in use"), and the gap is almost always the table/notebook integration layer.
+Status markers carry the plan: **✅ done** (implemented *and in use*) · **🟡 partial** (built
+but not wired into analysis) · **⬜ not started**. The ✅-vs-🟡 line matters most — work
+stalls at "built ≠ in use," and the gap is almost always the notebook-integration layer.
 
-- **At the end of every task, update `docs/AUDIT.md` to reflect reality.** For anything you
-  touched: move the marker, rewrite its `↳ **Status:**` line to what is now true, and adjust the
-  progress-dashboard counts if a marker changed. A fix is not "done" until the audit says what is
-  actually true about it — in particular, whether it is merely *built* or genuinely *in use in the
-  analysis*. Treat this as part of the task, not a chore after it.
-
-- **Before the audit drives a sequencing or build decision, verify its load-bearing claims against
-  the tree** — especially "X isn't built yet / no script does Y" markers, which are the ones that
-  trigger redundant work. The doc lags the code (it is reviewed in batches, not continuously): a
-  stale "done" only wastes a check, but a stale "not built" makes you rebuild something that already
-  exists. Cheap tell: when a status line claims something is missing, `grep`/`ls` for it and compare
-  file mtimes against the audit's own "last reviewed" date before acting. This is the doc-lag dual
-  of the global "the checkout is not the world" rule.
-
-  _Anchoring example (2026-06-29):_ §3.2 claimed "no from-source canonical-table builder exists"
-  while `src/swb_extract/features_table.py` (+ the `swb_extract table` CLI command) — the literal
-  deliverable, citing "AUDIT.md §3 fix 2" in its own docstring — had existed for 12 days. The marker
-  was newer than the file but never mentioned it. Caught only by listing the tree, not by re-reading
-  the audit.
+- **At the end of every task, update `docs/AUDIT.md` to reflect reality** for anything you
+  touched: move the marker, rewrite the status text to what is now true — in particular
+  whether a thing is merely *built* or genuinely *in use*. This is part of the task, not a
+  chore after it. Registry moves in `docs/FEATURES.md` count the same way.
+- **Before the audit drives a build/sequencing decision, verify its load-bearing claims
+  against the tree** — especially "X isn't built yet" markers, which trigger redundant work.
+  The doc lags the code: a stale "done" wastes a check, but a stale "not built" makes you
+  rebuild something that exists. Cheap tell: `grep`/`ls` for the claimed-missing thing and
+  compare mtimes against the doc's review date. (Anchor case 2026-06-29: §3.2 claimed "no
+  canonical-table builder exists" 12 days after `features_table.py` had landed — caught by
+  listing the tree, not by re-reading the audit.)
