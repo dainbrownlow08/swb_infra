@@ -5,7 +5,7 @@ Tannen ref: Ch.4 (PDF p.112): machine-gun questions are (a) questions, fired
 High-Involvement floor device.
 
 Replaces the ad-hoc composite previously computed inside
-``legacy/scripts/build_merge_test.py`` (AUDIT.md §3 fix 4), which had three defects:
+``analysis/archive/scripts/build_merge_test.py`` (AUDIT.md §3 fix 4), which had three defects:
 "high pitch" meant above the WHOLE-POPULATION median (≈ a female-speaker
 indicator, since female F0 sits above the pooled median); "fast follow" meant
 ``Turn Gap <= 0.5 s``, which every backchannel-polluted negative gap satisfied

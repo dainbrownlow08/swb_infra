@@ -10,7 +10,7 @@ from swb_extract.features.mutual_revelation_flag import (
     lookup_mutual_revelation,
     write_mutual_revelation_flags,
 )
-from swb_extract.features.turn_gap import build_text_index, build_turn_gap_index
+from swb_extract.features._turn_index import build_text_index, build_turn_gap_index
 from swb_extract.manifest import (
     MANIFEST_HEADER,
     manifest_path,

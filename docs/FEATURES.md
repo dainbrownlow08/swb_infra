@@ -88,8 +88,8 @@
 
 | Column | Extractor | Family | Notes |
 |---|---|---|---|
-| Turn Gap | turn_gap.py | interactional | legacy gap vs chronological predecessor incl. backchannels; 60% negative; superseded by FTO Sec |
-| Pronoun Rate | pronoun_rate.py | volume | per-token variant; using Pronouns per Second instead |
-| Repetition Rate | repetition_rate.py | volume | per-token variant; using Repetitions per Second instead |
-| Filler Word Rate | filler_word_rate.py | volume | per-token variant; using Filler Words per Second instead |
+| Turn Gap | turn_gap.py (dissolved 2026-07-31 → shared helpers in _turn_index.py; module in git history) | interactional | legacy gap vs chronological predecessor incl. backchannels; 60% negative; superseded by FTO Sec |
+| Pronoun Rate | pronoun_rate.py (dissolved 2026-07-31 → shared helpers in _text.py; module in git history) | volume | per-token variant; using Pronouns per Second instead |
+| Repetition Rate | repetition_rate.py (dissolved 2026-07-31 → shared helpers in _text.py; module in git history) | volume | per-token variant; using Repetitions per Second instead |
+| Filler Word Rate | filler_word_rate.py (dissolved 2026-07-31 → shared helpers in _text.py; module in git history) | volume | per-token variant; using Filler Words per Second instead |
 | Personal Focus Score | personal_focus_score.py | tannen | DEGENERATE per-utterance ratio — 71.5% null, saturates 0/1 (Jun-19 audit 2/10); pool the raw hit columns instead (NB07 Step 11; audit §3.3) |

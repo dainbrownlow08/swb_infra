@@ -17,7 +17,7 @@ This module parses those files into:
 Both A and B sides share one conversation clock (verified), so A-side and
 B-side times are directly comparable.
 
-Malformed lines are skipped (mirrors ``turn_gap``'s tolerant trans parser).
+Malformed lines are skipped (mirrors ``_turn_index``'s tolerant trans parser).
 Non-speech tokens are vanishingly rare in word.text; they are treated as
 ordinary occupied-time tokens so a ``[noise]`` span is never mistaken for
 silence.

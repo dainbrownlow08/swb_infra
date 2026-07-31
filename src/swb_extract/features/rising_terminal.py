@@ -54,7 +54,7 @@ from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path, parse_rel_path
 from .pitch import PITCH_FMAX, PITCH_FMIN, _frame_length_for_sr
-from .turn_gap import build_turn_gap_index
+from ._turn_index import build_turn_gap_index
 from .word_align import build_word_index
 
 FEATURE_NAME = "rising_terminal"

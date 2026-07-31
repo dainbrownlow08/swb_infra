@@ -11,7 +11,7 @@ correcting two legacy bugs:
   counting. They are noises, not words, and would otherwise manufacture
   fake repetitions or inflate the pair count.
 - The legacy `gensim` + NLTK lemmatizer stack is dropped in favour of the
-  same `tokenize` helper that `repetition_rate.py` uses, so tokenization
+  same `tokenize` helper (now in `_text.py`), so tokenization
   is consistent across the repetition family.
 
 This metric is complementary to `Repetition Rate` (which counts unique
@@ -29,7 +29,7 @@ from collections import Counter
 from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
-from .repetition_rate import tokenize
+from ._text import tokenize
 
 FEATURE_NAME = "repetitions_in_current"
 HEADER = ("Utterance File Name", "Repetitions In Current Utterance")

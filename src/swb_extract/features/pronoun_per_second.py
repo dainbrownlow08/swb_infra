@@ -1,6 +1,6 @@
 """Pronouns per Second per utterance.
 
-Same algorithm as pronoun_rate (spaCy POS tagging with whole-bracket tokens
+Same algorithm as the retired pronoun_rate (spaCy POS tagging with whole-bracket tokens
 stripped before tokenization), but divides by utterance duration in seconds
 instead of token count.
 
@@ -15,7 +15,7 @@ from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
 from ._duration_lookup import build_duration_index, lookup_duration
-from .pronoun_rate import _get_nlp, strip_bracket_tokens
+from ._text import _get_nlp, strip_bracket_tokens
 
 FEATURE_NAME = "pronoun_per_second"
 HEADER = ("Utterance File Name", "Pronouns per Second")
