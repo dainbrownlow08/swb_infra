@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from swb_extract.cli import main
-from swb_extract.features.loudness import (
+from swb_extract.features.inhouse.loudness import (
     HEADER,
     extract_loudness,
     write_loudness,

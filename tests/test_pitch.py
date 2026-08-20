@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.pitch import (
+from swb_extract.features.inhouse.pitch import (
     HEADER,
     PITCH_FMAX,
     PITCH_FMIN,

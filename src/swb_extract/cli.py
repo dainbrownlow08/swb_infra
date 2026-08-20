@@ -206,90 +206,25 @@ def cmd_table(args: argparse.Namespace) -> int:
 
 
 def cmd_features(args: argparse.Namespace) -> int:
-    from .features import (
-        demographics,
-        discourse_marker_per_second,
-        filled_pause_per_second,
-        filler_word_per_second,
-        fto,
-        latching_flag,
-        laughter,
-        loudness,
-        machine_gun_question,
-        mutual_revelation_flag,
-        overlap,
-        overlap_split,
-        personal_focus_score,
-        pitch,
-        pronoun_per_second,
-        question_flags,
-        repetition_per_second,
-        repetitions_in_current,
-        repetitions_in_previous,
-        rising_terminal,
-        syllable_rate,
-        token_count,
-        topic_label,
-        within_utterance_pauses,
-        word_rate,
-    )
+    """Dispatch on each extractor module's FEATURE_NAME (both sub-packages)."""
+    from .features import inhouse, thomas2018
 
-    if args.name == demographics.FEATURE_NAME:
-        return demographics.run(args)
-    if args.name == filler_word_per_second.FEATURE_NAME:
-        return filler_word_per_second.run(args)
-    if args.name == filled_pause_per_second.FEATURE_NAME:
-        return filled_pause_per_second.run(args)
-    if args.name == discourse_marker_per_second.FEATURE_NAME:
-        return discourse_marker_per_second.run(args)
-    if args.name == pitch.FEATURE_NAME:
-        return pitch.run(args)
-    if args.name == loudness.FEATURE_NAME:
-        return loudness.run(args)
-    if args.name == pronoun_per_second.FEATURE_NAME:
-        return pronoun_per_second.run(args)
-    if args.name == repetition_per_second.FEATURE_NAME:
-        return repetition_per_second.run(args)
-    if args.name == syllable_rate.FEATURE_NAME:
-        return syllable_rate.run(args)
-    if args.name == fto.FEATURE_NAME:
-        return fto.run(args)
-    if args.name == repetitions_in_current.FEATURE_NAME:
-        return repetitions_in_current.run(args)
-    if args.name == repetitions_in_previous.FEATURE_NAME:
-        return repetitions_in_previous.run(args)
-    if args.name == word_rate.FEATURE_NAME:
-        return word_rate.run(args)
-    if args.name == token_count.FEATURE_NAME:
-        return token_count.run(args)
-    if args.name == topic_label.FEATURE_NAME:
-        return topic_label.run(args)
-    if args.name == personal_focus_score.FEATURE_NAME:
-        return personal_focus_score.run(args)
-    if args.name == mutual_revelation_flag.FEATURE_NAME:
-        return mutual_revelation_flag.run(args)
-    if args.name == latching_flag.FEATURE_NAME:
-        return latching_flag.run(args)
-    if args.name == laughter.FEATURE_NAME:
-        return laughter.run(args)
-    if args.name == within_utterance_pauses.FEATURE_NAME:
-        return within_utterance_pauses.run(args)
-    if args.name == overlap.FEATURE_NAME:
-        return overlap.run(args)
-    if args.name == overlap_split.FEATURE_NAME:
-        return overlap_split.run(args)
-    if args.name == question_flags.FEATURE_NAME:
-        return question_flags.run(args)
-    if args.name == rising_terminal.FEATURE_NAME:
-        return rising_terminal.run(args)
-    if args.name == machine_gun_question.FEATURE_NAME:
-        return machine_gun_question.run(args)
-    raise NotImplementedError(
-        f"feature extractor {args.name!r} not implemented yet. "
-        f"Write to {Path(args.out_root) / 'features' / (args.name + '.csv')} "
-        f"with header 'Utterance File Name,<col1>[,<col2>...]' "
-        f"keyed on the same paths as manifest.csv."
-    )
+    extractors = {m.FEATURE_NAME: m for m in (*inhouse.EXTRACTORS, *thomas2018.EXTRACTORS)}
+    module = extractors.get(args.name)
+    if module is None:
+        raise NotImplementedError(
+            f"feature extractor {args.name!r} not implemented; known: {sorted(extractors)}. "
+            f"A new one writes {Path(args.out_root) / 'features' / (args.name + '.csv')} "
+            f"with header 'Utterance File Name,<col1>[,<col2>...]' keyed on the same paths "
+            f"as manifest.csv."
+        )
+    return module.run(args)
+
+
+def cmd_thomas2018_side(args: argparse.Namespace) -> int:
+    from .features.thomas2018 import side_table
+
+    return side_table.run(args)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -358,6 +293,14 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--overwrite", action="store_true",
                    help="ignore existing feature CSV (used by pitch)")
     s.set_defaults(func=cmd_features)
+
+    s = sub.add_parser(
+        "thomas2018-side",
+        help="per-(call, side) table of the 11 Thomas et al. (2018) variables from "
+             "features/{ppron,...,repu}.csv -> derived/thomas2018_side.csv",
+    )
+    s.add_argument("--out-root", default=default_out)
+    s.set_defaults(func=cmd_thomas2018_side)
 
     return p
 

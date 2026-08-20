@@ -34,6 +34,9 @@ swb-extract table            ──►  utterances_v2/derived/features_table.csv
 load_features_table(...)     ──►  08_measurement.ipynb   (stale-data + registry guards on
                                                           every load; trust status lives in
                                                           docs/FEATURES.md)
+swb-extract thomas2018-side  ──►  utterances_v2/derived/thomas2018_side.csv   (per conversation
+                                  side: the 11 Thomas et al. 2018 variables — built 2026-08-20,
+                                  not yet extracted corpus-wide or wired into NB08)
 ```
 
 ## Unit of analysis (important)

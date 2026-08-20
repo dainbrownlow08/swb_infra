@@ -5,7 +5,7 @@ test_pronoun_rate.py, keeping the tests for the shared helper functions the
 trusted per-second extractors import; the deprecated per-token rate columns'
 own tests (compute_rate, CSV writers, CLI dispatch) were dropped with them.
 """
-from swb_extract.features._text import (
+from swb_extract.features.inhouse._text import (
     DEFAULT_FILLERS,
     count_filler_hits,
     count_repetitions,
@@ -108,6 +108,6 @@ def test_laughed_words_feed_repetitions_and_fillers():
 def test_filler_partition_is_exact():
     # The 2026-08-20 split (audit §4E-c) must partition the legacy allowlist:
     # any drift breaks the split-columns-sum-to-combined identity.
-    from swb_extract.features._text import DISCOURSE_MARKERS, FILLED_PAUSES
+    from swb_extract.features.inhouse._text import DISCOURSE_MARKERS, FILLED_PAUSES
     assert FILLED_PAUSES | DISCOURSE_MARKERS == DEFAULT_FILLERS
     assert not (FILLED_PAUSES & DISCOURSE_MARKERS)

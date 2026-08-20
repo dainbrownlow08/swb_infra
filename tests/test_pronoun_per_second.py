@@ -2,7 +2,7 @@ import csv
 
 import pytest
 
-from swb_extract.features.pronoun_per_second import (
+from swb_extract.features.inhouse.pronoun_per_second import (
     HEADER,
     count_personal_pronouns,
     compute_rate_per_second,

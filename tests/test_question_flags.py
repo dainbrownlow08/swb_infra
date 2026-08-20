@@ -1,7 +1,7 @@
 import csv
 from pathlib import Path
 
-from swb_extract.features.question_flags import (
+from swb_extract.features.inhouse.question_flags import (
     HEADER,
     is_echo_question,
     question_flag,

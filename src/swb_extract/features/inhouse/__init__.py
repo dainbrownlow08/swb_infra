@@ -1,0 +1,61 @@
+"""The project's own feature extractors.
+
+Moved from ``features/`` on 2026-08-20 so the Thomas et al. (2018) replication
+(``features/thomas2018/``) could sit beside them; the code is verbatim (only the
+parent-package import depth changed). Column trust lives in docs/FEATURES.md.
+"""
+from . import (
+    demographics,
+    discourse_marker_per_second,
+    filled_pause_per_second,
+    filler_word_per_second,
+    fto,
+    latching_flag,
+    laughter,
+    loudness,
+    machine_gun_question,
+    mutual_revelation_flag,
+    overlap,
+    overlap_split,
+    personal_focus_score,
+    pitch,
+    pronoun_per_second,
+    question_flags,
+    repetition_per_second,
+    repetitions_in_current,
+    repetitions_in_previous,
+    rising_terminal,
+    syllable_rate,
+    token_count,
+    topic_label,
+    within_utterance_pauses,
+    word_rate,
+)
+
+EXTRACTORS = (
+    demographics,
+    discourse_marker_per_second,
+    filled_pause_per_second,
+    filler_word_per_second,
+    fto,
+    latching_flag,
+    laughter,
+    loudness,
+    machine_gun_question,
+    mutual_revelation_flag,
+    overlap,
+    overlap_split,
+    personal_focus_score,
+    pitch,
+    pronoun_per_second,
+    question_flags,
+    repetition_per_second,
+    repetitions_in_current,
+    repetitions_in_previous,
+    rising_terminal,
+    syllable_rate,
+    token_count,
+    topic_label,
+    within_utterance_pauses,
+    word_rate,
+)

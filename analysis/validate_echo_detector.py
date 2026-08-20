@@ -24,8 +24,8 @@ sys.path.insert(0, "/Users/dainbrownlow/switchboard/src")
 import pandas as pd
 
 from swb_extract import nxt
-from swb_extract.features._text import tokenize
-from swb_extract.features._turn_index import build_text_index, build_turn_gap_index
+from swb_extract.features.inhouse._text import tokenize
+from swb_extract.features.inhouse._turn_index import build_text_index, build_turn_gap_index
 
 TROOT = Path("/Users/dainbrownlow/switchboard/swb_ms98_transcriptions_cleaned")
 merged = build_turn_gap_index(TROOT)

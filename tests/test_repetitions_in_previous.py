@@ -3,13 +3,13 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.repetitions_in_previous import (
+from swb_extract.features.inhouse.repetitions_in_previous import (
     HEADER,
     count_cross_pair_matches,
     lookup_repetitions_in_previous,
     write_repetitions_in_previous,
 )
-from swb_extract.features._turn_index import build_text_index, build_turn_gap_index
+from swb_extract.features.inhouse._turn_index import build_text_index, build_turn_gap_index
 from swb_extract.manifest import (
     MANIFEST_HEADER,
     manifest_path,

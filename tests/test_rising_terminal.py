@@ -18,7 +18,7 @@ import pytest
 pytest.importorskip("librosa")
 from scipy.io import wavfile  # noqa: E402
 
-from swb_extract.features.rising_terminal import (  # noqa: E402
+from swb_extract.features.inhouse.rising_terminal import (  # noqa: E402
     RISE_MIN_ST_PER_SEC,
     extract_rising_terminal,
 )
@@ -136,7 +136,7 @@ def test_cache_recomputes_empty_flag_rows(tmp_path, monkeypatch):
 
     Freezing the original not-at-random missingness is the §3 fix-3 failure mode.
     """
-    from swb_extract.features import rising_terminal as rt
+    from swb_extract.features.inhouse import rising_terminal as rt
     from swb_extract.manifest import manifest_path, open_appender, write_row
 
     out = tmp_path / "utterances_v2"

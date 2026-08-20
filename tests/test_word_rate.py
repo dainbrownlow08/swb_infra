@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from swb_extract.cli import main
-from swb_extract.features.word_rate import (
+from swb_extract.features.inhouse.word_rate import (
     HEADER,
     compute_rate,
     count_words,
@@ -32,7 +32,7 @@ def transcript_root():
 
 def test_duration_guard_invalidates_mistimed_trans_lines(tmp_path):
     """Words outside the trans span ⇒ duration invalid ⇒ lookup returns None."""
-    from swb_extract.features._duration_lookup import (
+    from swb_extract.features.inhouse._duration_lookup import (
         build_duration_index,
         lookup_duration,
     )

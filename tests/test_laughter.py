@@ -1,6 +1,6 @@
 import csv
 
-from swb_extract.features.laughter import (
+from swb_extract.features.inhouse.laughter import (
     HEADER,
     count_bracket_events,
     write_laughter_counts,

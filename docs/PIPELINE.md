@@ -24,6 +24,7 @@ df = load_features_table(include="provisional")   # validated + unconfirmed (def
 | **Input** | `utterances_v2/features/*.csv` | no | each feature extractor (`swb-extract features …`) | the table builder |
 | **Trust metadata** | `docs/FEATURES.md` (parsed by `registry.py`) | **yes** | you (move rows between buckets) | the loader |
 | **Derived** | `utterances_v2/derived/features_table.csv` | no (rebuildable) | `swb-extract table` | trustworthy notebooks via the loader |
+| **Derived** | `utterances_v2/derived/thomas2018_side.csv` (+ `thomas2018_prosody.csv` cache) | no (rebuildable) | `swb-extract thomas2018-side` / the four acoustic thomas2018 extractors | the paper-unit (conversation-side) table of the 11 Thomas et al. 2018 variables — not yet consumed |
 | **Frozen** | `utterances_v2/merge_test.csv`, `paper_aligned_*` | no | the archived replication notebooks (`analysis/archive/`, NB01–06) | archived notebooks only |
 | **Quarantine** | `utterances_v2/_archive/` | no | — | nobody (safe to delete) |
 
@@ -74,10 +75,12 @@ load_features_table(include="provisional", family="interactional")
 
 ## Procedure: add (and validate) a feature
 
-1. **Write the extractor** in `src/swb_extract/features/<name>.py` with a unit test
-   (`tests/test_<name>.py`). It writes `utterances_v2/features/<name>.csv`, one row
+1. **Write the extractor** in `src/swb_extract/features/inhouse/<name>.py` with a unit test
+   (`tests/test_<name>.py`) and add the module to that package's `EXTRACTORS` tuple (the
+   CLI dispatches on `FEATURE_NAME`). It writes `utterances_v2/features/<name>.csv`, one row
    per manifest utterance, keyed by `Utterance File Name`, blanks (not 0) for
-   "unmeasurable."
+   "unmeasurable." (`features/thomas2018/` is the separate Thomas et al. (2018)
+   replication — one module per paper variable, same CSV contract.)
 2. **Run it:** `swb-extract features <name>` → produces the sibling CSV.
 3. **Rebuild the canonical table:** `swb-extract table`. The builder's per-row key
    assertions fail loudly on any misalignment — that is the corruption guard.

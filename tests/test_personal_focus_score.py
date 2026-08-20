@@ -2,7 +2,7 @@ import csv
 
 import pytest
 
-from swb_extract.features.personal_focus_score import (
+from swb_extract.features.inhouse.personal_focus_score import (
     ALL_TANNEN_CATEGORIES,
     HEADER,
     IMPERSONAL_CATEGORIES,

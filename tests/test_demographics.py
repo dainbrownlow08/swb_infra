@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.demographics import (
+from swb_extract.features.inhouse.demographics import (
     HEADER,
     Demographics,
     build_speaker_demos,

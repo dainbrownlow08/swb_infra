@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.backchannels import is_backchannel
-from swb_extract.features.fto import (
+from swb_extract.features.inhouse.backchannels import is_backchannel
+from swb_extract.features.inhouse.fto import (
     HEADER,
     build_fto_index,
     lookup_fto,

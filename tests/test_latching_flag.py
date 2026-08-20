@@ -1,8 +1,8 @@
 import csv
 from pathlib import Path
 
-from swb_extract.features.fto import build_fto_index
-from swb_extract.features.latching_flag import (
+from swb_extract.features.inhouse.fto import build_fto_index
+from swb_extract.features.inhouse.latching_flag import (
     HEADER,
     LATCH_MAX_SEC,
     lookup_latching,

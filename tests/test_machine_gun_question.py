@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-import swb_extract.features.machine_gun_question as mg
+import swb_extract.features.inhouse.machine_gun_question as mg
 from swb_extract.manifest import manifest_path, open_appender, write_row
 
 A1, A2, A7 = "200/sw2001A-U0001.wav", "200/sw2001A-U0002.wav", "200/sw2001A-U0007.wav"

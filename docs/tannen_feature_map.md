@@ -10,8 +10,11 @@ Deborah Tannen's *Conversational Style: Analyzing Talk Among Friends*
 ## Part 1 — What we currently extract
 
 Source columns from `legacy/aligned_acoustic_linguistic_v2.csv`. Extractor
-code lives in `src/swb_extract/features/` (the rewritten version) with the
+code lives in `src/swb_extract/features/inhouse/` (the rewritten version; `features/X.py`
+below = `features/inhouse/X.py` since the 2026-08-20 package split) with the
 original references in `legacy/Conversational-Styles/src/feature_extractors/`.
+`src/swb_extract/features/thomas2018/` is a separate, literal replication of the eleven
+variables of Thomas et al. (CHIIR 2018) — see `docs/AUDIT.md` §4E-h.
 
 | # | Column | What it computes | Source code | Tannen dimension served |
 |---|--------|------------------|-------------|-------------------------|
@@ -175,8 +178,12 @@ Suggestions are grouped by Tannen feature, with brief implementation notes.
 14. **(2026-08-19 direction) MSFT-paper repetition/entrainment redesign** —
     the whole in-house repetition family was demoted to WIP (construct-
     questionable: length-coupled, gold-disqualified; audit §4E-h). Replace with
-    the repetition/lexical-entrainment methodology of "the MSFT paper" (user
-    pointer; exact citation TBD). Any detector must validate vs gold `^m` at
+    the repetition methodology of "the MSFT paper" = Thomas, Czerwinski, McDuff,
+    Craswell & Mark (2018), *Style and Alignment in Information-Seeking
+    Conversation*, CHIIR '18 — its `rept`/`repu` (stopword-stripped, stemmed
+    terms repeated from the speaker's OWN previous utterance) are built in
+    `features/thomas2018/` (2026-08-20). NB they are self-repetition
+    ("persistence"), not dim-6 other-repetition. Any detector must validate vs gold `^m` at
     the 0.8 bar — naive lexical echo is proven infeasible
     (`analysis/validate_echo_detector.py`, recall ceiling 41%).
     Original sketch kept below for reference:
@@ -202,7 +209,7 @@ Suggestions are grouped by Tannen feature, with brief implementation notes.
     legacy extractors that populated the v2 CSV do **not** strip brackets,
     so `[laughter]` is sitting in the denominator of every rate (and is
     counted as a real token by `Repetition Rate` if it appears twice in
-    one utterance). The rewritten `src/swb_extract/features/` versions
+    one utterance). The rewritten `src/swb_extract/features/inhouse/` versions
     do strip — but they're not in the v2 CSV yet. Either way, no clean
     laughter count exists today.
 
@@ -291,7 +298,7 @@ Two recurring issues worth flagging:
   textstat / spaCy. Effects: bracket tokens inflate the denominator of
   every rate; `Repetition Rate` will fire on a doubled `[noise]`;
   textstat syllabifies "laughter" inside the brackets. The rewritten
-  `src/swb_extract/features/` extractors strip brackets cleanly — but
+  `src/swb_extract/features/inhouse/` extractors strip brackets cleanly — but
   they aren't in the production CSV yet. Net result: laughter (Tannen's
   ninth dimension, PDF p. 202) is neither cleanly counted nor cleanly
   removed. Adding a dedicated bracket-event counter pass before

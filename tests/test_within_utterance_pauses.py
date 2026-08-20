@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.within_utterance_pauses import (
+from swb_extract.features.inhouse.within_utterance_pauses import (
     HEADER,
     PAUSE_MIN_SEC,
     compute_pauses,

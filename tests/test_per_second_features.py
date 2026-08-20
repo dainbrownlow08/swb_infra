@@ -4,12 +4,12 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.filler_word_per_second import (
+from swb_extract.features.inhouse.filler_word_per_second import (
     HEADER as FILLER_PS_HEADER,
     compute_rate_per_second as filler_ps,
     write_filler_words_per_second,
 )
-from swb_extract.features.repetition_per_second import (
+from swb_extract.features.inhouse.repetition_per_second import (
     HEADER as REP_PS_HEADER,
     compute_rate_per_second as rep_ps,
     write_repetitions_per_second,
@@ -179,7 +179,7 @@ def test_features_dispatch_routes_per_second_features(tmp_path, transcript_root)
 # ---- pronoun_per_second has spaCy dep; gate on availability ----
 
 def test_pronoun_ps_compute():
-    from swb_extract.features.pronoun_per_second import compute_rate_per_second
+    from swb_extract.features.inhouse.pronoun_per_second import compute_rate_per_second
     # v2 (2026-08-19): 1st/2nd-person closed list — 'i like that' counts only 'i'
     assert compute_rate_per_second("i like that", 1.5) == pytest.approx(1 / 1.5)
     assert compute_rate_per_second("i", 0) is None
@@ -187,10 +187,10 @@ def test_pronoun_ps_compute():
 
 
 def test_filler_split_computes_and_sums_to_combined():
-    from swb_extract.features.discourse_marker_per_second import (
+    from swb_extract.features.inhouse.discourse_marker_per_second import (
         compute_rate_per_second as marker_ps,
     )
-    from swb_extract.features.filled_pause_per_second import (
+    from swb_extract.features.inhouse.filled_pause_per_second import (
         compute_rate_per_second as pause_ps,
     )
     # 'um you know well uh' = 2 filled pauses + 2 discourse markers over 2s

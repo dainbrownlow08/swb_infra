@@ -152,13 +152,40 @@ so/like/well homograph disambiguation vs Treebank `{D}/{C}/{F}` gold
 from the marker list (re-gate: excision breaks the sum identity) · ⬜ (d) voice
 quality (parselmouth/eGeMAPS) · ⬜ (e) marked-shift dynamics (slope/reset/contour vs static
 moments) · ⬜ (f) speaker-level aggregates (unblocked) · 🟡 (g) narrative block — gold
-quotation rate measured; #25–28 unbuilt · ⬜ **(h) repetition/entrainment redesign
-mirroring "the MSFT paper" (user directive 2026-08-19, after the repetition trio was
-demoted to WIP as construct-questionable — exact citation TBD, get it from the user
-before building)**: replace bag-of-words pair counts with that paper's
-repetition/lexical-entrainment methodology; any resulting detector still owes the
-gold-`^m` validation at the 0.8 bar (`analysis/validate_echo_detector.py` records why
-naive lexical echo cannot pass: recall ceiling 41%).
+quotation rate measured; #25–28 unbuilt · 🟡 **(h) Thomas et al. (2018) replication — BUILT 2026-08-20, not yet extracted or in use.**
+"The MSFT paper" is resolved: Thomas, Czerwinski, McDuff, Craswell & Mark, *Style and
+Alignment in Information-Seeking Conversation*, CHIIR '18 (doi:10.1145/3176349.3176388).
+Its eleven per-participant-task variables (§3.2 / Table 2: ppron, wps, wpu, wpp, boplen,
+poplen, pv, lv, olap, rept, repu) are rebuilt one module each, under the paper's names, in
+`src/swb_extract/features/thomas2018/` — per-utterance ingredient CSVs in manifest order
+(16 columns) + `aggregate()` = the paper's pooled statistic (ratio of sums / pooled variance
+/ mean, never a mean of per-utterance ratios); `swb-extract thomas2018-side` writes the
+per-(call, side) table, the paper's unit. The in-house extractors moved verbatim to
+`features/inhouse/` (imports `swb_extract.features.inhouse.*`; tests/scripts repointed;
+CLI now dispatches on each package's `EXTRACTORS`). Verified: 8 unit tests (pure functions,
+synthetic two-tone WAV, CLI round trip) + end-to-end on conversation 2001 (66 utts, 38 s):
+wps 3.1 w/s · wpu 12–15 · wpp 1.7 · boplen .18–.22 s (paper: "order of 0.1 s") · poplen
+.07–.14 s · pv 1.4–2.1k Hz² (paper: "order of 1000 Hz²") · lv .0016–.0037 RMS² · olap
+.66–.74 (Switchboard's listener lines start mid-partner almost by construction; the paper
+found olap carried no signal, −0.01) · rept .58–.74 · repu .33–.48.
+**Not done:** ⬜ corpus-wide extraction (the seven text/timing modules: minutes; the four
+acoustic ones share ONE pyin+RMS pass cached at `derived/thomas2018_prosody.csv`, ≈0.05×
+real time ⇒ ~3 h at 4 workers); ⬜ registry rows — register as WIP *before* `swb-extract
+table` or the loader refuses the table; ⬜ NB08 wiring (caller-level pooling via
+`side_table.aggregate_group` on canonical-table rows). Corpus-mapping decisions, each on
+record in its module docstring: word-tight utterance bounds for wps/olap/poplen (padded
+trans spans fabricate overlap — the FTO lesson); "speech signal" = pyin voicing on the
+pitch.py settings, loudness = frame RMS on the same grid (OpenSMILE is not a dependency);
+between-own pauses literal (every unvoiced run between voiced frames counts, consonant
+stretches included — that is why the paper's boplen is ~0.1 s and wpp ≈ words per voiced
+stretch); poplen blank in overlap and in own-own gaps, every transcript line counted
+(backchannels included, as the paper notes); rept/repu on a frozen NLTK stopword list +
+Porter with fillers exactly {um, uh, uh-huh} — Switchboard's "um-hum" therefore counts as a
+term (sweepable `FILLERS`; decide before extraction); ppron = per word (LIWC convention).
+Construct note: rept/repu are SELF-repetition across a speaker's own consecutive lines (the
+paper's "persistence"), so they do not answer the dim-6 other-repetition question — the
+gold-`^m` bar (`analysis/validate_echo_detector.py`: naive lexical echo recall ceiling 41%)
+still applies to any detector claiming dim 6.
 
 **F. External replication** — ⬜ Fisher (same genre, 10×), CallHome/CallFriend (familiar
 dyads — the boundary-condition test), CANDOR (outcomes).

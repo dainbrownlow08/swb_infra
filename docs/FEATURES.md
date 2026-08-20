@@ -24,6 +24,13 @@
 > `python3 -c "import sys;sys.path.insert(0,'src');from
 > swb_extract import registry as R;print(R.summary())"`._
 
+> _Package split 2026-08-20: the `Extractor` column names a module in
+> `src/swb_extract/features/inhouse/`. The Thomas et al. (2018) replication
+> (`features/thomas2018/`: ppron, wps, wpu, wpp, boplen, poplen, pv, lv, olap, rept, repu —
+> 16 ingredient columns) is BUILT but not extracted; it has no rows here yet. When an
+> extractor is run, register its columns as WIP **before** `swb-extract table`, or the
+> loader's registry guard refuses the table (AUDIT.md §4E-h lists the columns)._
+
 ## Trusted
 
 | Column | Extractor | Family | Notes |

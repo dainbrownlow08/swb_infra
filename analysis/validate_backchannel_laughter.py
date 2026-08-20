@@ -45,8 +45,8 @@ sys.path.insert(0, "/Users/dainbrownlow/switchboard/src")
 import pandas as pd
 
 from swb_extract import nxt
-from swb_extract.features._text import _unwrap_or_drop, _LAUGHED_WORD_RE
-from swb_extract.features.backchannels import BACKCHANNEL_TOKENS, is_backchannel
+from swb_extract.features.inhouse._text import _unwrap_or_drop, _LAUGHED_WORD_RE
+from swb_extract.features.inhouse.backchannels import BACKCHANNEL_TOKENS, is_backchannel
 from swb_extract.transcripts import parse_transcript
 
 TRANS_ROOT = Path("/Users/dainbrownlow/switchboard/swb_ms98_transcriptions_cleaned")

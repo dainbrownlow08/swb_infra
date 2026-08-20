@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.syllable_rate import (
+from swb_extract.features.inhouse.syllable_rate import (
     HEADER,
     compute_rate,
     count_syllables,
@@ -18,7 +18,7 @@ from swb_extract.manifest import (
 
 # textstat needs cmudict; make sure it's available before importing
 pytest.importorskip("textstat")
-from swb_extract.features.syllable_rate import _ensure_cmudict
+from swb_extract.features.inhouse.syllable_rate import _ensure_cmudict
 _ensure_cmudict()
 
 REPO = Path(__file__).resolve().parent.parent
