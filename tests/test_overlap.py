@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.overlap import (
+from swb_extract.features.inhouse.overlap import (
     HEADER,
     compute_overlap,
     write_overlap,

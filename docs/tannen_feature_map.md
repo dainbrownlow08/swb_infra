@@ -10,8 +10,11 @@ Deborah Tannen's *Conversational Style: Analyzing Talk Among Friends*
 ## Part 1 — What we currently extract
 
 Source columns from `legacy/aligned_acoustic_linguistic_v2.csv`. Extractor
-code lives in `src/swb_extract/features/` (the rewritten version) with the
+code lives in `src/swb_extract/features/inhouse/` (the rewritten version; `features/X.py`
+below = `features/inhouse/X.py` since the 2026-08-20 package split) with the
 original references in `legacy/Conversational-Styles/src/feature_extractors/`.
+`src/swb_extract/features/thomas2018/` is a separate, literal replication of the eleven
+variables of Thomas et al. (CHIIR 2018) — see `docs/AUDIT.md` §4E-h.
 
 | # | Column | What it computes | Source code | Tannen dimension served |
 |---|--------|------------------|-------------|-------------------------|
@@ -26,14 +29,14 @@ original references in `legacy/Conversational-Styles/src/feature_extractors/`.
 | 9 | **loudness std** | RMS std | `features/loudness.py` | Ch.7 dim 2a; "increased amplitude" floor-getting device — PDF p. 202 |
 | 10 | **loudness range** | RMS max − min | `features/loudness.py` | Ch.7 dim 2a; "marked amplitude shifts" — PDF p. 62 |
 | 11 | **Turn Gap** | start_time − previous utt end_time (sec) | `feature_extractors/turn_gap_seconds.py` | Ch.7 dim 5b (timing of contribution rel. to previous); "Avoiding interturn pauses" — PDF p. 61, 202 |
-| 12 | **Filler Word Rate** | count of {um, uh, like, you know, i mean, so, well, i guess, basically, er} / total tokens | `features/filler_word_rate.py` | Loosely: Ch.7 dim 2c (pauses — fillers as filled pauses); also a counter-marker of high-considerateness hesitancy. Tannen does not name fillers as a primary feature. |
-| 13 | **Pronoun Rate** | PRON-tagged tokens / total tokens (spaCy) | `features/pronoun_rate.py` | Weak proxy for Ch.7 dim 1 (relative personal focus of topic) and Ch.4 "Mutual Revelation" (PDF p. 122) — first/second person density |
+| 12 | **Filled Pauses per Second** + **Discourse Markers per Second** | 2026-08-20 split of the pooled filler rate: {um, uh, er} vs {so, well, like, you know, i mean, i guess, basically}, each / duration | `features/filled_pause_per_second.py`, `features/discourse_marker_per_second.py` | **Tannen does not mention filler words** — this row is the project's bridge, not her claim. The original loose link stands unchanged: fillers-as-filled-pauses ≈ Ch.7 dim 2c (pauses), at most. The split itself follows the standard disfluency taxonomy (Treebank `{F}` filled pause vs `{D}` discourse marker — the same line our gold layer draws), NOT a Tannen sign prediction: no HI/HC sign is assigned a priori to either half; the pooled rate forced both onto one loading, the split lets the data assign each its own, reconciled at W7. Legacy pooled `Filler Words per Second` = their exact sum, replication only. |
+| 13 | **Personal Pronouns per Second** | 1st/2nd-person closed-list tokens / duration (no tagger) | `features/pronoun_per_second.py` | Dim-1 lexical instrument (v2 redesign 2026-08-19; v1 spaCy-PRON was ~50% non-personal and was disqualified) — Chafe involvement marker Tannen builds on; whether pooled Empath hits remain needed for dim 1 is an open decision |
 | 14 | **Repetition Rate** | unique tokens appearing ≥2 times within utterance / total tokens | `features/repetition_rate.py` | Ch.7 dim 5d (floor-getting via repetition of words) — PDF p. 202 |
 | 15 | **syllable_rate** | textstat syllables / utterance duration | `features/syllable_rate.py` | Ch.7 dim 5c (rate of speech); Ch.2 "Faster rate of speech" — PDF p. 61, 202 |
 | 16 | **token_count** | tokens per utterance | `feature_extractors/token_count_and_rate.py` | (volume covariate; underlies "tells more / talks more") |
 | 17 | **word_rate** | words / duration (sec) | `feature_extractors/word_rate_v2.py` | Ch.7 dim 5c — duplicates syllable_rate at coarser grain |
-| 18 | **repetitions_in_current_utterance** | lemma-pair matches within utt | `feature_extractors/cross_utterance_repeats.py` | Ch.7 dim 6a (repetition to add to one's own line); also speech disfluency proxy |
-| 19 | **repetitions_in_previous_utterance** | lemma matches between current and previous utt | `feature_extractors/cross_utterance_repeats.py` | Ch.7 dim 6 (repetition to incorporate other's offer); Ch.4 example "rightrightrightright" (PDF p. 117) |
+| 18 | **repetitions_in_current_utterance** | EXACT-token pair matches within utt (no lemmatization) | `features/repetitions_in_current.py` | NOT dim 6a (2026-08-19 audit: ~75% length-coupled, 72.5% function-word pairs; NB07 Step 13: 24.5% repair material, r≈0 with gold mirror) — disfluency/self-recurrence covariate, MAYBE in final set (normalized form only); dim 6 = the gold ^m mirror rate |
+| 19 | **repetitions_in_previous_utterance** | EXACT-token bag-of-words pair matches vs chronological predecessor (31.8% same-speaker) | `features/repetitions_in_previous.py` | NOT dim 6b (2026-08-19 direct gold test: r .10/.19 vs gold ^m; length-coupled .934) — doubtful covariate; echo-detector route CLOSED (recall ceiling 41%, F1 .208 — `analysis/validate_echo_detector.py`); dim 6 = gold ^m rate |
 
 Also present in the codebase but not in v2 CSV: `filler_word_per_second`,
 `pronoun_per_second`, `repetition_per_second` (denominator = duration),
@@ -52,10 +55,10 @@ Mapping the 9 dimensions and 5 specific devices in the Ch.7 summary
 
 | Dimension | Status | Current proxy | Gap |
 |-----------|--------|---------------|-----|
-| 1. Relative personal focus of topic | ~ | Pronoun Rate (1st/2nd person density) | No topic classifier; no "talking-about-self" detector |
+| 1. Relative personal focus of topic | ~ | Personal Pronouns per Second (v2, 1st/2nd only) + pooled Empath Personal/Impersonal Hits (overlap decision open) | No topic classifier; no "talking-about-self" detector |
 | 2a. Loudness | ✓ | loudness mean/std/range | None |
 | 2b. Pitch | ✓ | pitch mean/std/range | None |
-| 2c. Pauses | ~ | Turn Gap covers between-turn; filler rate covers filled pauses | **Within-turn silent pauses unmeasured** despite word-level alignment available |
+| 2c. Pauses | ~ | Between-turn: FTO/latching. Within-turn absolute use: the four `Within Pause` columns (built + Trusted — the old "unmeasured" note here was stale). Book gives 2c NO sign ("absolute use and use of marked shifts", p. 181); Ch.2 splits pauses by location: interturn avoided by HI (pacing 2c), *strategic* within-turn pauses on the INVOLVEMENT list (4d) — our extractor docstring had this inverted, fixed 2026-08-20. Reading fillers as "filled pauses" under 2c is OUR bridge — her pauses are silences; fillers appear nowhere in the book (verified 2026-08-20) | "Marked shifts" half of 2c unmeasured (static moments only — audit §4E-e dynamics gap) |
 | 2d. Voice quality and tone | ✗ | — | No jitter, shimmer, HNR, spectral tilt, breathiness, creak |
 | 3a. Quickness of response | ✓ | Turn Gap | Should distinguish *positive* (very short / latched) from *long* gap |
 | 3b. Paralinguistics for enthusiasm | ~ | pitch/loudness ranges | No "marked shift" detector — current stats are summary moments |
@@ -67,8 +70,8 @@ Mapping the 9 dimensions and 5 specific devices in the Ch.7 summary
 | 5b. Timing of contribution | ✓ | Turn Gap | Need negative gaps (overlap) preserved, latching (~0s) flagged |
 | 5c. Rate of speech | ✓ | syllable_rate, word_rate | None |
 | 5d. Floor-getting (amplitude, repetition) | ~ | loudness range, Repetition Rate | No turn-onset amplitude vs. baseline; no "machine-gun" repetition pattern |
-| 6a. Repetition to extend another's line | ~ | repetitions_in_previous_utterance | Lemma overlap is coarse — no "completion of other's syntax" detector |
-| 6b. Repetition to incorporate other's offer | ~ | same column | Same caveat |
+| 6a. Repetition to extend another's line | ✓ | gold `^m` mirror rate (NXT dialAct; NB07 Step 13/T9) — extractor self-repetition columns disqualified (r≈0 with mirror) | No "completion of other's syntax" detector |
+| 6b. Repetition to incorporate other's offer | ✓ (gold subset) | gold `^m` mirror rate — extractor column disqualified by direct gold test (r .10/.19); full-corpus lexical detector proven infeasible (recall ceiling 41%) | Full-corpus coverage would need a semantic/transform-aware model, validated at the .8 bar |
 | 7. Topic cohesion / tolerance for diffuse topics | ✗ | — | No topic-shift / coherence metric |
 | 8. Tolerance for noise vs. silence | ~ | Turn Gap distribution | No conversation-level silence ratio; no overlap density |
 | 9. Laughter (when, how much) | ✗ | — | `[laughter]` brackets are *currently stripped* by all our extractors — losing the signal |
@@ -101,15 +104,22 @@ Suggestions are grouped by Tannen feature, with brief implementation notes.
 ### Pacing & turn-taking (Ch.4 Overlap and Pace, PDF p. 113–122)
 
 1. **within_utterance_pause_count** / **mean_intra_pause_sec** / **max_intra_pause_sec**
-   — Word-level alignments give silence between adjacent words inside one
-   utterance. Tannen's "strategic within-turn pauses" (Ch.2 feature 4d,
-   PDF p. 62) is currently invisible to us.
+   — BUILT (`within_utterance_pauses.py`, four Trusted columns). Measures
+   absolute within-turn silence; note Ch.2 4d places *strategic* within-turn
+   pauses on the involvement list, and the book signs absolute use not at all
+   (see the dim-2c row above).
 
-2. **filled_pause_rate** — separate `um`/`uh` (filled pauses) from
-   `like`/`you know`/`i mean` (discourse markers). Today they're lumped
-   into `Filler Word Rate`. The two have *opposite* readings: filled
-   pauses signal hesitation (high-considerateness); discourse markers like
-   "y'know" signal involvement (PDF p. 129 Yiddish "Oy" example).
+2. **filled_pause_rate** — DONE 2026-08-20 as the split pair
+   (`filled_pause_per_second` / `discourse_marker_per_second`).
+   **Source correction (2026-08-20 re-read):** the "opposite readings" sign
+   claim this item originally carried (filled pauses = HC hesitation,
+   "y'know" = involvement) is NOT in Tannen — fillers appear nowhere in the
+   book, and the old PDF-p.129 cite is the Yiddish "Oy!" *response-cry*
+   passage (expressive phonology / rapport, book p. 108), unrelated to
+   discourse markers. The signs were a project hypothesis; they remain one,
+   left to the loadings and reconciled at W7. The split stands on the
+   identifiability argument alone (two construct classes, one shared loading
+   when pooled).
 
 3. **latching_flag** — `Turn Gap` ≤ 50 ms (or negative). Tannen treats
    latching as the canonical involvement signal (PDF p. 119: "rapid rate
@@ -165,7 +175,19 @@ Suggestions are grouped by Tannen feature, with brief implementation notes.
 
 ### Repetition & alignment (Ch.7 dim 6, PDF p. 202)
 
-14. **other_repetition_count** / **self_repetition_count** — Already partly
+14. **(2026-08-19 direction) MSFT-paper repetition/entrainment redesign** —
+    the whole in-house repetition family was demoted to WIP (construct-
+    questionable: length-coupled, gold-disqualified; audit §4E-h). Replace with
+    the repetition methodology of "the MSFT paper" = Thomas, Czerwinski, McDuff,
+    Craswell & Mark (2018), *Style and Alignment in Information-Seeking
+    Conversation*, CHIIR '18 — its `rept`/`repu` (stopword-stripped, stemmed
+    terms repeated from the speaker's OWN previous utterance) are built in
+    `features/thomas2018/` (2026-08-20). NB they are self-repetition
+    ("persistence"), not dim-6 other-repetition. Any detector must validate vs gold `^m` at
+    the 0.8 bar — naive lexical echo is proven infeasible
+    (`analysis/validate_echo_detector.py`, recall ceiling 41%).
+    Original sketch kept below for reference:
+    **other_repetition_count** / **self_repetition_count** — Already partly
     have `repetitions_in_previous_utterance`, but this lumps *both*
     speakers together. Tannen distinguishes repeating *the other* (rapport
     — "rightrightright", PDF p. 117) from repeating *self* (insistence).
@@ -187,7 +209,7 @@ Suggestions are grouped by Tannen feature, with brief implementation notes.
     legacy extractors that populated the v2 CSV do **not** strip brackets,
     so `[laughter]` is sitting in the denominator of every rate (and is
     counted as a real token by `Repetition Rate` if it appears twice in
-    one utterance). The rewritten `src/swb_extract/features/` versions
+    one utterance). The rewritten `src/swb_extract/features/inhouse/` versions
     do strip — but they're not in the v2 CSV yet. Either way, no clean
     laughter count exists today.
 
@@ -276,7 +298,7 @@ Two recurring issues worth flagging:
   textstat / spaCy. Effects: bracket tokens inflate the denominator of
   every rate; `Repetition Rate` will fire on a doubled `[noise]`;
   textstat syllabifies "laughter" inside the brackets. The rewritten
-  `src/swb_extract/features/` extractors strip brackets cleanly — but
+  `src/swb_extract/features/inhouse/` extractors strip brackets cleanly — but
   they aren't in the production CSV yet. Net result: laughter (Tannen's
   ninth dimension, PDF p. 202) is neither cleanly counted nor cleanly
   removed. Adding a dedicated bracket-event counter pass before

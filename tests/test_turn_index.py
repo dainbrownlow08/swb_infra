@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features._turn_index import TurnGapIndex, build_turn_gap_index
+from swb_extract.features.inhouse._turn_index import TurnGapIndex, build_turn_gap_index
 from swb_extract.manifest import parse_rel_path
 
 

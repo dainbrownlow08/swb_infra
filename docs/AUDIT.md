@@ -104,7 +104,14 @@ session's report; both repos green: local 308 passed / 13 skipped, all 13 = empa
 installed):
 
 - 🟡 **Rate↔pause shared denominator** (risk 7): word/syllable/per-second rates divide by trans-span duration, mechanically anticoupling them with the Within-Pause family — part of Step 24's PC3 is arithmetic. NB08 sensitivity: articulation-rate variant via `phonation ≈ duration − Within Pause Total` from existing Trusted columns.
-- 🟡 **Loudness silence dilution** (risk 6): RMS over the padded slice mixes amplitude with speech density; dim-2a mapping partially confounded with pausing. Needs a FEATURES.md caveat + (only if load-bearing in S6) a word-tight variant.
+- ✅ **Loudness silence dilution** (risk 6) — **measured, then redesigned and re-extracted 2026-08-19**. Measurement first (`analysis/validate_loudness_dilution.py`): old shipped mean ≈ word-tight × speech_frac^0.67 (R² .96), speaker ranking survives (side-level r(log) ≈ .98) — variance argument said "caveat suffices," but the **word-tight redesign was adopted anyway** (decision: external post-publication auditability + operationalizing the pipeline on other corpora with different padding conventions). `loudness.py` rewritten (RMS frames restricted to word-aligned intervals; +`loudness speech frac` diagnostic; header change defuses the stale-cache vintage trap for this transition — the general per-CSV version-stamp item below still stands); full-corpus re-extraction + sanity gates passed same day (old-vs-new r(log) .905, new ≥ old 99.1%, median undilution ×1.457 — all matching prediction), table rebuilt, 4 columns Trusted. Pre-redesign CSV archived in `utterances_v2/_archive/`. **NB: Step 24 loudness loadings are now doubly pre-redesign (Hz-era AND diluted-loudness-era) — W5 re-records on the current table.** Residual dim-2a validity threat is **telephone channel gain**, not dilution — flagged, unquantified (B10 cross-call reliability would bound it).
+- ✅ **6b. Laughed-word tokenization** (found in the 2026-08-19 extractor walkthrough): `[laughter-yeah]` = a real spoken word in ms98 notation, but the shape-based bracket strip dropped it with `[noise]` — 10,275 tokens in 5,714 utts (0.39% of corpus, ~20% inside laughing utterances; biased against high-laughter = involvement-style speakers). Fixed in shared `_text.tokenize`/`strip_bracket_tokens` (unwrap, not drop; local duplicate tokenizers in token_count/word_rate/syllable_rate/personal_focus consolidated onto `_text` — kills the drift risk); question_flags/mutual_revelation local copies deliberately untouched (WIP-excluded, frozen adjudications); fto/backchannels independent (own normalization, gold P/R numbers unaffected). 9 extractors re-extracted + gated: token_count delta == Laughed Word Count EXACT (0/214,204 violations); every other changed row confined to laughed-word utts (+ chronological successors for reps-in-previous); table rebuilt; 280 tests pass. Pre-fix CSVs: `utterances_v2/_archive/*_pre_laughedword_2026-08-19.csv`. NB07 Steps 11/13 repetition/filler figures now cite pre-fix values (drift ≤1,721 rows) — W5 re-records on the current table.
+- ✅ **6c. Syllable counting + angle markup** (2026-08-19 syllable_rate walkthrough): textstat 0.7.13 = CMUdict vowel nuclei (98.4% freq-weighted coverage) + pyphen fallback, but the whole-text path stripped hyphens, so `um-hum` (13,744 tokens) became OOV "umhum" → pyphen guessed 1 syllable — **halving syllable_rate on 11,332 pure-backchannel utterances** (a backchannel-share-correlated bias, same shape as 6b). Fixed: per-hyphen-part CMUdict lookup; ms98 `_N` variant suffix stripped (citation-form counts, documented +0.07% approximation); `<b_aside>`/`<e_aside>` markup (300 tokens/147 utts, previously counted as words AND syllables) dropped in the shared tokenizer, correcting token_count/word_rate too. Gates: exact corpus-wide recompute 0/214,204 mismatches (token_count and syllable_rate both), delta==−angle_tokens exact, all other extractors' changes confined to the 147 angle utts, pure-backchannel rate ratio median exactly 2.00. Pre-fix CSVs: `_archive/*_pre_anglefix_2026-08-19.csv`; 284 tests.
+- ✅ **6d. Duration guard** (2026-08-19 word_rate audit): 9 trans lines in 247,820 (8 in the manifest) have word alignments extending outside their own span — provably wrong durations (worst: 11.9 s of words in a claimed 2.7 s span → 21.9 "words/s"). Guard in shared `_duration_lookup`: such durations are invalidated → all 5 per-second extractors write blanks (unmeasurable), gated exact (changed == the 8 rows, all blank). Corpus-portable alignment sanity check. Same 8 rows' audio slices are truncated → their loudness/pitch describe partial audio (left as-is, word-tight masking makes them valid for what's audible; noted). **Final-analysis decision on record: word_rate stays Trusted but is EXCLUDED from NB08's final set — syllable_rate (r .948/.966 near-duplicate, better instrument + better audited) is the dim-5c measure; fold into the W7 construct map.**
+- ✅ **6e. Personal-pronoun redesign** (2026-08-19 pronoun audit → same-day decision reversal): v1 spaCy-PRON was total pronominalization (~50% non-personal: it/that/what/there; side-level r with 1st/2nd-only just .549) — audited-and-keep was the first call, then reworked to align with dim 1. v2 = 1st/2nd-person **closed list, no tagger** (deterministic, corpus-portable; spaCy removed from the trusted line — the model-version reproducibility surface is gone). Column renamed `Personal Pronouns per Second`, family volume→tannen (dim-1 lexical instrument). Gates: corpus personal/total ratio .496 vs sample-predicted .501; 8 guard nulls; v1 archived. **Open decision: whether pooled Empath Personal/Impersonal Hits are still needed for dim 1** (Empath's category mapping is unvalidated per §4C12 — the pronoun list may now be the cleaner sole instrument).
+- ✅ **6f. Repetition-family construct adjudication** (2026-08-19 audits of both repetition columns): both extractors FAITHFUL (full recompute 0/214,204 each) but neither measures Tannen dim 6. In-current: 72.5% function-word pairs, r(pairs, token_count) .80/.88 — **kept, MAYBE for final set (normalized pairs/C(n,2) or log1p only, never raw next to token_count)**. In-previous: 31.8% same-speaker predecessors, length coupling .934, **direct gold test r .10/.19 vs ^m** — kept Trusted, DOUBTFUL for final set. **Echo-detector replacement adjudicated and CLOSED** (`analysis/validate_echo_detector.py`): gold mirrors are functional, not lexical — 75/598 share zero contiguous tokens with the preceding other-speaker utterance, recall ceiling 41%, best rule F1 .208 vs the .8 bar (Question Flag precedent). Dim 6 = gold `^m` rate, 642-conv subset (map updated: 6a/6b now ✓-gold).
+- ✅ **6g. Filler rate audited faithful** (2026-08-19 walkthrough, verdict-only — no code change): full recompute 0/214,204 EXACT; 8 nulls == the 6d guard rows; matcher hand-checked (greedy-safe allowlist). Composition measured: 41.8% filled pauses / 58.2% discourse markers, "er" dead (0 hits), so/like/well homograph-conflated — sharpens §4E-c, construct not computation. Details in the FEATURES.md row. **Follow-up 2026-08-20: the split shipped** — two extractors (`filled_pause_per_second`, `discourse_marker_per_second`), partitioned allowlist in `_text` (partition invariant unit-tested), extracted + exact-sum-gated + Trusted, table rebuilt; see §4E-c for status and the pending homograph gold study.
+- ✅ **6h. Source re-read: Tannen Ch.7 + Ch.2 vs our theory framing** (2026-08-20, book verified page-by-page; docs/docstrings only — columns and data untouched). Findings: Ch.7 mentions pauses exactly twice — dim 2c ("absolute use and use of marked shifts", p. 181, NO sign attached) and the p. 188 interturn-pause-expectation dominance mechanism; **fillers/um/uh appear nowhere in the book**. Ch.2 (pp. 40–41) splits pauses by location: interturn avoided by HI ("silence shows lack of rapport", pacing 2c); *strategic* within-turn pauses on the INVOLVEMENT list (expressive paralinguistics 4d). Fixed: `within_utterance_pauses.py` docstring had 4d's sign INVERTED (claimed HC-counterpart-to-latching — invented); feature-map 2c row was stale ("within-turn pauses unmeasured" — built + Trusted long since) and its filled_pause suggestion cited PDF p. 129 for a sign claim, but that page is the "Oy!" response-cry passage (expressive phonology, book p. 108) — unrelated to discourse markers. All pause/filler theory framing now labeled: book-sourced with page, or project bridge, or unsigned-left-to-loadings. Root pattern (2 hits in 2 days: filler signs, within-pause sign): unsourced sign claims decay into "Tannen says" — the construct map's W7 refresh (S6) must carry a page-cite per direction.
 - 🟡 **CSV cache vintage class** (risk 6, bit once — latching): caches key on (row, header); an algorithm change under an unchanged schema silently reuses stale rows. Fix: version/params stamp per feature CSV, before W5 re-records.
 - ⬜ **ST-slope artifact bound** (risk 5): the Hz column has the ±1000 Hz/s convention; the ST column the flag thresholds has none. Record one before W5.
 - ⬜ Small (risk ≤3): `float("nan")` passes the tolerant parsers (add `math.isfinite` before Fisher §4F); empath not installed in the test env (13 Trusted-extractor tests silently skip); `_ensure_cmudict` disables SSL verification globally; two "overlap" definitions across `overlap.py` (word-level) vs `overlap_split.py` (turn-span) deserve a registry cross-note.
@@ -131,11 +138,54 @@ mismatch → `rating_tab.csv` call quality (the most direct test of Tannen's act
 most exciting unpursued avenue); ⬜ D16 topic join (built, never joined); ✅ D17 FTO grounded
 in the turn-taking literature (Step 1b).
 
-**E. Feature gaps** — ✅ (a) overlap split · ✅ (b) laughter · ⬜ (c) filled-pause vs
-discourse-marker split (opposite signs currently cancel in the filler rate) · ⬜ (d) voice
+**E. Feature gaps** — ✅ (a) overlap split · ✅ (b) laughter · 🟡 (c) filled-pause vs
+discourse-marker split — **built, extracted, and Trusted 2026-08-20** (`Filled Pauses
+per Second` {um,uh,er} + `Discourse Markers per Second` {the 7 others}; gate: pair sums
+to the legacy combined column on all 214,204 rows, 0 violations, null sets identical;
+motivating measurement 2026-08-19: 41.8%/58.2% of 183,496 hits — near-worst-case mix
+IF the two classes load oppositely; that sign is unsourced in Tannen — fillers appear
+nowhere in the book (§3 6h) — so cancellation is a possibility the split makes checkable,
+not an established fact). 🟡 = not yet wired into NB08; combined column superseded for
+analysis (it is exactly their sum — never use all three together). Remaining leg:
+so/like/well homograph disambiguation vs Treebank `{D}/{C}/{F}` gold
+(`corpus/annotations/treebank/dysfl/`, 36 convs) at the 0.8 bar — failures excised
+from the marker list (re-gate: excision breaks the sum identity) · ⬜ (d) voice
 quality (parselmouth/eGeMAPS) · ⬜ (e) marked-shift dynamics (slope/reset/contour vs static
 moments) · ⬜ (f) speaker-level aggregates (unblocked) · 🟡 (g) narrative block — gold
-quotation rate measured; #25–28 unbuilt.
+quotation rate measured; #25–28 unbuilt · 🟡 **(h) Thomas et al. (2018) replication — BUILT 2026-08-20, not yet extracted or in use.**
+"The MSFT paper" is resolved: Thomas, Czerwinski, McDuff, Craswell & Mark, *Style and
+Alignment in Information-Seeking Conversation*, CHIIR '18 (doi:10.1145/3176349.3176388).
+Its eleven per-participant-task variables (§3.2 / Table 2: ppron, wps, wpu, wpp, boplen,
+poplen, pv, lv, olap, rept, repu) are rebuilt one module each, under the paper's names, in
+`src/swb_extract/features/thomas2018/` — per-utterance ingredient CSVs in manifest order
+(16 columns) + `aggregate()` = the paper's pooled statistic (ratio of sums / pooled variance
+/ mean, never a mean of per-utterance ratios); `swb-extract thomas2018-side` writes the
+per-(call, side) table, the paper's unit. The in-house extractors moved verbatim to
+`features/inhouse/` (imports `swb_extract.features.inhouse.*`; tests/scripts repointed;
+CLI now dispatches on each package's `EXTRACTORS`). Verified: 8 unit tests (pure functions,
+synthetic two-tone WAV, CLI round trip) + end-to-end on conversation 2001 (66 utts, 38 s):
+wps 3.1 w/s · wpu 12–15 · wpp 1.7 · boplen .18–.22 s (paper: "order of 0.1 s") · poplen
+.07–.14 s · pv 1.4–2.1k Hz² (paper: "order of 1000 Hz²") · lv .0016–.0037 RMS² · olap
+.66–.74 (Switchboard's listener lines start mid-partner almost by construction; the paper
+found olap carried no signal, −0.01) · rept .58–.74 · repu .33–.48.
+**Not done:** ⬜ corpus-wide extraction (the seven text/timing modules: minutes; the four
+acoustic ones share ONE pyin+RMS pass cached at `derived/thomas2018_prosody.csv`, ≈0.05×
+real time ⇒ ~3 h at 4 workers); ⬜ registry rows — register as WIP *before* `swb-extract
+table` or the loader refuses the table; ⬜ NB08 wiring (caller-level pooling via
+`side_table.aggregate_group` on canonical-table rows). Corpus-mapping decisions, each on
+record in its module docstring: word-tight utterance bounds for wps/olap/poplen (padded
+trans spans fabricate overlap — the FTO lesson); "speech signal" = pyin voicing on the
+pitch.py settings, loudness = frame RMS on the same grid (OpenSMILE is not a dependency);
+between-own pauses literal (every unvoiced run between voiced frames counts, consonant
+stretches included — that is why the paper's boplen is ~0.1 s and wpp ≈ words per voiced
+stretch); poplen blank in overlap and in own-own gaps, every transcript line counted
+(backchannels included, as the paper notes); rept/repu on a frozen NLTK stopword list +
+Porter with fillers exactly {um, uh, uh-huh} — Switchboard's "um-hum" therefore counts as a
+term (sweepable `FILLERS`; decide before extraction); ppron = per word (LIWC convention).
+Construct note: rept/repu are SELF-repetition across a speaker's own consecutive lines (the
+paper's "persistence"), so they do not answer the dim-6 other-repetition question — the
+gold-`^m` bar (`analysis/validate_echo_detector.py`: naive lexical echo recall ceiling 41%)
+still applies to any detector claiming dim 6.
 
 **F. External replication** — ⬜ Fisher (same genre, 10×), CallHome/CallFriend (familiar
 dyads — the boundary-condition test), CANDOR (outcomes).

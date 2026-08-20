@@ -3,14 +3,14 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.mutual_revelation_flag import (
+from swb_extract.features.inhouse.mutual_revelation_flag import (
     HEADER,
     MIN_TOKENS,
     is_personal_anecdote,
     lookup_mutual_revelation,
     write_mutual_revelation_flags,
 )
-from swb_extract.features._turn_index import build_text_index, build_turn_gap_index
+from swb_extract.features.inhouse._turn_index import build_text_index, build_turn_gap_index
 from swb_extract.manifest import (
     MANIFEST_HEADER,
     manifest_path,

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.repetitions_in_current import (
+from swb_extract.features.inhouse.repetitions_in_current import (
     HEADER,
     compute,
     count_pair_repetitions,

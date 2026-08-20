@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.topic_label import (
+from swb_extract.features.inhouse.topic_label import (
     HEADER,
     build_topic_index,
     load_conv_topics,

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from swb_extract.cli import main
-from swb_extract.features.word_rate import (
+from swb_extract.features.inhouse.word_rate import (
     HEADER,
     compute_rate,
     count_words,
@@ -28,6 +28,33 @@ def transcript_root():
     if not TRANSCRIPT_ROOT.is_dir():
         pytest.skip(f"missing transcript root: {TRANSCRIPT_ROOT}")
     return TRANSCRIPT_ROOT
+
+
+def test_duration_guard_invalidates_mistimed_trans_lines(tmp_path):
+    """Words outside the trans span ⇒ duration invalid ⇒ lookup returns None."""
+    from swb_extract.features.inhouse._duration_lookup import (
+        build_duration_index,
+        lookup_duration,
+    )
+
+    d = tmp_path / "20" / "2001"
+    d.mkdir(parents=True)
+    (d / "sw2001A-ms98-a-trans.text").write_text(
+        "sw2001A-ms98-a-0001 0.0 1.0 hi there\n"      # consistent
+        "sw2001A-ms98-a-0002 5.0 6.0 way too long\n",  # words run to 11 s
+        encoding="utf-8",
+    )
+    (d / "sw2001A-ms98-a-word.text").write_text(
+        "sw2001A-ms98-a-0001 0.1 0.5 hi\n"
+        "sw2001A-ms98-a-0001 0.5 0.9 there\n"
+        "sw2001A-ms98-a-0002 5.1 5.5 way\n"
+        "sw2001A-ms98-a-0002 5.5 6.0 too\n"
+        "sw2001A-ms98-a-0002 10.0 11.0 long\n",
+        encoding="utf-8",
+    )
+    idx = build_duration_index(tmp_path)
+    assert lookup_duration(idx, "200/sw2001A-U0001.wav") == pytest.approx(1.0)
+    assert lookup_duration(idx, "200/sw2001A-U0002.wav") is None
 
 
 def test_tokenize_strips_whole_bracket():

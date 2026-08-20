@@ -1,8 +1,8 @@
 import csv
 from pathlib import Path
 
-from swb_extract.features.fto import TRANSFER, build_turn_events
-from swb_extract.features.overlap_split import (
+from swb_extract.features.inhouse.fto import TRANSFER, build_turn_events
+from swb_extract.features.inhouse.overlap_split import (
     HEADER,
     OBSTRUCTIVE_WINDOW_SEC,
     classify_event,

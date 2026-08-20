@@ -3,7 +3,7 @@ import csv
 import pytest
 
 from swb_extract.cli import main
-from swb_extract.features.token_count import (
+from swb_extract.features.inhouse.token_count import (
     HEADER,
     count_tokens,
     run,

@@ -4,12 +4,12 @@ from pathlib import Path
 
 import pytest
 
-from swb_extract.features.filler_word_per_second import (
+from swb_extract.features.inhouse.filler_word_per_second import (
     HEADER as FILLER_PS_HEADER,
     compute_rate_per_second as filler_ps,
     write_filler_words_per_second,
 )
-from swb_extract.features.repetition_per_second import (
+from swb_extract.features.inhouse.repetition_per_second import (
     HEADER as REP_PS_HEADER,
     compute_rate_per_second as rep_ps,
     write_repetitions_per_second,
@@ -179,14 +179,52 @@ def test_features_dispatch_routes_per_second_features(tmp_path, transcript_root)
 # ---- pronoun_per_second has spaCy dep; gate on availability ----
 
 def test_pronoun_ps_compute():
-    spacy = pytest.importorskip("spacy")
-    try:
-        nlp = spacy.load("en_core_web_sm")
-    except OSError:
-        pytest.skip("en_core_web_sm not installed")
+    from swb_extract.features.inhouse.pronoun_per_second import compute_rate_per_second
+    # v2 (2026-08-19): 1st/2nd-person closed list — 'i like that' counts only 'i'
+    assert compute_rate_per_second("i like that", 1.5) == pytest.approx(1 / 1.5)
+    assert compute_rate_per_second("i", 0) is None
+    assert compute_rate_per_second("[laughter]", 1.0) == 0.0
 
-    from swb_extract.features.pronoun_per_second import compute_rate_per_second
-    # 'i like that' has 2 pronouns (i, that); 1.5s duration → 2/1.5 = 1.333
-    assert compute_rate_per_second("i like that", 1.5, nlp=nlp) == pytest.approx(2 / 1.5)
-    assert compute_rate_per_second("i", 0, nlp=nlp) is None
-    assert compute_rate_per_second("[laughter]", 1.0, nlp=nlp) == 0.0
+
+def test_filler_split_computes_and_sums_to_combined():
+    from swb_extract.features.inhouse.discourse_marker_per_second import (
+        compute_rate_per_second as marker_ps,
+    )
+    from swb_extract.features.inhouse.filled_pause_per_second import (
+        compute_rate_per_second as pause_ps,
+    )
+    # 'um you know well uh' = 2 filled pauses + 2 discourse markers over 2s
+    text = "um you know well uh"
+    assert pause_ps(text, 2.0) == pytest.approx(1.0)
+    assert marker_ps(text, 2.0) == pytest.approx(1.0)
+    # split identity: pause + marker == combined, incl. laughed/bracket tokens
+    for t in (text, "so i mean like", "[laughter-um] right", "yeah [noise]", ""):
+        combined = filler_ps(t, 2.0)
+        assert pause_ps(t, 2.0) + marker_ps(t, 2.0) == pytest.approx(combined)
+    # None/zero-duration and empty-text semantics match the combined column
+    assert pause_ps("um", 0.0) is None and marker_ps("well", None) is None
+    assert pause_ps("", 5.0) == 0.0 and marker_ps("", 5.0) == 0.0
+
+
+def test_features_dispatch_routes_filler_split(tmp_path, transcript_root):
+    from swb_extract.cli import main
+
+    out = tmp_path / "utterances_v2"
+    mp = manifest_path(out)
+    with open_appender(mp) as w:
+        write_row(w, "200/sw2001A-U0002.wav", "hi um you know")
+
+    for name, col in (
+        ("filled_pause_per_second", "Filled Pauses per Second"),
+        ("discourse_marker_per_second", "Discourse Markers per Second"),
+    ):
+        rc = main([
+            "features", name,
+            "--out-root", str(out),
+            "--transcript-root", str(transcript_root),
+        ])
+        assert rc == 0
+        rows = list(csv.reader((out / "features" / f"{name}.csv").open()))
+        assert rows[0] == ["Utterance File Name", col]
+        assert rows[1][0] == "200/sw2001A-U0002.wav"
+        assert rows[1][1] != ""
