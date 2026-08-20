@@ -1,8 +1,19 @@
-"""Within-utterance pauses — strategic silences inside a single turn.
+"""Within-utterance pauses — silent gaps inside a single turn.
 
-Tannen ref: Ch.2 feature 4d (PDF p.62) "strategic within-turn pauses" — the
-High-Considerateness counterpart to latching. HI speakers minimize internal
-pausing (fast, latched); HC speakers leave silences for the interlocutor.
+Tannen refs (verified against the book 2026-08-20): Ch.7 dim 2c lists "pauses"
+among the paralinguistic features, varying in "absolute use and use of marked
+shifts" (book p. 181) — NO direction attached. Ch.2's involvement-features
+list mentions pauses twice, split by location with different roles (book
+pp. 40-41): Pacing 2c "Avoiding interturn pauses (silence shows lack of
+rapport)" — BETWEEN-turn silence avoided by high-involvement speakers (FTO/
+latching territory) — and Expressive paralinguistics 4d "Strategic within-turn
+pauses", i.e. marked/expressive WITHIN-turn pausing listed as an involvement
+device. These columns measure the ABSOLUTE side (total/count/rate/max of
+within-turn silence), for which the book states no sign — direction is left to
+the loadings. (A prior version of this docstring called within-turn silence
+"the High-Considerateness counterpart to latching" — an invented sign,
+inverted relative to 4d's placement; corrected 2026-08-20. The marked-shifts
+half of dim 2c remains the audit §4E-e dynamics gap.)
 
 From the word-level alignment of one utterance, compute silent gaps between
 adjacent words:  gap_i = word[i+1].start - word[i].end  (negatives clamped to 0

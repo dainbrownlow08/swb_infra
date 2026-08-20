@@ -22,11 +22,13 @@ from __future__ import annotations
 
 import csv
 import os
+import re
 import ssl
 from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
 from ._duration_lookup import build_duration_index, lookup_duration
+from ._text import strip_bracket_tokens
 
 FEATURE_NAME = "syllable_rate"
 HEADER = ("Utterance File Name", "syllable_rate")  # lowercase per legacy column
@@ -49,21 +51,33 @@ def _ensure_cmudict() -> None:
     nltk.download("cmudict", quiet=True)
 
 
-def _strip_bracket_text(text: str) -> str:
-    return " ".join(
-        t for t in text.split()
-        if not (t.startswith("[") and t.endswith("]"))
-    )
+# ms98 pronunciation-variant suffix (them_1 = 'em, because_1 = 'cause, …).
+# Stripped before lookup so the base word hits CMUdict; this counts the
+# CITATION form — a deliberate approximation for reduced variants ('cause said
+# with 1 syllable counts as because = 2; 2,532 tokens, +0.07% corpus-wide),
+# accepted because no principled reduced-form syllable source exists.
+_VARIANT_SUFFIX_RE = re.compile(r"_\d+$")
 
 
 def count_syllables(text: str) -> int:
-    """Strip whole-bracket tokens, then count via textstat. Returns 0 for empty."""
+    """Strip markup tokens, then count syllables per hyphen-part via textstat
+    (CMUdict vowel nuclei; pyphen fallback for OOV). Returns 0 for empty.
+
+    2026-08-19 fix: counting per hyphen part sends each part through CMUdict —
+    the whole-text path stripped hyphens, so "um-hum" became OOV "umhum" and
+    pyphen guessed 1 syllable (13,744 tokens; 11,332 pure-backchannel
+    utterances had their rate halved). um(1)+hum(1)=2 by dictionary instead.
+    """
     import textstat
 
-    cleaned = _strip_bracket_text(text)
-    if not cleaned:
-        return 0
-    return int(textstat.syllable_count(cleaned))
+    cleaned = strip_bracket_tokens(text)
+    total = 0
+    for tok in cleaned.split():
+        tok = _VARIANT_SUFFIX_RE.sub("", tok)
+        for part in tok.split("-"):
+            if part:
+                total += int(textstat.syllable_count(part))
+    return total
 
 
 def compute_rate(text: str, duration: float | None) -> float | None:

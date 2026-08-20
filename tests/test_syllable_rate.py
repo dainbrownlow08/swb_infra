@@ -54,6 +54,26 @@ def test_count_syllables_keeps_inline_brackets():
     assert count_syllables("i[t]-") >= 1  # textstat parses through the marker
 
 
+def test_count_syllables_hyphen_parts_via_dictionary():
+    # 2026-08-19 fix: per hyphen-part lookup — the whole-text path made
+    # "um-hum" an OOV "umhum" that pyphen guessed as 1 syllable.
+    assert count_syllables("um-hum") == 2
+    assert count_syllables("huh-uh") == 2
+    assert count_syllables("uh-huh") == 2
+    assert count_syllables("twenty-five") == 3
+
+
+def test_count_syllables_ms98_variant_suffix_counts_citation_form():
+    # because_1 = reduced "'cause"; counted as citation "because" (documented)
+    assert count_syllables("because_1") == 2
+    assert count_syllables("them_1") == 1
+
+
+def test_count_syllables_angle_markup_is_not_speech():
+    assert count_syllables("<b_aside>") == 0
+    assert count_syllables("<b_aside> okay <e_aside>") == 2
+
+
 def test_compute_rate_basic():
     # 'um yeah um' → textstat ≈ 3 syllables, duration 1.5s → rate = 2.0
     rate = compute_rate("um yeah um", 1.5)

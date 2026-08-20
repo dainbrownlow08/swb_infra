@@ -208,6 +208,8 @@ def cmd_table(args: argparse.Namespace) -> int:
 def cmd_features(args: argparse.Namespace) -> int:
     from .features import (
         demographics,
+        discourse_marker_per_second,
+        filled_pause_per_second,
         filler_word_per_second,
         fto,
         latching_flag,
@@ -236,6 +238,10 @@ def cmd_features(args: argparse.Namespace) -> int:
         return demographics.run(args)
     if args.name == filler_word_per_second.FEATURE_NAME:
         return filler_word_per_second.run(args)
+    if args.name == filled_pause_per_second.FEATURE_NAME:
+        return filled_pause_per_second.run(args)
+    if args.name == discourse_marker_per_second.FEATURE_NAME:
+        return discourse_marker_per_second.run(args)
     if args.name == pitch.FEATURE_NAME:
         return pitch.run(args)
     if args.name == loudness.FEATURE_NAME:

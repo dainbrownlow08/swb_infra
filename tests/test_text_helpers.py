@@ -73,9 +73,41 @@ def test_count_empty_list():
 def test_strip_bracket_tokens_removes_whole_brackets():
     assert strip_bracket_tokens("yes [laughter] um") == "yes um"
     assert strip_bracket_tokens("[noise] right") == "right"
-    assert strip_bracket_tokens("i [laughter-yeah] you") == "i you"
 
 
 def test_strip_bracket_tokens_keeps_inline_brackets():
     # i[t]- is a partial-word marker, not a whole-bracket token
     assert strip_bracket_tokens("i[t]- yeah") == "i[t]- yeah"
+
+
+def test_laughed_words_are_unwrapped_not_dropped():
+    # [laughter-yeah] = the speaker SAID "yeah" while laughing (2026-08-19 fix)
+    assert tokenize("um [laughter-yeah] ok") == ["um", "yeah", "ok"]
+    assert strip_bracket_tokens("i [laughter-yeah] you") == "i yeah you"
+    # pure non-speech events still dropped
+    assert tokenize("[laughter] [laughter-yeah]") == ["yeah"]
+
+
+def test_laughed_partial_word_inner_form_kept_verbatim():
+    # inner form may itself be a partial word; kept per the partial-word policy
+    assert tokenize("[laughter-no[t]-] way") == ["no[t]-", "way"]
+
+
+def test_angle_markup_tokens_are_dropped():
+    # ms98 aside-span delimiters are markup, not words (2026-08-19 fix)
+    assert tokenize("<b_aside> hang on <e_aside> sorry") == ["hang", "on", "sorry"]
+    assert strip_bracket_tokens("<b_aside> hi <e_aside>") == "hi"
+
+
+def test_laughed_words_feed_repetitions_and_fillers():
+    # a laughed "yeah" pairs with a spoken "yeah"; a laughed "um" is a filler
+    assert count_repetitions(tokenize("yeah [laughter-yeah]")) == 1
+    assert count_filler_hits(tokenize("[laughter-um] right"), DEFAULT_FILLERS) == 1
+
+
+def test_filler_partition_is_exact():
+    # The 2026-08-20 split (audit §4E-c) must partition the legacy allowlist:
+    # any drift breaks the split-columns-sum-to-combined identity.
+    from swb_extract.features._text import DISCOURSE_MARKERS, FILLED_PAUSES
+    assert FILLED_PAUSES | DISCOURSE_MARKERS == DEFAULT_FILLERS
+    assert not (FILLED_PAUSES & DISCOURSE_MARKERS)

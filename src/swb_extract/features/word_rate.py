@@ -15,16 +15,10 @@ from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
 from ._duration_lookup import build_duration_index, lookup_duration
+from ._text import tokenize
 
 FEATURE_NAME = "word_rate"
 HEADER = ("Utterance File Name", "word_rate")
-
-
-def tokenize(text: str) -> list[str]:
-    return [
-        w for w in text.lower().split()
-        if not (w.startswith("[") and w.endswith("]"))
-    ]
 
 
 def count_words(text: str) -> int:

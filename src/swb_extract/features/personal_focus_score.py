@@ -43,6 +43,7 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
+from ._text import strip_bracket_tokens
 
 FEATURE_NAME = "personal_focus_score"
 HEADER = (
@@ -115,18 +116,6 @@ def _get_lexicon():
             )
         _CATEGORIES_VERIFIED = True
     return _LEXICON
-
-
-def strip_bracket_tokens(text: str) -> str:
-    """Remove whole-bracket tokens like [noise], [laughter] before analysis.
-
-    A whole-bracket token starts with '[' and ends with ']'. Inline markers
-    like 'i[t]-' (partial words) do NOT start with '[' so they are kept.
-    """
-    return " ".join(
-        t for t in text.split()
-        if not (t.startswith("[") and t.endswith("]"))
-    )
 
 
 def compute_counts(text: str, lexicon=None) -> Counts:

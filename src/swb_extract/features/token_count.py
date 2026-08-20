@@ -16,16 +16,10 @@ import csv
 from pathlib import Path
 
 from ..manifest import MANIFEST_HEADER, manifest_path
+from ._text import tokenize
 
 FEATURE_NAME = "token_count"
 HEADER = ("Utterance File Name", "token_count")
-
-
-def tokenize(text: str) -> list[str]:
-    return [
-        w for w in text.lower().split()
-        if not (w.startswith("[") and w.endswith("]"))
-    ]
 
 
 def count_tokens(text: str) -> int:
