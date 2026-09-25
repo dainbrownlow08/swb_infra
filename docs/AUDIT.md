@@ -8,7 +8,7 @@
 > at one level not the rigorous one) · ⬜ not started. The ✅-vs-🟡 line is the discipline that
 > matters: most work stalls at "built ≠ in use."
 >
-> **Current phase:** NB08 measurement (`docs/NB08_MEASUREMENT_PLAN.md`, W3+ pending).
+> **Current phase:** NB08 measurement (`docs/NB08_MEASUREMENT_PLAN.md` + REVISION R1 2026-08-25: parcels → simple scores → coherence centerpiece; projection cut). Skeleton rekindled to the R1 design 2026-08-25 (15 cells, all analysis sections ⬜); W3 machinery transplant still next.
 > **Repo focus (2026-07-31 compression):** `analysis/08_measurement.ipynb` is the living
 > notebook; `analysis/07_demoted_in_favor_of_5D.ipynb` is its frozen evidence record; NB00–06
 > live in `analysis/archive/`. Planned later step: once NB08 stands alone, NB07 also moves to
@@ -56,9 +56,31 @@ external replication (§4F) — the next paper.
 
 **2026-07-29 rising-terminal semitone redesign** (§3.3, gold-validated in
 `analysis/validate_rising_terminal.py`): flag now thresholds `Terminal ST Slope` ≥ 3.07 st/s
-(the old 30 Hz/s at the 169 Hz median register); r(share, pitch) .485 → .315; null set +
+(the old 30 Hz/s at the 169 Hz median F0); r(share, pitch) .485 → .315; null set +
 Hz column bit-identical; known-groups qy 2.48× / AUC .721 PASS, `^d` 1.65× failed-and-
 adjudicated on record; MGQ recomposed 2,436 → 2,406. Registry: 46 Trusted.
+**2026-09-06: RT excluded from the NB08 parcel instrument** (exclusion, not deprecation — trust
+unchanged, the gold pass stands): grounds = 30.3% length-dependent MNAR nulls + the weakest
+construct-map anchor (dims-3d/4 bridge, ours); resolves the frozen table's ⚑ (now 20 in / 6 out,
+parcels ~11 → ~10, S6 matrix 10×10). Question family → gold_acts (§4C, WIP); RT stays in the
+26-feature appendix CPCA as recorded.
+**2026-09-07: Empath dropped from the instrument** (exclusion, not deprecation — the 3 ingredient
+columns stay Trusted): PF_ratio out of the dim-1 parcel (mapping unvalidated §4C12; the open
+"still needed?" decision resolved no, without the caller-level r check); dim 1 = Personal
+Pronouns per Second v2 alone (SINGLE block, reliability via S7 ICC). Frozen-table roles flipped
+(pronouns in / PF_ratio out; tally stays 20 in / 6 out).
+**2026-09-12: dim 5a recomposed on Tannen's verbatim contrast** ("cooperative versus obstructive
+overlap", p. 202): Cooperative Overlap Count enters the overlap parcel (replacing the undifferentiated
+count → S3 convergence check); obstructive_overlap_share becomes that parcel's nuisance gate, not a
+signed ingredient. Same day, same logic: loudness mean → nuisance panel (line gain; std/range = the 2a
+instrument), and the repetition trio **hard-deprecated** (registry WIP → Deprecated; dim 6 unmeasured in
+this paper, entrainment redesign §4E-h = next paper). Instrument = **16 columns / 9 parcels / 9×9
+matrix**; nuisance panel = token_count · pitch mean · loudness mean · obstructive share. Registry:
+46 Trusted · 27 WIP · 8 Deprecated.
+**2026-09-14: S3 convergence gate fixed before any cell runs** — reliability of the block mean ≥ .70
+(Spearman–Brown for the k=2 pairs, standardized α for k≥3) AND every item-rest r ≥ .30 → PARCEL; else
+FIX (one stray column) / SINGLE; Pearson on caller z-scores, Spearman beside it, α with caller-bootstrap CI.
+Effective n moved out of the gate to the S4 parceling rationale (same matrix as α; two readouts, one test).
 
 ## 1. Legacy autopsy (settled — basis for everything above)
 
@@ -127,9 +149,9 @@ A8 multiverse). Results in the ledger; machinery in `src/swb_extract/stats_modal
 ⬜ **B10 ICC/split-half trait stability** — the highest-value unpursued analysis (543 callers
 × ~9 calls; also disattenuates every effect size). Deferred to the reliability paper (NB08 D9).
 
-**C. Construct validity** — ✅ C12 gold suite complete (ledger Steps 12–15). 🟡 C11
+**C. Construct validity** — ✅ C12 gold suite complete (ledger Steps 12–15). **2026-08-21 asset:** the Switchboard Dialog Act corpus (Potts release, `corpus/swda/`, gitignored; 1,155 convs / 223,606 acts, 42 SWBD-DAMSL tags; data CC BY-NC-SA 3.0 per the release notes, reader code GPL-2) downloaded — NXT's 642 are a subset, so gold dialog acts now exist for **1,002 of our 1,994 sliced conversations** (was 544; +458) once the SwDA text (Treebank markup, no timestamps) is word-aligned to ms98 utterances. **2026-08-21 later — 🟡 BUILT, EXTRACTED, REGISTERED (WIP), not yet in NB08:** `swda.py` (reader + difflib word-sequence aligner, per-conversation A/B channel-swap detection: 82/1,002 SwDA convs are swapped) and `features/inhouse/gold_acts.py` (5 `gold`-family columns: Gold Act, Gold DA Source, Gold Question Flag = Tannen 3d, Gold Information Question Flag = 4b, Gold Echo Question Flag = 4a). Gates stated first, then run (`analysis/validate_gold_acts.py`): on the 544-conv NXT∩SwDA overlap the text join agrees with the time join on the question flag at .9978 (49,034 utts), coverage .981, side match ratio median .958 (17/1,088 sides < .85 blanked) — PASS. Corpus run: 98,710 labelled utts (46.1%) in 1,001 convs (NXT 52,890 + SwDA 45,820), question rate 6.06% (by source 6.18/5.92%), echo .68% (sparse); table rebuilt 67 cols; 5 tests. Remaining: promotion to Trusted after the caller-level source-effect check, and NB08 Frame-B wiring (pool per caller over labelled substantive utts with a `gold_labelled_share` companion). Same session: Empath has no question category and its nearest categories detect questions at chance (AUC .49–.50, P .06–.12 vs gold) — closed as an instrument; rising terminal as a question detector P .15 / R .46 (§3 RT audit) — style variable only. 🟡 C11
 single-axis question: NB07 Step 24 (K=5, split factors) is exploratory evidence against a
-unidimensional HI–HC axis; **NB08's theory projection addresses this by construction**
+unidimensional HI–HC axis; **NB08 addresses this by construction (R1 2026-08-25: theory-signed parcel score — signed-z mean + marker count; the subspace projection was cut to an appendix variant)**
 (a theory contrast measured inside a 5-D space, not an assertion of unidimensionality);
 semopy CFA proper stays ⬜. ⬜ C13 perceptual anchoring (rater study).
 
@@ -166,8 +188,8 @@ CLI now dispatches on each package's `EXTRACTORS`). Verified: 8 unit tests (pure
 synthetic two-tone WAV, CLI round trip) + end-to-end on conversation 2001 (66 utts, 38 s):
 wps 3.1 w/s · wpu 12–15 · wpp 1.7 · boplen .18–.22 s (paper: "order of 0.1 s") · poplen
 .07–.14 s · pv 1.4–2.1k Hz² (paper: "order of 1000 Hz²") · lv .0016–.0037 RMS² · olap
-.66–.74 (Switchboard's listener lines start mid-partner almost by construction; the paper
-found olap carried no signal, −0.01) · rept .58–.74 · repu .33–.48.
+.66–.74 on that conversation (corpus-wide side median .36, IQR .24–.49 — 2026-08-22 extraction;
+the paper found olap carried no signal, −0.01) · rept .58–.74 · repu .33–.48.
 **Not done:** ⬜ corpus-wide extraction (the seven text/timing modules: minutes; the four
 acoustic ones share ONE pyin+RMS pass cached at `derived/thomas2018_prosody.csv`, ≈0.05×
 real time ⇒ ~3 h at 4 workers); ⬜ registry rows — register as WIP *before* `swb-extract
@@ -185,7 +207,7 @@ term (sweepable `FILLERS`; decide before extraction); ppron = per word (LIWC con
 Construct note: rept/repu are SELF-repetition across a speaker's own consecutive lines (the
 paper's "persistence"), so they do not answer the dim-6 other-repetition question — the
 gold-`^m` bar (`analysis/validate_echo_detector.py`: naive lexical echo recall ceiling 41%)
-still applies to any detector claiming dim 6.
+still applies to any detector claiming dim 6. **Later 2026-08-20:** `docs/tannen_feature_map.md` rewritten to map the eleven only (decision: Thomas-only first; in-house map archived; Thomas + in-house expansion later) — Ch.7 coverage by the eleven: ✓ 4 (2c, 3a, 5b, 5c) · ~ 8 · ✗ 7 (2d, 3c, 3d, 4a, 4b, 6, 9). **2026-08-22 — instrument validated on MISC:** the MISC release (`corpus/misc/`, 12.3 GB, STT transcripts + OpenSMILE prosodyShs tracks + questionnaires; research use, no redistribution) downloaded; `analysis/c_alpha/misc_variables.py` rebuilds the eleven on their data along their routes with their exclusions (101 participant-tasks vs their 98), and `analysis/c_alpha/thomas_method.py` (their §4.1 method: z-score, α, PCA, involvement = Σ loading × z) reproduces Table 2 at Tucker φ **.988**, 10/11 signs, PC1 25% (theirs 29%), keyed α .60 (theirs .67), involvement under our PC1 vs their weights r .995. Route differences measured on Switchboard (Thomas route vs in-house analogue, side level): wps–word_rate r .60, ppron–pronouns/s .72, olap–Overlap Onset .93, poplen–FTO .63, wpu–token_count 1.00 — route is a multiverse axis, not a footnote. **All 16 ingredient columns extracted + registered WIP (family `thomas`) 2026-08-22**; the acoustic pass (pyin+RMS, 266.9 h of audio, 12 workers, ~2 h, cache checkpointed every 5,000 utts at `derived/thomas2018_prosody.csv`); `derived/thomas2018_side.csv` = 3,988 sides × 11; table 83 cols. **Switchboard replication of the paper's §4.1 method** (`analysis/c_alpha/`, README has the full table): PC1 congruence with Table 2 φ **.839** at side level (n=3,836; 9/11 signs — boplen and pv flip, both ≈ 0 in both studies) and .887 at caller level (n=482); PC1 24–26% (theirs 29%); keyed α .36/.39 (theirs .67) — the eleven cohere far less here (r̄ .05 vs .16), driven by three arithmetic facts: wpp and boplen share the pause-count denominator (raw r +.83 → keyed −.83), rept/repu are near-duplicates (+.91) that track utterance length (+.73/+.65), and keying olap negative follows a loading the paper called zero (Tannen-keyed olap: α .47; pauses unsigned: .56). The involvement score under their fixed weights still correlates .95/.98 with our PC1 score — the composite is robust, the loadings are not. Since our code reproduces Table 2 on MISC at φ .988, the Switchboard gap is corpus, and it exceeds their sampling noise (subsample φ q05 .90 at n=168). Route-level contrasts: wpu 12.3 vs 7.0 words/line (human vs STT segmentation), boplen .20 vs .105 s, wpp 2.0 vs .84, pv 1,571 vs 3,712 Hz² (OpenSMILE SHS octave errors), olap .36 vs .16, poplen .40 vs 1.6 s. **2026-08-23 method identification on MISC** (`analysis/c_alpha/misc_identify.py`): their n=168 reconstructed exactly (tasks 2–5 − 5 named outliers − participant 22's three questionnaire-less tasks); their 98 ≈ audio ≤ 600 s (we get 97); pronoun list LIWC-consistent (r .97, +39%). Table 2 reproduces on the 98-type sample (φ .974 baseline / .983 best routes) far better than on the 168 (.923/.941) → Table 2 was most likely the cleaned 98. Route switches (pause/pv-lv frame definitions, poplen overlap handling, olap by voicing, stemmer, pronoun list; 17 combinations) move φ ≤ .02, α ≤ .03. Coherence gap persists under every choice: α .52–.58 vs .67, GLB-fa .70–.74 vs .85. Remaining unknowns need the authors' code ("available on request"). **2026-08-23 like-for-like (`analysis/c_alpha/like_for_like.py`, README last section):** openSMILE 3.0 prosodyShs run over all 3,988 Switchboard sides (`run_opensmile.py`, tracks at `derived/opensmile/*.npz`) and over MISC; the eleven rebuilt on Switchboard along the MISC route (`swb_misc_route.py`). Route removal moves Switchboard keyed α .36 → .41 (sides) / .43 (callers), φ .84 → .81, PC1 24–25 % unchanged; per-side involvement under Table 2 weights agrees r .96 across routes. MISC under the same detector: α .54–.58, φ .82–.94 (shipped tracks .96–.99). The residual corpus gap is one variable: wpp's keyed mean r .22 on MISC vs −.06 on Switchboard (wps–wpp .84 vs .04). Cause: on 8 kHz telephone audio the tracker drops voicing inside words (F0 = 0 runs ≥ 200 ms .159/word vs .062/word real inter-word gaps; 65 % of the long runs sit inside aligned words; voiced share of line time .53 vs .79 on MISC), so wpp/boplen measure dropout, not pausing — same under pyin, so audio not detector. **Bound:** the paper's pause definition is not portable to telephone audio; Switchboard comparisons must flag wpp/boplen or define pauses from alignments (in-house route). Padded ms98 spans are unusable for olap/poplen (olap .72; poplen undefined for 1,750 sides).
 
 **F. External replication** — ⬜ Fisher (same genre, 10×), CallHome/CallFriend (familiar
 dyads — the boundary-condition test), CANDOR (outcomes).
@@ -206,6 +228,6 @@ throughout: claim **unimodal/dimensional**, never "normal."
 | `docs/FEATURES.md` | the trust registry — machine-parsed; moving a row between sections IS the trust workflow |
 | `docs/PIPELINE.md` | data-layer contract + add-a-feature/recompute loop |
 | `docs/NB08_MEASUREMENT_PLAN.md` | current-phase execution plan (archive at phase end) |
-| `docs/tannen_feature_map.md` | theory reference (Tannen Ch.7 ↔ features; S6 cites it; Part 2 refresh due at W7) |
+| `docs/tannen_feature_map.md` | theory reference — since 2026-08-20 Tannen ↔ the **Thomas et al. (2018) set only** (labels [T1] / [PDF p.] / [ours]; Ch.2 directions vs MISC loadings; Ch.7 coverage ✓4 ~8 ✗7); the in-house map is archived (`docs/archive/tannen_feature_map_inhouse_2026-08-20.md`) and is what S6's in-house directions cite until the Thomas + in-house expansion (later, by decision) |
 | `docs/archive/` | superseded docs, verbatim (see its README) |
 | `analysis/` | `08_measurement.ipynb` living · `07_demoted_in_favor_of_5D.ipynb` frozen record · `validate_rising_terminal.py` RT evidence · `archive/` NB00–06 |

@@ -52,6 +52,7 @@ HEADER = (
 # (voiced_n, f0_mean, f0_var, rms_mean, rms_var, pause_n, pause_sec)
 Prosody = tuple[int, float | None, float | None, float | None, float | None, int, float]
 NO_VOICING: Prosody = (0, None, None, None, None, 0, 0.0)
+PERSIST_EVERY = 5000  # checkpoint the cache this often during a run
 
 
 def extract_prosody(wav_path: Path) -> Prosody | None:
@@ -146,28 +147,46 @@ def ensure_prosody(
     )
     if todo:
         work = [(r, str(out_root / r)) for r in todo]
-        if workers <= 1:
-            for arg in work:
-                rel, result = _worker(arg)
+
+        def persist() -> None:
+            # Checkpoint every row we have, manifest order, via an atomic replace — an
+            # interrupted multi-hour run resumes from the last checkpoint, not from zero.
+            cache_csv.parent.mkdir(parents=True, exist_ok=True)
+            tmp = cache_csv.with_suffix(".csv.tmp")
+            with open(tmp, "w", encoding="utf-8", newline="") as fout:
+                writer = csv.writer(fout, quoting=csv.QUOTE_MINIMAL)
+                writer.writerow(HEADER)
+                for r in all_rels:
+                    if r in cache:
+                        writer.writerow(_fmt_row(r, cache[r]))
+            tmp.replace(cache_csv)
+
+        done = 0
+        last_log = 0
+        results = map(_worker, work) if workers <= 1 else None
+        with (ProcessPoolExecutor(max_workers=workers) if workers > 1 else _NoPool()) as ex:
+            if results is None:
+                results = ex.map(_worker, work, chunksize=8)
+            for rel, result in results:
                 cache[rel] = result
-        else:
-            with ProcessPoolExecutor(max_workers=workers) as ex:
-                done = 0
-                last_log = 0
-                for rel, result in ex.map(_worker, work, chunksize=8):
-                    cache[rel] = result
-                    done += 1
-                    if done - last_log >= 1000 or done == len(work):
-                        print(f"  {done:,}/{len(work):,}", flush=True)
-                        last_log = done
-        cache_csv.parent.mkdir(parents=True, exist_ok=True)
-        with open(cache_csv, "w", encoding="utf-8", newline="") as fout:
-            writer = csv.writer(fout, quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(HEADER)
-            for rel in all_rels:  # every row we have, manifest order
-                if rel in cache:
-                    writer.writerow(_fmt_row(rel, cache[rel]))
+                done += 1
+                if done - last_log >= 1000 or done == len(work):
+                    print(f"  {done:,}/{len(work):,}", flush=True)
+                    last_log = done
+                if done % PERSIST_EVERY == 0:
+                    persist()
+        persist()
     return {r: cache[r] for r in rels}
+
+
+class _NoPool:
+    """Context-manager stand-in so the single-worker path shares the loop above."""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
 
 
 def write_projection(

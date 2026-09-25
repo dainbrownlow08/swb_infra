@@ -24,7 +24,8 @@ df = load_features_table(include="provisional")   # validated + unconfirmed (def
 | **Input** | `utterances_v2/features/*.csv` | no | each feature extractor (`swb-extract features …`) | the table builder |
 | **Trust metadata** | `docs/FEATURES.md` (parsed by `registry.py`) | **yes** | you (move rows between buckets) | the loader |
 | **Derived** | `utterances_v2/derived/features_table.csv` | no (rebuildable) | `swb-extract table` | trustworthy notebooks via the loader |
-| **Derived** | `utterances_v2/derived/thomas2018_side.csv` (+ `thomas2018_prosody.csv` cache) | no (rebuildable) | `swb-extract thomas2018-side` / the four acoustic thomas2018 extractors | the paper-unit (conversation-side) table of the 11 Thomas et al. 2018 variables — not yet consumed |
+| **Derived** | `utterances_v2/derived/thomas2018_side.csv` (+ `thomas2018_prosody.csv` cache) | no (rebuildable) | `swb-extract thomas2018-side` / the four acoustic thomas2018 extractors | the paper-unit (conversation-side) table of the 11 Thomas et al. 2018 variables — consumed by `analysis/c_alpha/thomas_method.py` (reliability/PCA replication) |
+| **Derived** | `utterances_v2/derived/opensmile/*.npz` | no (rebuildable, ~1 h at 12 workers) | `analysis/c_alpha/run_opensmile.py swb` (openSMILE 3.0 prosodyShs: F0, voicing, loudness at 10 ms) | `analysis/c_alpha/swb_misc_route.py` — the like-for-like Thomas variables along the MISC route |
 | **Frozen** | `utterances_v2/merge_test.csv`, `paper_aligned_*` | no | the archived replication notebooks (`analysis/archive/`, NB01–06) | archived notebooks only |
 | **Quarantine** | `utterances_v2/_archive/` | no | — | nobody (safe to delete) |
 
@@ -50,7 +51,9 @@ column is* and *whether we trust it* — a living document with **Trusted** / **
 **Deprecated** sections, one markdown-table row per column.
 `src/swb_extract/registry.py` parses it; the section a row sits under is its trust
 status, and each row also carries a `family` (volume | interactional | prosody |
-tannen | meta):
+tannen | meta | gold — `gold` = human-labelled annotation joined to utterances, not a
+computed feature; `gold_acts.py` reads NXT (`corpus/nxt_switchboard_ann/`) and the SwDA
+release (`corpus/swda/`), both gitignored corpus assets):
 
 - **Trusted** — correctness confirmed; analysis may rely on it.
 - **WIP** — built and producing values, but not yet confirmed. Usable in

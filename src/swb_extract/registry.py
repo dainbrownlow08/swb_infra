@@ -22,7 +22,7 @@ DOC_PATH = REPO_ROOT / "docs" / "FEATURES.md"
 KEY_COLUMNS = ("Utterance File Name", "Transcript")
 
 VALID_STATUSES = ("validated", "provisional", "deprecated")
-VALID_FAMILIES = ("volume", "interactional", "prosody", "tannen", "meta")
+VALID_FAMILIES = ("volume", "interactional", "prosody", "tannen", "meta", "gold", "thomas")
 
 # First word of a "## <Heading>" (lowercased) -> status. Other sections (title,
 # Dashboard, …) map to None and their rows are ignored.
