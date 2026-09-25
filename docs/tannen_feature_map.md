@@ -1,313 +1,151 @@
-# Switchboard Feature Extraction ↔ Tannen's Conversational Style
+# Tannen's Conversational Style ↔ the Thomas et al. (2018) feature set
 
-A reference mapping our current acoustic + linguistic feature columns to
-Deborah Tannen's *Conversational Style: Analyzing Talk Among Friends*
-(Oxford, 2005). PDF page references match `tannen_features.txt`
-(PDF page = printed book page + 21).
+**Scope (decision 2026-08-20).** This map covers the **eleven variables of Thomas, Czerwinski,
+McDuff, Craswell & Mark (2018), "Style and Alignment in Information-Seeking Conversation"
+(CHIIR '18, doi:10.1145/3176349.3176388)** as rebuilt in `src/swb_extract/features/thomas2018/`
+— and nothing else. The in-house extractors' coverage (every earlier version of this file,
+including the "row 12" / "item #17" numbering some in-house docstrings cite) is archived
+verbatim at `docs/archive/tannen_feature_map_inhouse_2026-08-20.md`; expanding the map to
+Thomas + in-house is later work. Trust state lives in `docs/FEATURES.md` (none of the eleven
+is registered yet — built, not extracted; status in `docs/AUDIT.md` §4E-h).
 
----
+**Sources and labels.** Tannen = *Conversational Style: Analyzing Talk Among Friends* (Oxford,
+2005); page references are PDF pages (= printed page + 21), matching the quotes collected in
+`tannen_features.txt`. Thomas et al. built their Table 1 on Tannen's 1987 summary
+("Conversational style", in Dechert & Raupach, eds., *Psycholinguistic Models of Production*),
+which is the same checklist as the 2005 book's Ch.2 "features of high-involvement style"
+(PDF pp. 61–62) with the wording differences listed in Part 3. Every claim below carries one
+of three labels:
 
-## Part 1 — What we currently extract
+- **[T1]** — Thomas et al.'s own assignment of a variable to a Tannen characteristic (their Table 1).
+- **[PDF p. N]** — Tannen's 2005 text, by PDF page. The only source for a HI/HC *direction*:
+  an item is signed only by appearing on the Ch.2 high-involvement list (PDF pp. 61–62);
+  the Ch.7 nine-dimension summary (PDF pp. 202–203) is unsigned.
+- **[ours]** — a bridge, caveat, or corpus-mapping decision of this project; not a claim of
+  either paper.
 
-Source columns from `legacy/aligned_acoustic_linguistic_v2.csv`. Extractor
-code lives in `src/swb_extract/features/inhouse/` (the rewritten version; `features/X.py`
-below = `features/inhouse/X.py` since the 2026-08-20 package split) with the
-original references in `legacy/Conversational-Styles/src/feature_extractors/`.
-`src/swb_extract/features/thomas2018/` is a separate, literal replication of the eleven
-variables of Thomas et al. (CHIIR 2018) — see `docs/AUDIT.md` §4E-h.
-
-| # | Column | What it computes | Source code | Tannen dimension served |
-|---|--------|------------------|-------------|-------------------------|
-| 1 | **Gender** | LDC `caller_tab.csv` sex field | `features/demographics.py` | (covariate, not a Tannen feature) |
-| 2 | **Region** | LDC dialect_area | `features/demographics.py` | (covariate) — Tannen's NY/CA/UK speaker contrast hinges on this |
-| 3 | **Year Born / Generation / Decade** | LDC birth_year + bucketed | `features/demographics.py` | (covariate) |
-| 4 | **Education** | LDC education code (0–3, 9) | `features/demographics.py` | (covariate) |
-| 5 | **pitch mean** | mean F0 (Hz) over voiced frames, librosa.pyin (50–400 Hz) | `features/pitch.py` | Ch.7 dim 2b (pitch); Ch.2 "marked pitch shifts"; Expressive Phonology — PDF p. 128 |
-| 6 | **pitch std** | F0 standard deviation | `features/pitch.py` | Ch.7 dim 2b (marked pitch *shifts*) — PDF p. 202 |
-| 7 | **pitch range** | F0 max − min | `features/pitch.py` | Ch.7 dim 2b; "marked pitch and amplitude shifts" — PDF p. 62 |
-| 8 | **loudness mean** | mean RMS energy from STFT | `features/loudness.py` | Ch.7 dim 2a (loudness) — PDF p. 202 |
-| 9 | **loudness std** | RMS std | `features/loudness.py` | Ch.7 dim 2a; "increased amplitude" floor-getting device — PDF p. 202 |
-| 10 | **loudness range** | RMS max − min | `features/loudness.py` | Ch.7 dim 2a; "marked amplitude shifts" — PDF p. 62 |
-| 11 | **Turn Gap** | start_time − previous utt end_time (sec) | `feature_extractors/turn_gap_seconds.py` | Ch.7 dim 5b (timing of contribution rel. to previous); "Avoiding interturn pauses" — PDF p. 61, 202 |
-| 12 | **Filled Pauses per Second** + **Discourse Markers per Second** | 2026-08-20 split of the pooled filler rate: {um, uh, er} vs {so, well, like, you know, i mean, i guess, basically}, each / duration | `features/filled_pause_per_second.py`, `features/discourse_marker_per_second.py` | **Tannen does not mention filler words** — this row is the project's bridge, not her claim. The original loose link stands unchanged: fillers-as-filled-pauses ≈ Ch.7 dim 2c (pauses), at most. The split itself follows the standard disfluency taxonomy (Treebank `{F}` filled pause vs `{D}` discourse marker — the same line our gold layer draws), NOT a Tannen sign prediction: no HI/HC sign is assigned a priori to either half; the pooled rate forced both onto one loading, the split lets the data assign each its own, reconciled at W7. Legacy pooled `Filler Words per Second` = their exact sum, replication only. |
-| 13 | **Personal Pronouns per Second** | 1st/2nd-person closed-list tokens / duration (no tagger) | `features/pronoun_per_second.py` | Dim-1 lexical instrument (v2 redesign 2026-08-19; v1 spaCy-PRON was ~50% non-personal and was disqualified) — Chafe involvement marker Tannen builds on; whether pooled Empath hits remain needed for dim 1 is an open decision |
-| 14 | **Repetition Rate** | unique tokens appearing ≥2 times within utterance / total tokens | `features/repetition_rate.py` | Ch.7 dim 5d (floor-getting via repetition of words) — PDF p. 202 |
-| 15 | **syllable_rate** | textstat syllables / utterance duration | `features/syllable_rate.py` | Ch.7 dim 5c (rate of speech); Ch.2 "Faster rate of speech" — PDF p. 61, 202 |
-| 16 | **token_count** | tokens per utterance | `feature_extractors/token_count_and_rate.py` | (volume covariate; underlies "tells more / talks more") |
-| 17 | **word_rate** | words / duration (sec) | `feature_extractors/word_rate_v2.py` | Ch.7 dim 5c — duplicates syllable_rate at coarser grain |
-| 18 | **repetitions_in_current_utterance** | EXACT-token pair matches within utt (no lemmatization) | `features/repetitions_in_current.py` | NOT dim 6a (2026-08-19 audit: ~75% length-coupled, 72.5% function-word pairs; NB07 Step 13: 24.5% repair material, r≈0 with gold mirror) — disfluency/self-recurrence covariate, MAYBE in final set (normalized form only); dim 6 = the gold ^m mirror rate |
-| 19 | **repetitions_in_previous_utterance** | EXACT-token bag-of-words pair matches vs chronological predecessor (31.8% same-speaker) | `features/repetitions_in_previous.py` | NOT dim 6b (2026-08-19 direct gold test: r .10/.19 vs gold ^m; length-coupled .934) — doubtful covariate; echo-detector route CLOSED (recall ceiling 41%, F1 .208 — `analysis/validate_echo_detector.py`); dim 6 = gold ^m rate |
-
-Also present in the codebase but not in v2 CSV: `filler_word_per_second`,
-`pronoun_per_second`, `repetition_per_second` (denominator = duration),
-and a `politeness_score` extractor that wraps ConvoKit's PolitenessStrategies
-classifier trained on the Wikipedia politeness corpus.
+**Signs.** "MISC loading" is the variable's loading on Thomas et al.'s "involvement" component
+(their Table 2: a PCA over the MISC participant-task observations, first component 29% of
+variance; the involvement score is the z-scored variables summed by these loadings). It is an
+empirical result on one small corpus of information-seeking dialogue (22 pairs), **not a
+Tannen prediction**; the paper itself reports the one reversal (olap, −0.01, "practically
+zero"). Thomas et al. summarise the poles by quoting Tannen 1987 — high involvement: "When in
+doubt, talk. Ask questions. Talk fast, loud, soon. Overlap. Show enthusiasm. Prefer personal
+topics"; high consideration: "Allow longer pauses. Hesitate. Don't impose one's topics, ideas,
+personal information. Use moderate paralinguistic effects." (their §2.1; label **[T§2.1]**).
 
 ---
 
-## Part 2 — Coverage of Tannen's framework
+## Part 1 — The eleven variables
 
-Mapping the 9 dimensions and 5 specific devices in the Ch.7 summary
-(PDF p. 202–203) to what we have now. ✓ = at least partially covered;
-~ = weak proxy only; ✗ = not extracted.
+Unit: the paper's unit is participant × task; on Switchboard that is one conversation side.
+Each module writes per-utterance ingredients and `aggregate()` pools them as the paper does
+(ratio of sums / pooled variance / mean — never a mean of per-utterance ratios);
+`swb-extract thomas2018-side` writes the side table.
 
-### Ch.7 dimensions
+| # | Variable | Paper definition (§3.2) | Here (`thomas2018/`) | Tannen anchor | Book direction (Ch.2 HI list) | MISC loading |
+|---|---|---|---|---|---|---|
+| 1 | **ppron** | rate of 1st/2nd-person pronouns, not 3rd ("our own list") | Σ pronouns / Σ words — the 16-form closed list; per word, the LIWC convention [ours] | Ch.7 dim 1 "relative personal focus of topic" [PDF p. 202]; Ch.2 1a "Prefer personal topics" [T1]; Ch.4 personal vs impersonal topics [PDF pp. 95, 102–103]. Caveat: pronouns measure the *framing* of talk (self/other reference), not its topic — "I think the government should …" is a personal frame on an impersonal topic [ours]. Thomas et al. expected a weak signal because MISC topics were assigned; Switchboard topics are assigned too [ours] | HI + | +0.13 |
+| 2 | **wps** | words / total duration of utterances (a micro-average) | Σ`wpu` / Σ`wps sec`, word-tight utterance spans [ours] | Ch.7 dim 5c "rate of speech" [PDF p. 202]; Ch.2 2a "Faster rate of speech" [PDF p. 61] [T1 "Faster rate"]; "rapid rate of speech, overlap, and latching … show solidarity" [PDF p. 119] | HI + | +0.39 |
+| 3 | **wpu** | mean words per utterance | mean of `wpu` | [T1] files it under "Faster rate" (Pace). The 2005 checklist has no item for utterance length as such; the nearest anchor is floor share — who "talked the most" [PDF p. 124] — so here it is a volume measure, a bridge [ours]. The paper's largest loading; in this corpus utterance length is also the backchannel/segmentation axis (AUDIT §1) [ours] | none in Ch.2; only "When in doubt, talk" [T§2.1] | +0.45 |
+| 4 | **wpp** | words / number of between-own pauses, "approximately the length of each spoken phrase" | Σ`wpu` / Σ`wpp pauses`; pauses = unvoiced runs between voiced frames inside the utterance | [T1] "Faster rate". Ch.7 dim 2c pauses, "absolute use and use of marked shifts" — no direction attached [PDF p. 202]. Because every unvoiced run counts (as in the paper), wpp here is nearer words-per-voiced-stretch than phrase length [ours] | none stated | +0.44 |
+| 5 | **boplen** | mean length of between-own pauses ("no speech signal … during a single utterance") | Σ`boplen sec` / Σ`boplen n`, the same pauses | Ch.7 dim 2c pauses, within-turn half [PDF p. 202]. [T1] "Pauses avoided". The book does not sign within-turn silence that way: Ch.2 2c "Avoiding interturn pauses" is *between* turns [PDF p. 61], while 4d "Strategic within-turn pauses" sits on the *involvement* list [PDF pp. 61–62]; "Hesitate" is the consideration pole in the 1987 summary [T§2.1]. So the [T1] label is their reading, and the MISC loading is the only empirical sign [ours; AUDIT §3 6h] | ambiguous — 4d HI + ("strategic"), hesitation HC | −0.10 |
+| 6 | **poplen** | mean post-other pause: partner's end → own next start, non-alternation allowed | mean of `poplen`; word-tight; blank when the utterance starts in overlap or after own talk [ours] | Ch.7 dim 3a "quickness of response" and 5b "timing of contribution, relative to previous contribution" [PDF p. 202]; Ch.2 2b "Faster turn taking", 2c "Avoiding interturn pauses (silence shows lack of rapport)" [PDF p. 61] [T1 "Pauses avoided", "Faster rate of turntaking"]; mismatched pause expectations as a dominance mechanism [PDF p. 209 (printed 188); AUDIT §3 6h]. Every transcript line counts, backchannels included, as in the paper [ours] | HI − (shorter) | −0.27 |
+| 7 | **pv** | variance of F0 over frames with a speech signal, across the whole recording | pooled variance of voiced-frame F0, Hz² | Ch.7 dim 2b pitch [PDF p. 202]; Ch.2 4b "Marked pitch and amplitude shifts" [PDF p. 62] [T1 "Pitch shifts"]; "marked pitch shifts and exaggerated stress … expressiveness and empathy" [PDF p. 130]. Caveat: a variance is a static moment — equal variances can hide entirely different *shift* patterns — and Hz² grows with mean F0, so it is partly a pitch-level measure [ours] | HI + (read as "marked shifts") | +0.09 |
+| 8 | **lv** | loudness variance, "measured the same way" | pooled variance of voiced-frame RMS (OpenSMILE loudness is not a dependency) [ours] | Ch.7 dim 2a loudness [PDF p. 202]; Ch.2 4b amplitude shifts [PDF p. 62] [T1 "Loudness shifts"]; dim 5d floor-getting by "increased amplitude" [PDF p. 202] — lv is variation, not onset amplitude, so 5d is indirect [ours]. Telephone-line gain confounds between-caller level [ours] | HI + (read as "marked shifts") | +0.21 |
+| 9 | **olap** | proportion of utterances that begin while the partner is still talking | mean of `olap`, word-tight | Ch.7 dim 5a "cooperative versus obstructive overlap" [PDF p. 202]; Ch.2 2d "Cooperative overlap" [T1], 2e "Participatory listenership" [PDF pp. 61–62]; overlap-as-enthusiasm [PDF p. 98]. olap does not separate cooperative from obstructive — the paper says so ("need not be an interruption … commonly … 'uh-huh'") — so it covers 5a's *rate*, not its contrast [ours]. In Switchboard the side-level olap median is .36 (IQR .24–.49, corpus-wide 2026-08-22), the overlapping starts being mostly listener backchannel lines [ours] | HI + | −0.01 (the paper's noted reversal) |
+| 10 | **rept** | mean number of terms repeated from the same person's previous utterance (stopwords + um/uh/uh-huh removed, stemmed) | mean of `rept`; frozen NLTK stopwords + Porter; a term is a type [ours] | [T1 "Persistence"] = Ch.2 1d "Persist (if a new topic is not immediately picked up, reintroduce it, repeatedly if necessary)" [PDF pp. 61–62]; "persist with contributions for two, three, and four tries" [PDF p. 131]; persistence ↔ "tolerance for … diffuse talk" (dim 7) [PDF p. 140]. **Not** Ch.7 dim 6 (repetition of *another's* words, PDF p. 202): by definition rept is self-repetition across own consecutive lines [ours] | HI + (via persist) | +0.39 |
+| 11 | **repu** | fraction of utterances with ≥ 1 such repeated term | mean of `repu` | as rept — the incidence view of re-statement [T1 "Persistence"] | HI + (via persist) | +0.39 |
 
-| Dimension | Status | Current proxy | Gap |
-|-----------|--------|---------------|-----|
-| 1. Relative personal focus of topic | ~ | Personal Pronouns per Second (v2, 1st/2nd only) + pooled Empath Personal/Impersonal Hits (overlap decision open) | No topic classifier; no "talking-about-self" detector |
-| 2a. Loudness | ✓ | loudness mean/std/range | None |
-| 2b. Pitch | ✓ | pitch mean/std/range | None |
-| 2c. Pauses | ~ | Between-turn: FTO/latching. Within-turn absolute use: the four `Within Pause` columns (built + Trusted — the old "unmeasured" note here was stale). Book gives 2c NO sign ("absolute use and use of marked shifts", p. 181); Ch.2 splits pauses by location: interturn avoided by HI (pacing 2c), *strategic* within-turn pauses on the INVOLVEMENT list (4d) — our extractor docstring had this inverted, fixed 2026-08-20. Reading fillers as "filled pauses" under 2c is OUR bridge — her pauses are silences; fillers appear nowhere in the book (verified 2026-08-20) | "Marked shifts" half of 2c unmeasured (static moments only — audit §4E-e dynamics gap) |
-| 2d. Voice quality and tone | ✗ | — | No jitter, shimmer, HNR, spectral tilt, breathiness, creak |
-| 3a. Quickness of response | ✓ | Turn Gap | Should distinguish *positive* (very short / latched) from *long* gap |
-| 3b. Paralinguistics for enthusiasm | ~ | pitch/loudness ranges | No "marked shift" detector — current stats are summary moments |
-| 3c. Free offer of related material | ✗ | — | Requires discourse modelling: spontaneous topic addition vs. response |
-| 3d. Use of questions | ✗ | — | No question detection (syntactic or prosodic) |
-| 4a. Echo questions as back-channel | ✗ | — | Detect when current utt ≈ previous utt restated as question |
-| 4b. Information questions | ✗ | — | Wh-/yes-no question rate |
-| 5a. Cooperative vs. obstructive overlap | ✗ | — | Requires aligned A+B side timing — feasible from word.text |
-| 5b. Timing of contribution | ✓ | Turn Gap | Need negative gaps (overlap) preserved, latching (~0s) flagged |
-| 5c. Rate of speech | ✓ | syllable_rate, word_rate | None |
-| 5d. Floor-getting (amplitude, repetition) | ~ | loudness range, Repetition Rate | No turn-onset amplitude vs. baseline; no "machine-gun" repetition pattern |
-| 6a. Repetition to extend another's line | ✓ | gold `^m` mirror rate (NXT dialAct; NB07 Step 13/T9) — extractor self-repetition columns disqualified (r≈0 with mirror) | No "completion of other's syntax" detector |
-| 6b. Repetition to incorporate other's offer | ✓ (gold subset) | gold `^m` mirror rate — extractor column disqualified by direct gold test (r .10/.19); full-corpus lexical detector proven infeasible (recall ceiling 41%) | Full-corpus coverage would need a semantic/transform-aware model, validated at the .8 bar |
-| 7. Topic cohesion / tolerance for diffuse topics | ✗ | — | No topic-shift / coherence metric |
-| 8. Tolerance for noise vs. silence | ~ | Turn Gap distribution | No conversation-level silence ratio; no overlap density |
-| 9. Laughter (when, how much) | ✗ | — | `[laughter]` brackets are *currently stripped* by all our extractors — losing the signal |
+Reading the last two columns together: where the 2005 checklist gives a direction, the MISC
+sign agrees for ppron, wps, poplen, pv, lv, rept and repu; disagrees for olap (which the
+paper discounts); and boplen is the case where the book's own direction is unsettled. wpu
+and wpp carry the two largest loadings with no checklist direction behind them — they are
+the paper's operationalization, not Tannen's.
 
-### Ch.7 specific devices
+---
+
+## Part 2 — Coverage of Tannen's framework by the eleven
+
+✓ = covered at least partially · ~ = weak or indirect proxy only · ✗ = nothing in the set.
+
+### Ch.7 dimensions [PDF pp. 202–203]
+
+| Dimension | Status | Thomas-set proxy | What the eleven cannot see |
+|---|---|---|---|
+| 1. Relative personal focus of topic | ~ | ppron [T1] | the topic itself (framing ≠ topic) |
+| 2a. Loudness | ~ | lv — variation only | absolute level; marked *shifts* as dynamics |
+| 2b. Pitch | ~ | pv — variation only | level; contour/shift dynamics; a level-free (semitone) scale |
+| 2c. Pauses | ✓ | boplen (within-turn), poplen (between-turn), wpp (pause density) | the "marked shifts" half; strategic vs hesitant |
+| 2d. Voice quality and tone | ✗ | — | jitter / shimmer / HNR, breathiness, creak |
+| 3a. Quickness of response | ✓ | poplen | — |
+| 3b. Paralinguistics for enthusiasm | ~ | pv, lv | any shift / onset detector |
+| 3c. Free offer of related material | ✗ | — | discourse modelling |
+| 3d. Use of questions | ✗ | — | question detection |
+| 4a. Echo questions as back-channel | ✗ | — | — |
+| 4b. Information questions | ✗ | — | — |
+| 5a. Cooperative vs obstructive overlap | ~ | olap — rate, undifferentiated | the cooperative/obstructive contrast itself |
+| 5b. Timing relative to previous contribution | ✓ | poplen | latching as a category; backchannel-aware floor transfers |
+| 5c. Rate of speech | ✓ | wps (with wpp, wpu as the paper's Rate group) | syllable-level rate |
+| 5d. Floor-getting (amplitude, repetition) | ~ | lv, rept — both indirect | onset amplitude vs baseline; repetition *of the other* |
+| 6a/6b. Repetition of another's statement / offer | ✗ | — (rept/repu are self-repetition) | allo-repetition |
+| 7. Topic cohesion / tolerance for diffuse topics | ~ | rept, repu, via persistence [PDF p. 140] | topic-shift / coherence measure |
+| 8. Tolerance for noise vs silence | ~ | poplen + boplen (silence side), olap (noise side) | conversation-level silence ratio; overlap density |
+| 9. Laughter | ✗ | — | laughter counts |
+
+Tally over the 19 rows: **✓ 4** (2c, 3a, 5b, 5c) · **~ 8** (1, 2a, 2b, 3b, 5a, 5d, 7, 8) ·
+**✗ 7** (2d, 3c, 3d, 4a, 4b, 6, 9). Coverage is concentrated in pacing (dim 5) and pauses;
+questions, laughter, voice quality, repetition of the other, and narrative are out of the
+set's reach — which is what the paper itself says ("do not address genre … not 'marked voice
+quality' or 'strategic pauses'").
+
+### Ch.7 specific devices [PDF p. 203]
 
 | Device | Status | Notes |
-|--------|--------|-------|
-| Machine-gun questions | ✗ | Composite: high pitch + reduced syntax + fast pace + question intent + short turn gap. All ingredients except question detection are extractable. |
-| Mutual revelation / personal statements | ✗ | Needs first-person disclosure classifier; pronoun rate is a weak floor. |
-| Ethnically-marked / in-group expressions | ✗ | Could detect Yiddishisms, AAVE markers, regional lexicon via dictionary. |
-| Story rounds | ✗ | Needs narrative segmentation across multi-utterance spans. |
-| Ironic or humorous routines | ✗ | `[laughter]` bracket detection would be a lower bound; Cutler's irony cues (PDF p. 185) — nasalization, slow rate, exaggerated stress — partially extractable. |
+|---|---|---|
+| Machine-gun questions | ✗ | The set has the pace ingredients (wps, poplen, pv) but no question intent; Tannen names high pitch, reduced syntax, fast rate, directness, and the pace of firing [PDF p. 112] |
+| Mutual revelation / personal statements | ✗ | ppron is at most a weak floor for "personal statement" [PDF p. 122]; no disclosure detection |
+| Ethnically marked / in-group expressions | ✗ | — |
+| Story rounds | ✗ | genre is outside the set by design (Table 1: "Genre — —") |
+| Ironic or humorous routines | ✗ | no laughter or prosodic-irony cue in the set |
+
+### Ch.2 "features of high-involvement style" — the list Table 1 is built on [PDF pp. 61–62]
+
+| Tannen feature (2005 wording) | Thomas et al. Table 1 row | Variable(s) |
+|---|---|---|
+| 1a Prefer personal topics | Prefer personal topics | ppron [T1] |
+| 1b Shift topics abruptly | Shift topics abruptly | — [T1: —] |
+| 1c Introduce topics without hesitation | Introduce topics without hesitance | — [T1: —] |
+| 1d Persist (reintroduce a topic, repeatedly if necessary) | Persistence | rept, repu [T1] |
+| 2a Faster rate of speech | Faster rate | wps, wpp, wpu [T1] |
+| 2b Faster turn taking | Faster rate of turntaking | poplen [T1] |
+| 2c Avoiding interturn pauses | Pauses avoided | poplen, boplen [T1] — boplen is *within*-turn; see Part 1 row 5 |
+| 2d Cooperative overlap | Cooperative overlap | olap [T1] |
+| 2e Participatory listenership | *(not in Table 1)* | — ; olap's "uh-huh" content is an accidental proxy [ours] |
+| 3a Tell more stories | Tell more stories | — [T1: —] |
+| 3b Tell stories in rounds | Tell stories in rounds | — [T1: —] |
+| 3c Prefer internal evaluation (point dramatized, not lexicalized) | Point of stories is emotion of teller | — [T1: —] |
+| 4a Expressive phonology | *(not in Table 1)* | — ; pv/lv at most [ours] |
+| 4b Marked pitch and amplitude shifts | Pitch shifts; Loudness shifts | pv, lv [T1] |
+| 4c Marked voice quality | Marked voice quality | — [T1: —] |
+| 4d Strategic within-turn pauses | Strategic pauses | — [T1: —]; boplen measures within-turn pausing, not its strategic use, and the paper explicitly does not claim it [ours] |
 
 ---
 
-## Part 3 — Proposed additional features
+## Part 3 — Notes for the later expansion (Thomas + in-house)
 
-The Switchboard data we have access to:
-
-- **Stereo per-channel audio** sliced per utterance (`utterances/`, `utterances_v2/`)
-- **Word-level alignments** with start/end timestamps in
-  `swb_ms98_transcriptions_cleaned/*/*/sw*-word.text`
-- **Utterance-level alignments** in the parallel `*-trans.text` files
-- **Caller metadata** in `tables/caller_tab.csv` and topic in `topic_tab.csv`
-
-This gives us much richer raw material than the current column set uses.
-Suggestions are grouped by Tannen feature, with brief implementation notes.
-
-### Pacing & turn-taking (Ch.4 Overlap and Pace, PDF p. 113–122)
-
-1. **within_utterance_pause_count** / **mean_intra_pause_sec** / **max_intra_pause_sec**
-   — BUILT (`within_utterance_pauses.py`, four Trusted columns). Measures
-   absolute within-turn silence; note Ch.2 4d places *strategic* within-turn
-   pauses on the involvement list, and the book signs absolute use not at all
-   (see the dim-2c row above).
-
-2. **filled_pause_rate** — DONE 2026-08-20 as the split pair
-   (`filled_pause_per_second` / `discourse_marker_per_second`).
-   **Source correction (2026-08-20 re-read):** the "opposite readings" sign
-   claim this item originally carried (filled pauses = HC hesitation,
-   "y'know" = involvement) is NOT in Tannen — fillers appear nowhere in the
-   book, and the old PDF-p.129 cite is the Yiddish "Oy!" *response-cry*
-   passage (expressive phonology / rapport, book p. 108), unrelated to
-   discourse markers. The signs were a project hypothesis; they remain one,
-   left to the loadings and reconciled at W7. The split stands on the
-   identifiability argument alone (two construct classes, one shared loading
-   when pooled).
-
-3. **latching_flag** — `Turn Gap` ≤ 50 ms (or negative). Tannen treats
-   latching as the canonical involvement signal (PDF p. 119: "rapid rate
-   of speech, overlap, and latching… show solidarity").
-
-4. **overlap_duration_sec** / **overlap_count** — Requires merging A and B
-   word-timed transcripts. Distinguishes *cooperative* overlap (Tannen's
-   high-involvement marker) from interruptions. This is the single most
-   important Tannen feature we don't compute.
-
-5. **turn_length_sec** — already in `legacy/.../turn_length_seconds.py`.
-   Not in current CSV. Underlies "talked the most" measurements (PDF p. 124).
-
-### Paralinguistics & voice quality (Ch.7 dim 2d, PDF p. 202)
-
-6. **jitter / shimmer / HNR** — Standard Praat-style voice quality features.
-   Tannen's "marked voice quality" (PDF p. 62) and "thick quality"
-   (PDF p. 136) currently has no acoustic correlate in our pipeline.
-
-7. **spectral_tilt** / **H1-H2** — Captures breathiness and creak. The
-   "breathy voice quality" Tannen describes for empathy (PDF p. 130) and
-   the "creak" / vocal fry that marks turn-end can be measured directly.
-
-8. **pitch_slope** and **pitch_excursion_per_syllable** — Tannen distinguishes
-   "marked pitch shifts" (PDF p. 62) from raw range. A high range can come
-   from one outlier; slope captures the contour shape (e.g. her "He's a
-   gréat writer" example, PDF p. 129).
-
-9. **loudness_onset_delta** — RMS in first 200 ms of turn vs. session mean.
-   Operationalizes "increased amplitude" as a floor-getting device
-   (Ch.7 dim 5d, PDF p. 202).
-
-### Question and prosodic-form features (Ch.7 dim 4, PDF p. 202)
-
-10. **question_flag** (syntactic) — Wh-word at start, subj-aux inversion,
-    or final `?` if any pretokenized form exists. Required for both
-    "machine-gun questions" and "echo questions as back-channel".
-
-11. **rising_terminal_flag** — Semitone-scale F0 slope over the 0.3 s tail
-    anchored at the last word's offset, ≥ 3.07 st/s (2026-07-29 redesign:
-    register-invariant; the old 30 Hz/s rule under-detected low registers).
-    Catches declarative-form questions ("You stayed at the Plaza?" PDF
-    p. 113) that syntactic detection misses — gold-validated: ^d rising
-    share .410 vs .248 statements, qy .616.
-
-12. **machine_gun_question_score** — Composite z-score: (high pitch) +
-    (short syntax: ≤4 words) + (short Turn Gap) + (question_flag). Exactly
-    the four ingredients Tannen names at PDF p. 112.
-
-13. **echo_question_flag** — Current utt is question AND ≥80% lemma
-    overlap with previous turn's content words (e.g. Tannen p. 87 "You
-    stayed at the Plaza?" echoing Chad).
-
-### Repetition & alignment (Ch.7 dim 6, PDF p. 202)
-
-14. **(2026-08-19 direction) MSFT-paper repetition/entrainment redesign** —
-    the whole in-house repetition family was demoted to WIP (construct-
-    questionable: length-coupled, gold-disqualified; audit §4E-h). Replace with
-    the repetition methodology of "the MSFT paper" = Thomas, Czerwinski, McDuff,
-    Craswell & Mark (2018), *Style and Alignment in Information-Seeking
-    Conversation*, CHIIR '18 — its `rept`/`repu` (stopword-stripped, stemmed
-    terms repeated from the speaker's OWN previous utterance) are built in
-    `features/thomas2018/` (2026-08-20). NB they are self-repetition
-    ("persistence"), not dim-6 other-repetition. Any detector must validate vs gold `^m` at
-    the 0.8 bar — naive lexical echo is proven infeasible
-    (`analysis/validate_echo_detector.py`, recall ceiling 41%).
-    Original sketch kept below for reference:
-    **other_repetition_count** / **self_repetition_count** — Already partly
-    have `repetitions_in_previous_utterance`, but this lumps *both*
-    speakers together. Tannen distinguishes repeating *the other* (rapport
-    — "rightrightright", PDF p. 117) from repeating *self* (insistence).
-
-15. **collaborative_completion_flag** — Current turn syntactically/lexically
-    completes the previous speaker's unfinished turn (e.g. Tannen's "would-be
-    actors" example, PDF p. 71). Detect via partial-word brackets `i[t]-`
-    in previous turn + immediate semantic continuation.
-
-16. **lexical_alignment_score** — Cosine similarity of sentence embeddings
-    between adjacent A and B turns over a moving window. Captures
-    "thematic cohesion" (Ch.7 dim 7).
-
-### Laughter, humor, irony (Ch.6 + Ch.7 dim 9, PDF p. 184, 202)
-
-17. **laughter_token_count** — Add a dedicated `[laughter]` counter (and
-    one for `[noise]`, `[vocalized-noise]` etc.). Tannen's dim 9 deserves
-    its own column. Note the current state is *messy*, not absent: the
-    legacy extractors that populated the v2 CSV do **not** strip brackets,
-    so `[laughter]` is sitting in the denominator of every rate (and is
-    counted as a real token by `Repetition Rate` if it appears twice in
-    one utterance). The rewritten `src/swb_extract/features/inhouse/` versions
-    do strip — but they're not in the v2 CSV yet. Either way, no clean
-    laughter count exists today.
-
-18. **laughter_audio_event_count** — Use a laughter detector (e.g. OpenSMILE's
-    Laughter detector, or Wav2Vec2 fine-tuned for nonverbal vocal events)
-    to catch laughs not transcribed.
-
-19. **irony_prosody_score** — Cutler's three cues quoted by Tannen
-    (PDF p. 185): nasalization, slowed rate, exaggerated stress.
-    Approximations: spectral nasal energy ratio (1–2 kHz dip),
-    syllable_rate vs. speaker baseline, peak-stress-syllable F0+RMS z-score.
-
-### Topic, content, and discourse (Ch.7 dim 1 & 7, PDF p. 202)
-
-20. **personal_focus_score** — Ratio of (1st-person + 2nd-person pronouns +
-    personal-content noun phrases) to total content words. Better proxy
-    for "relative personal focus of topic" than raw pronoun rate.
-
-21. **topic_label** — Switchboard ships `tables/topic_tab.csv` with the
-    assigned topic per call. Free covariate for the Tannen "personal vs.
-    impersonal topic" split (Ch.4 Personal vs. Impersonal Topics, PDF p. 90).
-
-22. **topic_shift_count** — Per-call count of LDA / topic-embedding shifts.
-    Directly indexes Tannen's "tolerance for diffuse topics" (Ch.7 dim 7).
-
-23. **mutual_revelation_flag** — Current turn is a first-person past-tense
-    personal anecdote AND previous turn was the same. ConvoKit's
-    `disclosure` annotators or simple regex (`I (was|did|had|went) …`)
-    works as v1.
-
-24. **politeness_score** — Already implemented in
-    `feature_extractors/politeness_score.py` (ConvoKit
-    PolitenessStrategies). Plug it into the pipeline. It quantifies the
-    Lakoff "Don't impose" / "Be friendly" axis Tannen builds her whole
-    framework on (PDF p. 37).
-
-### Narrative / story features (Ch.5, PDF p. 144–183)
-
-25. **narrative_turn_flag** — Past-tense + character/event NER + ≥N tokens.
-    Replicates Tannen's manual Table 5.1 narrative count (PDF p. 145).
-
-26. **story_round_flag** — ≥3 consecutive narrative turns by ≥2 speakers
-    sharing topic embedding. Tannen's story-round definition exactly
-    (PDF p. 147).
-
-27. **constructed_dialogue_count** — Count quoted-speech spans inside a
-    narrative turn (regex for `said`, `says`, plus quote marks if any
-    surface form exists). Tannen's "Meaning in Intonation" device
-    (PDF p. 172).
-
-28. **narrative_intonation_dramatization_score** — pitch_range +
-    loudness_range *within* narrative turns vs. baseline. Operationalizes
-    the "dramatized rather than lexicalized" point preference
-    (Ch.2 feature 3c, PDF p. 62).
-
-### Conversation-level / speaker-level aggregates
-
-These are derived by groupby on the per-utterance table — cheap to add
-once the per-utterance signals exist.
-
-29. **speaker_silence_ratio** — Σ silence / Σ call duration, per speaker.
-    Direct measure of "tolerance for silence" (Ch.7 dim 8).
-30. **speaker_overlap_initiation_rate** — Overlaps per minute initiated by
-    speaker. Cooperative-overlap signal.
-31. **speaker_persistence_score** — Tannen's "two, three, and four tries"
-    (PDF p. 131): count of dropped topics that the same speaker
-    re-introduces within N turns.
-32. **speaker_narrative_share** — % of turns that are narrative.
-    Reproduces Tannen's Table 5.1 ranking (PDF p. 145).
-33. **speaker_humor_rate** — % of turns containing `[laughter]` either
-    before/within/after them (audience or self). Reproduces Table 6.1
-    (PDF p. 185).
-
----
-
-## Notes on what we're losing today
-
-Two recurring issues worth flagging:
-
-- **Bracket annotation handling is inconsistent and unmeasured.** The
-  legacy extractors that produced `aligned_acoustic_linguistic_v2.csv`
-  do **not** strip `[laughter]` / `[noise]` / `[vocalized-noise]` —
-  `within_utterance_repetition.py`, `filler_word_rate.py`,
-  `syllable_rate_textstat.py`, `pronoun_rate_spacy.py`, and
-  `word_rate_v2.py` all pass raw transcript text to `split()` /
-  textstat / spaCy. Effects: bracket tokens inflate the denominator of
-  every rate; `Repetition Rate` will fire on a doubled `[noise]`;
-  textstat syllabifies "laughter" inside the brackets. The rewritten
-  `src/swb_extract/features/inhouse/` extractors strip brackets cleanly — but
-  they aren't in the production CSV yet. Net result: laughter (Tannen's
-  ninth dimension, PDF p. 202) is neither cleanly counted nor cleanly
-  removed. Adding a dedicated bracket-event counter pass before
-  stripping fixes both problems at once.
-
-- **Per-utterance summary statistics flatten exactly the contrasts Tannen
-  cares about.** "Marked pitch shifts" (Ch.2 4b) means *how* the F0
-  contour moves, not its mean or range. A speaker can have identical
-  pitch_range to another while one speaks in a flat declarative and the
-  other in dramatic exclamations. Sequence features (slope per syllable,
-  number of pitch reset points, contour entropy) would capture what
-  static moments cannot.
+- **Table 1 vs the 2005 checklist.** Thomas et al. worked from Tannen 1987: "Participatory
+  listenership" (2e) and "Expressive phonology" (4a) are absent from their table; 3c "Prefer
+  internal evaluation" appears as "Point of stories is emotion of teller"; 1c "hesitation" as
+  "hesitance". None of this changes a mapping above, but a citation should name which text
+  a wording comes from.
+- **Ch.7 is broader than Ch.2.** The nine-dimension summary adds questions (3d, 4), repetition
+  of another's words (6), topic cohesion (7), noise vs silence (8), laughter (9) and voice
+  quality (2d); the eleven reach none of 2d, 4, 6, 9.
+- **Unit.** The paper's unit is participant × task (≈ conversation side); NB08's unit is the
+  caller across ~9 calls. `side_table.aggregate_group` pools either grouping from
+  canonical-table rows.
+- **Where the in-house set already reaches** (questions — excluded on gold; laughter; the
+  cooperative/obstructive split; FTO and latching; the Within-Pause family; personal-focus
+  hits; rising terminal): the archived map and `docs/FEATURES.md`. Merging the two coverages
+  is the next revision of this file, not this one.

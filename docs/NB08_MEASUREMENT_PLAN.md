@@ -9,6 +9,51 @@ the completed submission-battery plan this superseded as "current phase" is arch
 NB07 Step 24's analysis (26 features, 487 callers, Horn K=5), promoted from exploratory to
 central.
 
+**REVISION R1 (2026-08-25, decided in conversation — supersedes S3–S9 details below where they
+conflict; the notebook skeleton is the current map):**
+1. **Estimator simplified.** The subspace projection u = zLLᵀt (old S7) is **cut** from the primary
+   analysis (Dain: don't publish math you can't yet defend). Primary score = **signed-z mean** of
+   dimension parcels (Dawes 1979 improper composite); companion = **binary marker count** 0–k
+   (Burgess 1928 / Apgar lineage). The projection survives only as a two-line appendix variant.
+2. **Parceling adopted** (pseudoreplication fix): features are gated within each Tannen dimension
+   (convergence: reliability of the mean ≥ .70 [Spearman–Brown at k=2, standardized α at k≥3] + every
+   item-rest r ≥ .30, bars fixed 2026-09-14 before any cell runs; + nuisance panel vs token_count /
+   pitch mean / loudness mean / obstructive share), then collapsed
+   to ONE signed z-score per dimension (9 parcels as of 2026-09-12 — see R1 item 6 and the
+   frozen-table tally below). One theoretical unit = one statistical vote.
+   Measured motivation: loudness trio eff n 1.04; repetition block r .88 with token_count. (2026-09-14:
+   effective n = (Σλ)²/Σλ² is the S4 *rationale* number for pseudoreplication, not an S3 gate — it reads
+   the same matrix α does; the S3 verdict line is α/SB + min item-rest + nuisance max r.)
+   Rule: within-dimension consistency is a quality gate; between-dimension consistency is an outcome.
+3. **Between-dimension coherence promoted to centerpiece** with pre-stated falsification: P1 positive
+   manifold (pairwise signs), P2 Horn K=1 on parcels, P3 marker-count overdispersion vs Binomial(k,½);
+   endings A (bundle real) / B (channels real, bundle not) / C (signed trade-offs). Reliability rival
+   closed by per-parcel ICC across each caller's ~7–9 calls + disattenuated matrix (old deferred D9
+   is now IN scope — externally motivated by Ward 2021's instability finding).
+4. **Score↔space bridge without the projector:** footprint corr(score, PCₖ), captured share
+   R² = Σcorr² (PCs orthogonal ⇒ additive), Tucker φ(t, PC1). PCA runs on parcels; the 26-feature
+   CPCA (NB07 Step 24) demoted to appendix sensitivity. NOTE the name collision: "CPCA" is entrenched
+   for Takane's constrained PCA — spell ours out in the paper.
+5. Related-work anchors fixed by the 2026-08-23/25 literature sweeps: Ward & Avila 2023 and Qiu et
+   al. 2020 are the two must-engage contrasts (theory-first vs data-first framing); novelty claim =
+   first continuous automatic theory-first operationalization, NOT estimator novelty.
+6. **(2026-09-12) Dim 5a recomposed around Tannen's own contrast** — Ch.7 dim 5a is verbatim
+   "cooperative versus obstructive overlap" (PDF p. 202; map row 9 + Part 2 5a). The undifferentiated
+   trio measured 5a's *rate*, not its contrast. Now: the 5a parcel = {Overlap Duration Sec, Overlap
+   Onset Flag, **Cooperative Overlap Count**} all HI+ (the cooperative count replaces the undifferentiated
+   Overlap Count, which becomes the S3 convergence check + robustness alternate); the contrast enters
+   as the parcel's **nuisance-panel gate**: corr(5a parcel, obstructive_overlap_share) must be low —
+   a parcel that rises with interruption share is measuring floor-fighting, which is the *opposite*
+   of what 5a's HI pole names. Obstructive is NOT signed HC (HC speakers wait; they don't interrupt).
+   S8 variant: cooperative share coop/(coop+obstr) as the 5a parcel instead of the rate.
+   Same pass, same logic applied to level: **loudness mean → nuisance panel** for the 2a parcel
+   (between-caller level = telephone-line gain per FEATURES.md; std/range = Tannen's "marked
+   amplitude shifts"), mirroring pitch mean for 2b. **Repetition hard-deprecated** (registry rows
+   WIP → Deprecated 2026-09-12): dim 6 has no automatic instrument, full stop — no gold-subsample
+   parcel, no redesign in this paper. Instrument = **16 columns / 9 parcels, 9×9 matrix**.
+   Nuisance panel = token_count (length) · pitch mean (pitch level) · loudness mean (level) ·
+   obstructive_overlap_share (5a contrast).
+
 Cell indices below refer to `analysis/07_final.ipynb` at HEAD `1e36206` (78 cells) — renamed
 `analysis/07_demoted_in_favor_of_5D.ipynb` on 2026-07-29 with one close-out cell appended
 (→ 79 cells; indices 0–77 unchanged); steps are stable names, indices shift on edit.
@@ -122,7 +167,7 @@ the table before W5 — deliberately, so S4 records its reference values once, o
 measurement. Step 24's recorded eigs/loadings are therefore the **Hz-era precursor
 reference**: W5 re-derives and records fresh values, keeps the K=5 expectation as the
 assert, and reports the Hz-era vs semitone-era comparison — in particular whether PC1's
-pitch–rising fusion survives the register-invariant detector.)_ Close with
+pitch–rising fusion survives the pitch-level-invariant detector.)_ Close with
 one paragraph: the vol11 K=2 solution (Steps 3–6) as the exploratory precursor subspace.
 Resolve 24a's upstream globals so the cell runs from S2's outputs alone.
 **Check:** Horn assert; variance row sums match; loadings reproduce the recorded Step 24
@@ -139,31 +184,37 @@ cherry-picked).
 **Check:** each plot's top-loading feature matches the printed loading table.
 
 ### S6 — The Tannen construct map *(new frozen cell + doc update)*
+
+> **2026-08-20:** `docs/tannen_feature_map.md` now maps the Thomas et al. (2018) set only; the
+> in-house directions S6 cites live in `docs/archive/tannen_feature_map_inhouse_2026-08-20.md`
+> until the map's Thomas + in-house expansion (later, by decision). The notebook's file citation
+> still resolves; the rows moved.
 The full 26-row table, fixed **before** S7 executes, every direction citing
 `docs/tannen_feature_map.md` (Ch.7 dims; PDF pages). Draft to adjudicate at the walkthrough
 (⚑ = contested, decide at W7):
 
 | Feature | Domain | Dir | Tannen anchor | In *t*? |
 |---|---|---|---|---|
-| loudness mean/std/range | Loudness | HI | dim 2a; marked amplitude shifts (p. 62, 202) | yes |
+| loudness std / loudness range | Loudness | HI | dim 2a; marked amplitude shifts (p. 62, 202) | yes |
+| loudness mean | Loudness | — | absolute level = telephone-line gain (FEATURES.md); theory names *shifts* | **no** — 2026-09-12: nuisance panel for the 2a parcel (parity with pitch mean) |
 | pitch std / pitch range | Pitch | HI | dim 2b; marked pitch shifts (p. 62, 202) | yes ⚑ (Hz-scale sex confound → drop-pitch variant in S8) |
 | pitch mean | Pitch | — | absolute F0 = anatomy/sex proxy; theory names *shifts* | **no** ⚑ |
-| word_rate / syllable_rate | Rate | HI | dim 5c faster rate (p. 61, 202) | yes |
+| syllable_rate | Rate | HI | dim 5c faster rate (p. 61, 202) | yes (SINGLE; word_rate EXCLUDED 2026-08-19 — r .966 near-duplicate, robustness alternate only) |
 | FTO Sec | Turn timing | HC (+) | dim 3a/5b; avoiding interturn pauses = HI, so +FTO = spacing | yes |
 | Latching Flag | Turn timing | HI | latching as canonical involvement (p. 119) | yes |
-| Overlap Duration/Count/Onset | Overlap | HI | Ch.4 cooperative simultaneity (p. 113–122) | yes |
-| obstructive_overlap_share | Overlap | — | construct-contested: Tannen's HI overlap is *cooperative*; no unambiguous direction | **no** ⚑ |
+| Overlap Duration / Onset Flag / **Cooperative Overlap Count** | Overlap (5a) | HI | Ch.7 dim 5a "cooperative versus obstructive overlap" (p. 202); Ch.4 cooperative simultaneity (p. 113–122) | yes — recomposed 2026-09-12 (R1 item 6): cooperative count replaces the undifferentiated Overlap Count (→ S3 convergence check / robustness alternate) |
+| obstructive_overlap_share | Overlap (5a) | — | the *obstructive* pole of 5a is what HC listeners hear, not what HC speakers do — no HI/HC sign | **no** — resolved 2026-09-12: the 5a parcel's nuisance-panel gate (corr must be low); cooperative share = S8 variant |
 | Within Pause Total/Count/Rate/Max | Pausing | HC | dim 2c within-turn pauses | yes |
-| Repetitions In Current | Repetition | HI | dim 6a/5d floor-getting repetition | yes ⚑ (24.5% repair-attributable, Step 13 caveat) |
-| Repetitions In Previous | Repetition | HI | dim 6 incorporating other's offer (p. 117) | yes (14.2% caveat) |
+| Repetitions In Current | Repetition | HI | dim 6a/5d floor-getting repetition | **no** — Deprecated 2026-09-12 (~75% length; 24.5% repair-attributable, Step 13) |
+| Repetitions In Previous | Repetition | HI | dim 6 incorporating other's offer (p. 117) | **no** — Deprecated 2026-09-12 (r .10 with gold `^m`); dim 6 unmeasured in this paper |
 | Filler Words per Second | Pausing | — | not a named Tannen feature; filled-pause vs discourse-marker readings conflict (map Part 3 §2) | **no** ⚑ |
 | token_count | Volume | — | utterance-length covariate, no clean Ch.7 direction; artifact-check history | **no** ⚑ |
-| Pronouns per Second | Involvement | — | weak dim-1 proxy; PF_ratio is the sanctioned dim-1 measure | **no** ⚑ |
-| PF_ratio | Involvement | HI | dim 1 personal focus of topic | yes |
+| Pronouns per Second | Involvement | HI | dim 1 personal focus of topic (Chafe involvement marker; v2 closed list) | **yes** — ⚑ resolved 2026-09-07: roles flipped per the 8/19 audit, the dim-1 instrument (SINGLE block) |
+| PF_ratio | Involvement | — | dim 1 personal focus of topic | **no** — excluded 2026-09-07 (Empath mapping unvalidated §4C12; "still needed?" resolved no); ingredients stay Trusted |
 | laughs_per_100utt | Involvement | HI | dim 9 laughter | yes |
-| rt_rising_share | Involvement | HI | expressive/questioning intonation (dims 3d/4) | yes ⚑ (MNAR caveat; weakest anchor — adjudicate) |
+| rt_rising_share | Involvement | — | expressive/questioning intonation (dims 3d/4) | **no** — ⚑ resolved 2026-09-06: excluded (30.3% length-dependent MNAR nulls + weakest anchor, a 3d/4 bridge [ours]); extractor stays Trusted; questions route to gold_acts (WIP) |
 
-Draft tally: 21 in / 5 out. Also refresh `docs/tannen_feature_map.md` Part 2's stale status
+Tally (2026-09-12): **16 columns in / 9 parcels** — loudness shifts (2), pitch shifts (2), overlap 5a (3), pausing (4), and five SINGLEs (syllable_rate, FTO, latching, laughter, pronouns). Of the frozen 26: 10 out (pitch mean, loudness mean, token_count, fillers, word_rate, both repetition columns, PF_ratio, rt_rising_share, obstructive share) and Overlap Count demoted to the 5a convergence check; Cooperative Overlap Count enters from outside the 26. Four of the ten out are the nuisance panel. (History: 20/6 until 2026-09-12.) Also refresh `docs/tannen_feature_map.md` Part 2's stale status
 column (overlap/laughter/pauses now built) while we're in the file.
 **Check:** the map cell hard-codes the frozen table; S7 reads directions from it, nowhere
 else.
@@ -304,8 +355,15 @@ type evidence lives (S9 + appendices + NB07). No rebuttal framing.
 - **D1** ✅ decided 2026-07-29: new NB08; NB07 frozen — renamed
   `analysis/07_demoted_in_favor_of_5D.ipynb`, close-out cell appended (its one edit).
 - **D2** ✅ decided 2026-07-29: `analysis/08_measurement.ipynb` (skeleton created, smoke-passed).
-- **D3** Construct-map ⚑ rows (pitch mean, obstructive share, fillers, token_count,
-  pronouns out; rt_rising in; repetition caveats) — adjudicate at W7.
+- **D3** Construct-map ⚑ rows (pitch mean, fillers, token_count,
+  pronouns **in / PF_ratio out — decided 2026-09-07 (Empath dropped)**; rt_rising **out — decided
+  2026-09-06, exclusion not deprecation**; **obstructive share → 5a nuisance gate, cooperative count
+  into the 5a parcel — decided 2026-09-12 (R1 item 6)**; repetition pair out per the 2026-08-19 WIP
+  demotion) — remainder (pitch mean, fillers, token_count) adjudicate at W7.
+- **D10** ✅ decided 2026-09-12: repetition hard-deprecated (registry rows → Deprecated); dim 6 has no
+  instrument in this paper; 9 parcels, 9×9 matrix. Entrainment redesign (audit §4E-h) = next paper.
+- **D11** ✅ decided 2026-09-12: loudness mean → nuisance panel for the 2a parcel (parity with pitch
+  mean); std/range = the "marked shifts" instrument.
 - **D4** Theory-vector weighting — unit per-feature primary, domain-balanced as sensitivity.
 - **D5** Demographics placement (S9b after the type question) + the 24-test FDR family.
 - **D6** External validation via transplanted gold chain (required — score×gold is a new

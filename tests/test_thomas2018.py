@@ -164,3 +164,24 @@ def test_cli_writes_all_eleven_in_manifest_order_and_the_side_table(scratch):
     assert 2.0 < float(side[0]["wps"]) < 4.0 and float(side[0]["wpu"]) == 15.5
     assert float(side[0]["ppron"]) == pytest.approx(4 / 31)
     assert 0.1 < float(side[0]["boplen"]) < 0.3 and 100 < float(side[0]["pv"]) < 5000
+
+
+def test_prosody_cache_checkpoints_and_resumes(tmp_path, monkeypatch):
+    """Second run must reuse the cache (no re-extraction); --overwrite must recompute."""
+    sr = 8000
+    t = np.arange(sr) / sr
+    out = tmp_path / "utterances_v2"; (out / "200").mkdir(parents=True)
+    for i in (2, 4):
+        _write_wav(out / "200" / f"sw2001A-U{i:04d}.wav", 0.5 * np.sin(2 * np.pi * 150 * t), sr)
+    with open_appender(manifest_path(out)) as w:
+        for i in (2, 4):
+            write_row(w, f"200/sw2001A-U{i:04d}.wav", "")
+    calls = []
+    real = _prosody.extract_prosody
+    monkeypatch.setattr(_prosody, "extract_prosody", lambda p: (calls.append(str(p)), real(p))[1])
+    first = _prosody.ensure_prosody(manifest_path(out), out, workers=1)
+    assert len(calls) == 2 and (out / "derived" / "thomas2018_prosody.csv").is_file()
+    second = _prosody.ensure_prosody(manifest_path(out), out, workers=1)
+    assert len(calls) == 2 and second == first          # fully served from the checkpoint
+    _prosody.ensure_prosody(manifest_path(out), out, workers=1, overwrite=True)
+    assert len(calls) == 4                               # --overwrite recomputes
