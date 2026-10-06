@@ -9,8 +9,14 @@ our PC1 with their Table 2: sign agreement, Tucker's congruence φ, bootstrap CI
 sampling-error yardstick at their n (168 / 98).
 
 Stated deviations from the paper: their outlier removal was manual (ours is a |z| > 5 rule
-plus the project's ≥ 20-utterance floor, with a sensitivity block without them); Revelle's
-GLB is an R routine (McDonald's ω_t from a one-factor fit is reported beside α instead).
+plus the project's ≥ 20-utterance floor, with a sensitivity block without them; on MISC,
+`analysis/nb_AJ.ipynb` applies their §3.4 removals by name instead). The GLB is their
+footnote-2 routine, psych 1.7.3 `glb.fa`, ported line for line from the CRAN source
+(`glb_fa`, 2026-09-04; no R here, so a port, not a call — the same routine at the exact
+minres optimum, `exact=True`, bounds the port's optimizer slack at ≈ .04), beside the bound
+it approximates (`glb_algebraic`, Jackson & Agunwamba's SDP solved by a log-barrier Newton
+method; equals α under compound symmetry to 1e-12) and McDonald's ω_t. Known-answer checks:
+`tests/test_c_alpha_method.py`.
 
 Inputs: `utterances_v2/derived/thomas2018_side.csv` (all eleven extracted, then
 `swb-extract thomas2018-side`). Outputs (written here, regenerable):
@@ -19,9 +25,20 @@ Inputs: `utterances_v2/derived/thomas2018_side.csv` (all eleven extracted, then
 |---|---|
 | `thomas_method_sides.csv` | per side: n_utts, the eleven raw and z-scored, involvement under our PC1 weights and under their Table 2 weights, percentile |
 | `thomas_method_loadings.csv` | per variable: Table 2 weight, our PC1 weight, bootstrap 95% CI, sign match, α-if-deleted, mean/sd/skew/kurtosis |
-| `thomas_method_results.csv` | key–value: n at each cleaning step, r̄, α (both keyings), ω_t, PC variance shares, Horn K, corr(ours, their weights), φ, sign agreement, subsample-φ yardstick, sensitivity re-runs |
+| `thomas_method_results.csv` | key–value: n at each cleaning step, r̄, α (both keyings), ω_t, GLB (`glb_fa` raw and keyed, exact minres, algebraic), PC variance shares, Horn K, corr(ours, their weights), φ, sign agreement, subsample-φ yardstick, sensitivity re-runs |
 
 Run: `PYTHONPATH=src python3 analysis/c_alpha/thomas_method.py` (repo root).
+
+The notebook record of the MISC line under the paper's *own* exclusions (n = 171 / 101 against
+their 168 / 98, no |z| rule) is `analysis/nb_AJ.ipynb` (2026-09-04): φ .94 / .98, keyed α .53 /
+.56, `glb.fa` .78 keyed on both; the same routine on iid noise at n = 168 gives a median .39
+(algebraic .30), so the GLB's small-sample floor is a large part of the paper's .85. Its §8
+(2026-10-06) checks Horn's K = 5 on the 3,836 Switchboard sides against Velicer's MAP (1;
+revised 2), the empirical Kaiser criterion (5) and comparison data (5–6) — `velicer_map`,
+`ekc` and `comparison_data` here. MAP cannot count components carried by two or three
+variables (it returns 1 on a planted five-factor structure of our size and shape), so it does
+not arbitrate; dropping wpp, which shares boplen's pause-count denominator, gives K = 4 by
+every criterion that gave 5.
 
 ## Results — MISC, their data through our code (2026-08-22)
 
