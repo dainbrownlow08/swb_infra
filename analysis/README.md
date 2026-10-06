@@ -1,11 +1,12 @@
 # analysis/
 
-Two notebooks matter; everything else is archived history.
+These notebooks matter; everything else is archived history.
 
 | Notebook | Role |
 |---|---|
 | `08_measurement.ipynb` | **The living notebook.** The measurement-first analysis per `docs/NB08_MEASUREMENT_PLAN.md`: five combined trusted-space PCA coordinates (26 Trusted features, 487 callers, Horn K=5) + a theory-cited Tannen HI/HC projection score per caller, with validation; the type question demoted to a secondary test. All new analysis lands here. |
 | `07_demoted_in_favor_of_5D.ipynb` | **The frozen evidence record** (formerly `07_final.ipynb`; closed 2026-07-29 — never edited, never re-run: ~55 min, and its recorded outputs are the evidence cited as "NB07 Step N"). Holds the audit-response arc as numbered Steps 11–24: trust adjudication, the NXT gold suite, overlap split, classifiers, the §4A dimensionality battery, clusterability, taxometrics (CCFI .151), power, the 288-spec multiverse, and Step 24's combined PCA. NB08 cites these numbers instead of recomputing them (ledger: `docs/AUDIT.md`). Planned later step: moves to `archive/` once NB08 stands alone. |
+| `nb_AJ.ipynb` | **The Thomas et al. (2018) one-to-one record** (2026-09-04). Their §3.2–§4.1 method on their own MISC data with their §3.4 exclusions applied *by name* (n = 171 / 101 vs their 168 / 98): the Table 2 loadings (congruence φ .94 / .98, 10/11 signs) with every Horn-retained component's loadings and bootstrap intervals beside them, Cronbach's α (.53 / .56 keyed vs their .67), the GLB by the routine their footnote 2 names (psych 1.7.3 `glb.fa`, ported from the CRAN source: .78 vs their .85; the algebraic bound .81–.84; the same routine on pure noise at n = 168 gives .39), and the histogram of units on PC1 with normal / skew-normal fits (unimodal, right-skewed); then the same method on 3,836 Switchboard sides (φ .84, α .36, `glb.fa` .74). §8 (2026-10-06): Horn's K = 5 checked against Velicer's MAP (1 / revised 2), the empirical Kaiser criterion (5) and comparison data (5–6), with each criterion's behaviour on subsamples and planted structures of our size, and the five components' anatomy (one is the wpp/boplen shared-denominator pair; without wpp, 4). Reads `c_alpha/` tables + `../utterances_v2/derived/thomas2018_side.csv`; every statistic is a `c_alpha/thomas_method.py` function. ~1.5 min. |
 
 `validate_rising_terminal.py` — the gold-DA known-groups validation behind the 2026-07-29
 rising-terminal semitone redesign (qy 2.48×, AUC .721; the failed `^d` arm adjudicated on
@@ -35,8 +36,8 @@ load_features_table(...)     ──►  08_measurement.ipynb   (stale-data + reg
                                                           every load; trust status lives in
                                                           docs/FEATURES.md)
 swb-extract thomas2018-side  ──►  utterances_v2/derived/thomas2018_side.csv   (per conversation
-                                  side: the 11 Thomas et al. 2018 variables — built 2026-08-20,
-                                  not yet extracted corpus-wide or wired into NB08)
+                                  side: the 11 Thomas et al. 2018 variables; consumed by
+                                  nb_AJ.ipynb + c_alpha/thomas_method.py)
 ```
 
 ## Unit of analysis (important)
