@@ -250,3 +250,39 @@ pause measure on Switchboard at the cost of leaving the paper's definition.
 Files: `run_opensmile.py` (+ `opensmile_conf/`), `swb_misc_route.py` → `swb_misc_route_{sides,callers}.csv`,
 `like_for_like.py` → `misc_{shipped,v3}_{168,98}_*`, `swb_os_{sides,sides_trans,sides_inlines,callers}_*`,
 `compare_routes.py`.
+
+## Is PC1 utterance length? (2026-11-21)
+
+Question (from review of the Switchboard paper): PC1 on Switchboard is rept, repu and wpu — could shared counts and utterance
+length produce it? `restatement_length.py` rebuilds rept / repu from the transcripts (equal to the tables to 1e-15 on 3,987
+sides and 176 MISC participant-tasks) and writes, per unit, what the two would be for a random pair of the unit's own lines
+(`rept_chance`, `repu_chance`: exact mean over all pairs; `rept_shuf`, `repu_shuf`: one realised re-pairing, seed 0) and two
+length-fair forms (`rept_per_term` = Σ shared / Σ own terms; `rept_jaccard` = Σ shared / Σ union) →
+`restatement_length_{swb,misc}.csv`. `analysis/nb_AJ.ipynb` §9 runs the controls; intervals are blocked bootstraps (whole pairs
+on MISC, whole callers on Switchboard, B = 500).
+
+Run: `PYTHONPATH=src python3 analysis/c_alpha/restatement_length.py` (repo root, ~15 s).
+
+φ of PC1 with Table 2 on the variables kept:
+
+| Control | MISC, n = 171 (22 pairs) | MISC, n = 101 | Switchboard sides, n = 3,836 (489 callers) |
+|---|---|---|---|
+| all eleven | .94 [.53, .96] | .98 [.18, .98] | .84 [.79, .86] |
+| drop rept + repu | .95 [.79, .97] | .98 [.77, .98] | .30 [.08, .47] |
+| drop wpu | .92 [.08, .95] | .93 [−.03, .97] | .80 [.54, .86] |
+| drop wpu + rept + repu | .91 [.66, .94] | .92 [.46, .96] | .23 [.05, .41] |
+| rept per own term, repu dropped | .84 [.66, .88] | .83 [.41, .91] | .14 [−.13, .44] |
+| rept, repu residualised on wpu | .70 [.26, .87] | .59 [−.32, .89] | .38 [.24, .56] |
+| the other ten residualised on wpu | −.14 [−.87, .78] | −.12 [−.82, .65] | .51 [.39, .68] |
+| placebo: the other ten residualised on wps | .83 [.58, .93] | .82 [.23, .91] | .79 [.73, .82] |
+| null: rept, repu scored against a random own line | .97 [.70, .98] | .97 [.18, .99] | .84 [.77, .86] |
+
+Reading. A random own line reproduces 56–64% of rept and 61–65% of repu in both corpora; on Switchboard the pair correlates
+.73 / .65 with wpu (MISC .20–.37 / .18–.27). Switchboard's PC1 is the Table 2 direction only while both counts are in the set:
+without them, or with one length-fair rate in their place, PC1 becomes the wpp / boplen pair, and the Table-2-like direction is
+second (17%, |φ| .78). The random re-pairing gives the §3 component back (weights within about .03), so its re-statement leg
+does not need the previous utterance. Dropping wpu alone leaves it (φ .80): the component is the near-duplicate count pair
+(r .91) with the length that drives it. MISC's PC1 is carried by wps / wpp / wpu and survives removal of the trio; it does not
+survive wpu being regressed out of the other ten, while the same operation with wps leaves it. MISC's intervals are wide
+everywhere once pairs are resampled, so its rows are point estimates. Not done: caller-level controls, blocking on conversation
+as well as caller, an utterance-level length model, external validation of the second component.

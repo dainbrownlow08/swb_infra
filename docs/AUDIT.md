@@ -174,7 +174,7 @@ so/like/well homograph disambiguation vs Treebank `{D}/{C}/{F}` gold
 from the marker list (re-gate: excision breaks the sum identity) · ⬜ (d) voice
 quality (parselmouth/eGeMAPS) · ⬜ (e) marked-shift dynamics (slope/reset/contour vs static
 moments) · ⬜ (f) speaker-level aggregates (unblocked) · 🟡 (g) narrative block — gold
-quotation rate measured; #25–28 unbuilt · 🟡 **(h) Thomas et al. (2018) replication — built 2026-08-20 · extracted corpus-wide 2026-08-22 · in use at side level in `analysis/nb_AJ.ipynb` (2026-09-04; retention criteria §8, 2026-10-06); not yet pooled per caller into NB08.**
+quotation rate measured; #25–28 unbuilt · 🟡 **(h) Thomas et al. (2018) replication — built 2026-08-20 · extracted corpus-wide 2026-08-22 · in use at side level in `analysis/nb_AJ.ipynb` (2026-09-04; retention criteria §8, 2026-10-06; PC1 length controls §9, 2026-11-21 — on Switchboard sides PC1 is the Table 2 direction only while both re-statement counts are in: φ .84 → .14 with a length-normalised re-statement rate, and .84 again with rept / repu scored against a random own line); not yet pooled per caller into NB08.**
 "The MSFT paper" is resolved: Thomas, Czerwinski, McDuff, Craswell & Mark, *Style and
 Alignment in Information-Seeking Conversation*, CHIIR '18 (doi:10.1145/3176349.3176388).
 Its eleven per-participant-task variables (§3.2 / Table 2: ppron, wps, wpu, wpp, boplen,
